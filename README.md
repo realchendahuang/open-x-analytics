@@ -1,7 +1,7 @@
 # open-x-analytics 📊
 
-> **A living, 100% open X (Twitter) creator dataset by an indie hacker ([@realchendahuang](https://x.com/realchendahuang)).**  
-> 120 days · 18.66M impressions · 45.35K bookmarks · 1,084 posts. Updated continuously. No paywalls, zero bullshit.
+> **一个持续更新的中文 X（Twitter）真实创作者全量开源数据集**  
+> 作者：[@realchendahuang](https://x.com/realchendahuang) ｜ 120 天 · 1866 万曝光 · 4.5 万收藏 · 1,084 篇推文 · 零门槛开源，持续同步。
 
 <p align="left">
   <a href="https://x.com/realchendahuang"><img src="https://img.shields.io/twitter/follow/realchendahuang?style=social&logo=x" alt="Twitter Follow"></a>
@@ -16,8 +16,8 @@
 </p>
 
 > [!TIP]
-> **关注作者的 X (Twitter)**：[@realchendahuang](https://x.com/realchendahuang)  
-> 本数据集的最新增量版本发布、万字经验复盘长文、以及关于 Local-First 与 Edge Serverless 架构的一线独立开发实测，均会第一时间在 X 主页同步。欢迎在推特上与我交流探讨！
+> **关注作者的 X**：[@realchendahuang](https://x.com/realchendahuang)  
+> 本数据集后续的增量同步、分析手记与独立开发实操，均会在 X 主页第一时间发布，欢迎交流探讨。
 
 ---
 
@@ -167,22 +167,17 @@ python3 scripts/sync.py \
 
 ---
 
-## 👨‍💻 关于作者 (About the Author)
+## 👨‍💻 关于作者
 
 - **作者**：陈大黄（[@realchendahuang](https://x.com/realchendahuang)）
-- **身份**：KOSX（[@kosxai](https://x.com/kosxai)）华东创业与独立开发负责人、AI 科技公司合伙人、Indie Hacker、前 AI 产品经理。
+- **定位**：KOSX（[@kosxai](https://x.com/kosxai)）华东创业与独立开发负责人、AI 科技公司合伙人、Indie Hacker。
 - **个人网站**：[chendahuang.com](https://chendahuang.com)
-- **四大精神信仰**：
-  1. **代码的绝对诚实**：写错当场报错绝不通融，写对老实跑通绝不刁难。技术是对抗世俗人情与浑水摸鱼最纯粹的武器；
-  2. **两极架构主义**：端侧坚决 Local-First（纯本地极速运行、零服务器成本），云端坚决 Edge Serverless（按量计费、弹性免运维）；
-  3. **反廉价体面，拥抱粗糙摩擦力**：大模型时代空洞客套套话的边际成本为零。真实人类唯一的稀缺溢价来自微观踩坑与分厘细账；
-  4. **对低效劳动的生理性羞耻**：宁可花 8 小时写脚本做自动化，也不愿忍受 5 秒钟的机械重复搬砖。
-- **正在进行的开源与硬件项目**：
-  - [FlareMo](https://chendahuang.com)：基于 Cloudflare 的开源轻量知识库；
-  - [Cherina Pod](https://chendahuang.com)：双语播客；
-  - FeedSieve（福滤娃）：已退役的千星开源黄推清理扩展。
+- **正在进行的项目**：
+  - [FlareMo](https://chendahuang.com)：基于 Cloudflare 的开源知识库
+  - [Cherina Pod](https://chendahuang.com)：双语播客
+  - FeedSieve（福滤娃）：已退役的开源黄推清理扩展
 
-欢迎关注我的推特主页：[https://x.com/realchendahuang](https://x.com/realchendahuang)
+欢迎关注我的 X 主页：[https://x.com/realchendahuang](https://x.com/realchendahuang)
 
 ---
 
