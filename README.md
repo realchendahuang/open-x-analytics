@@ -1,16 +1,14 @@
 # open-x-analytics 📊
 
-> **一个持续更新的中文 X（Twitter）真实创作者全量开源数据集**  
-> 作者：[@realchendahuang](https://x.com/realchendahuang) ｜ 120 天 · 1866 万曝光 · 4.5 万收藏 · 1,084 篇推文 · 零门槛开源，持续同步。
+> **中文 X（Twitter）独立开发者真实运营全量开源数据集**  
+> 作者：[@realchendahuang](https://x.com/realchendahuang) ｜ 包含逐日运营大盘与全量推文互动明细，按周期持续增量同步。
 
 <p align="left">
   <a href="https://x.com/realchendahuang"><img src="https://img.shields.io/twitter/follow/realchendahuang?style=social&logo=x" alt="Twitter Follow"></a>
-  <a href="https://x.com/realchendahuang"><img src="https://img.shields.io/badge/X%20Followers-10%2C000%2B-1DA1F2?logo=x&logoColor=white" alt="Followers"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="data/csv/daily_overview.csv"><img src="https://img.shields.io/badge/Total%20Impressions-18.66M-orange" alt="Impressions"></a>
-  <a href="data/csv/daily_overview.csv"><img src="https://img.shields.io/badge/Total%20Bookmarks-45.35K-purple" alt="Bookmarks"></a>
-  <a href="data/jsonl/posts.jsonl"><img src="https://img.shields.io/badge/Bookmark%2FLike%20Ratio-0.785%20(Asset)-green" alt="Asset Ratio"></a>
-  <a href="data/csv/posts_content.csv"><img src="https://img.shields.io/badge/Posts%20Analyzed-1%2C084-blue" alt="Posts Analyzed"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Status-Living%20Dataset-success" alt="Living Dataset"></a>
+  <a href="data/"><img src="https://img.shields.io/badge/Data%20Format-CSV%20%7C%20JSONL-brightgreen" alt="Format"></a>
+  <a href="scripts/sync.py"><img src="https://img.shields.io/badge/Sync-Automated%20Pipeline-blue" alt="Sync"></a>
   <a href="examples/quick_start.py"><img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white" alt="Python"></a>
   <a href="#-欢迎贡献-community--pr"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
 </p>
@@ -39,7 +37,9 @@
 
 ---
 
-## 📈 当前大盘基准指标（截至 2026-10-12）
+## 📈 数据集基准指标（首发初始快照）
+
+> **说明**：以下为项目立项（2026-10-12 首发版）时的基准数据快照，随着后续周期性增量同步，数据集将持续生长更新。最新的全量数据请直接查阅 `data/` 目录下的实时文件。
 
 | 指标维度 | 官方实测数据 | 说明与洞察 |
 |---|---|---|
