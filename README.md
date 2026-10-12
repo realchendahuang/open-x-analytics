@@ -135,25 +135,9 @@ print(assets[["date", "bookmark_like_ratio", "bookmarks", "likes", "impressions"
 
 ---
 
-## 💡 摸索 4 个月以来的几点粗浅体会
-
-数据拉出来看后，我自己有几个很深刻的体会，供大家参考：
-
-1. **比起热闹的点赞，我更珍惜大家的收藏**：
-   - 随手发的吃瓜段子可能当时看个乐，但很快就滑过去了；
-   - 真正被大家反复收藏的，都是些踩坑踩出来的配置参数、免运维架构、或者分钱级的真实成本账单。这让我意识到，老老实实交付真正能用得上的东西，比蹭热点踏实得多。
-2. **感谢大家对“粗糙和踩坑”的包容**：
-   - 很多时候在主页记录自己写代码报错、折腾网络卡顿的过程，反而得到了很多同行的共鸣与关注；
-   - 真实生活里没有那么多光鲜体面，代码写不通就是写不通，把真实的踩坑过程写出来，大家反而更愿意交流。
-3. **最厉害的解法往往在评论区**：
-   - 好多次我遇到搞不懂的网络或者架构难题，在推上随手一问，评论区各路大神直接给出了现场诊断和最佳实践；
-   - 这 1,000 多篇推文里，很大一部分高质量内容其实是社区的各位老师陪我一起完善出来的。再次感谢大家！
-
----
-
 ## 🔄 持续更新机制 (Update Cadence)
 
-作者会按周或按月从 X 官方创作者后台导出最新分析明细，并使用内置同步脚本合并更新：
+作者会按周期从 X 官方后台导出最新分析明细，并通过内置同步脚本增量合并：
 
 ```bash
 # 自动合并去重并重新生成 JSONL
@@ -169,15 +153,8 @@ python3 scripts/sync.py \
 
 ## 👨‍💻 关于作者
 
-- **作者**：陈大黄（[@realchendahuang](https://x.com/realchendahuang)）
-- **定位**：KOSX（[@kosxai](https://x.com/kosxai)）华东创业与独立开发负责人、AI 科技公司合伙人、Indie Hacker。
-- **个人网站**：[chendahuang.com](https://chendahuang.com)
-- **正在进行的项目**：
-  - [FlareMo](https://chendahuang.com)：基于 Cloudflare 的开源知识库
-  - [Cherina Pod](https://chendahuang.com)：双语播客
-  - FeedSieve（福滤娃）：已退役的开源黄推清理扩展
-
-欢迎关注我的 X 主页：[https://x.com/realchendahuang](https://x.com/realchendahuang)
+- 陈大黄：[@realchendahuang](https://x.com/realchendahuang)
+- 个人网站：[chendahuang.com](https://chendahuang.com)
 
 ---
 
