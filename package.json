@@ -1,0 +1,12 @@
+{
+  "name": "open-x-analytics-root",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare:data": "python3 scripts/prepare_web_data.py",
+    "dev": "pnpm prepare:data && pnpm --filter web dev",
+    "build": "pnpm prepare:data && pnpm --filter web build",
+    "deploy:pages": "pnpm build && cf pages deploy web/dist --project-name open-x-analytics",
+    "domain:bind": "cf pages domains create open-x-analytics --domain analytics.chendahuang.com"
+  }
+}

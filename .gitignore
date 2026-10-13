@@ -15,3 +15,10 @@ venv/
 # Scratch & local temp
 *.tmp
 *.log
+
+# Node & Frontend
+node_modules/
+dist/
+.output/
+.wrangler/
+.env.local
