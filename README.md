@@ -7,6 +7,8 @@
   <a href="https://x.com/realchendahuang"><img src="https://img.shields.io/twitter/follow/realchendahuang?style=social&logo=x" alt="Twitter Follow"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="#"><img src="https://img.shields.io/badge/Status-Living%20Dataset-success" alt="Living Dataset"></a>
+  <a href="examples/dashboard.html"><img src="https://img.shields.io/badge/Dashboard-ECharts%20Interactive-orange" alt="Dashboard"></a>
+  <a href="examples/stage_and_pitfall_analysis.py"><img src="https://img.shields.io/badge/Analysis-Cohort%20%26%20Pitfall-purple" alt="Cohort Analysis"></a>
   <a href="data/"><img src="https://img.shields.io/badge/Data%20Format-CSV%20%7C%20JSONL-brightgreen" alt="Format"></a>
   <a href="scripts/sync.py"><img src="https://img.shields.io/badge/Sync-Automated%20Pipeline-blue" alt="Sync"></a>
   <a href="examples/quick_start.py"><img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white" alt="Python"></a>
@@ -66,12 +68,15 @@ open-x-analytics/
 │   │   ├── daily_overview_verified.csv # 蓝 V（X Premium）高净值人群专属数据切片
 │   │   └── posts_content.csv           # 2,602 篇全量推文正文与互动明细（无损全文版 CSV）
 │   └── jsonl/
-│       └── posts.jsonl                 # 开发者友好的标准 JSONL 格式（每行一个 JSON，带计算字段）
+│       └── posts.jsonl                 # 开发者友好的标准 JSONL 格式（含生命周期分段与归一化计算字段）
 ├── examples/
-│   └── quick_start.py                  # 零依赖极简分析脚本（查看资产帖与转化排行）
+│   ├── dashboard.html                  # 🌟 零依赖单文件交互式增长看板（浏览器双击直开，ECharts 深色模式）
+│   ├── stage_and_pitfall_analysis.py   # 🔬 粉丝分段穿透对比与硬核踩坑增粉实证复盘脚本
+│   └── quick_start.py                  # 极简分析演示（高藏赞比资产帖与转化排行）
 ├── scripts/
 │   ├── sync.py                         # 官方导出增量去重、清洗与自动化合并工具
-│   └── enrich_with_vault.py            # Vault 无损全文回填与未导出推文深度融合工具
+│   ├── enrich_with_vault.py            # Vault 无损全文回填与未导出推文深度融合工具
+│   └── add_cohort_and_window_metrics.py# 粉丝分段推导、观察窗口归一化与采集时间标记工具
 ├── LICENSE                             # MIT 开源协议
 └── README.md
 ```
@@ -82,11 +87,13 @@ open-x-analytics/
 
 ### 1. 推文明细表 (`data/csv/posts_content.csv` / `data/jsonl/posts.jsonl`)
 
+`posts_content.csv` 保持与 X 官方原生导出完全一致的列结构，方便 Excel / 传统 BI 导入；`posts.jsonl` 在此基础上注入了**生命周期归一化与分段特征**：
+
 | 字段名 (CSV) | JSONL 键名 | 类型 | 说明 |
 |---|---|---|---|
 | `Post id` | `post_id` | String | 推文唯一推特 ID（可直接拼接成链接） |
 | `Date` | `date` | String | 发布日期（如 `"Mon, Sep 28, 2026"`） |
-| `Post text` | `text` | String | 推文完整正文（包含换行与 emoji） |
+| `Post text` | `text` | String | 推文无损完整正文（包含代码块、换行与 emoji） |
 | `Post Link` | `link` | String | 推文公开 URL |
 | — | `is_reply` | Boolean | 是否为回复互动帖（以 `@` 开头） |
 | `Impressions` | `impressions` | Integer | 累计阅读量/曝光量 |
@@ -98,11 +105,63 @@ open-x-analytics/
 | `Profile visits`| `profile_visits`| Integer | 该推文带来的个人主页访问次数 |
 | `URL Clicks` | `url_clicks` | Integer | 推文中外部链接的点击次数 |
 | — | `bookmark_like_ratio` | Float | **藏赞比**（Bookmarks / Likes） |
+| — | `snapshot_at` | String | **采集快照时间戳**（ISO 8601，如 `2026-10-12T23:59:59+08:00`） |
+| — | `post_age_days` | Integer | **观察时间窗口**（发布日至快照日经历的天数） |
+| — | `followers_at_post` | Integer | **发帖时粉丝基数**（由逐日大盘净增粉倒推估算） |
+| — | `follower_stage` | String | **账号成长阶段**（🌱 破冰期 0~1K / 🚀 增长期 1K~5K / ⚡ 飞轮期 5K~10K） |
+| — | `viral_ratio` | Float | **破圈穿透倍率**（Impressions / followers_at_post，剥离粉丝基数红利） |
+| — | `daily_impressions` | Float | **日均曝光量**（Impressions / post_age_days，消除时间积累偏差） |
+| — | `daily_likes` | Float | **日均点赞量**（Likes / post_age_days） |
+| — | `daily_new_follows` | Float | **日均直接转化关注数**（New follows / post_age_days） |
+| — | `follow_rate_per_10k` | Float | **万次曝光转化关注数**（New follows / Impressions × 10,000） |
 
 ### 2. 每日大盘表 (`data/csv/daily_overview.csv`)
 
 包含每天全账户维度的核心指标：
 `Date`, `Impressions`, `Likes`, `Engagements`, `Bookmarks`, `Shares`, `New follows`, `Unfollows`, `Replies`, `Reposts`, `Profile visits`, `Create Post`, `Video views`, `Media views`。
+
+---
+
+## 🔬 科学复盘：生命周期分段与踩坑记录实证
+
+### 1. 为什么必须引入「观察窗口」与「粉丝分段」？
+
+在社媒数据分析中，只按曝光量降序排“爆款”极易产生两大约束性偏差：
+1. **时间窗口偏差**：发布了 120 天的老帖积累了数月的长尾流量与持续收藏，而最近发布的优质推文可能只有几小时或几天。因此数据集增加了 `snapshot_at` 采集快照与 `post_age_days`，并输出 `daily_impressions` 等日均速率指标。
+2. **受众基数混淆（Confounding Variable）**：当账号处于 9,000 粉丝时，一条普通的随笔动态也能获得数千曝光；但在 0~700 粉丝的破冰阶段，推文需要完全依赖内容本身的穿透力在公域冷启动。
+
+为此，本项目通过 `viral_ratio`（曝光量 / 当时粉丝基数）剥离已有受众红利：
+
+```text
+成长阶段              | 推文数   | 平均曝光      | 平均点赞    | 平均穿透倍率      | 平均藏赞比   
+--------------------------------------------------------------------------
+🌱 破冰期 (0~1K)    | 17 篇   | 10,245     | 45.8     | 13.4 倍 (最高 135x) | 0.467   
+🚀 增长期 (1K~5K)   | 477 篇  | 10,709     | 44.1     | 3.3 倍           | 0.451   
+⚡ 飞轮期 (5K~10K)  | 2,108 篇| 5,223      | 14.7     | 0.8 倍           | 0.267   
+```
+
+> **实证洞察**：破冰期的平均穿透倍率高达 **13.4 倍**！例如 2026 年 6 月 15 日作者在粉丝仅 ~765 人时发布的 Cloudflare 全家桶经验长推，斩获了 103,531 次曝光，穿透倍率高达 **135.3x**。低曝光期的早期帖子蕴含着最纯粹的冷启动价值。
+
+### 2. 真实的「踩坑记录」到底转化了多少关注？
+
+全库通过语义识别定位出 **138 篇深度的技术踩坑、Bug 排查与架构复盘推文**（关键词涵盖：`踩坑`、`避坑`、`排查`、`翻车`、`bug`、`教训`、`复盘`、`死锁`、`重构` 等）：
+
+- **超高藏赞比（案头手册属性）**：泛娱乐帖藏赞比通常只有 0.1~0.2，而深度踩坑复盘推文的平均藏赞比高达 **1.3 ~ 1.7**（即收藏数远超点赞数），被一线工程师当作备查手册反复调阅；
+- **最高转化单帖**：2026 年 9 月 28 日关于架构选型与配置避坑的复盘长推，单篇直接带来 **+163 位高质量关注**、3,227 次收藏与 17.5 万曝光。
+
+运行以下脚本即可直接复现这套分析：
+```bash
+python3 examples/stage_and_pitfall_analysis.py
+```
+
+---
+
+## 📊 交互式看板 (Interactive Dashboard)
+
+项目内置了单文件交互式看板 `examples/dashboard.html`，基于 ECharts 构建，采用深色主题：
+- **零依赖直开**：无需安装 Node.js、无需构建、无需配置本地 Web 服务器，直接在本地浏览器双击打开 `examples/dashboard.html`；
+- **全景数据穿透**：支持按破冰期/增长期/飞轮期切片查看散点图分布，支持一键筛选「高藏赞比资产帖」、「硬核踩坑帖」与「高转化破圈帖」；
+- **实时排行榜**：动态展示完整推文全文预览与各维度指标。
 
 ---
 
