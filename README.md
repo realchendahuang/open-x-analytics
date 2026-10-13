@@ -4,10 +4,11 @@
 > 作者：[@realchendahuang](https://x.com/realchendahuang) ｜ 包含历史上全量推文文本与逐日后台运营数据，持续同步更新。
 
 <p align="left">
+  <a href="https://realchendahuang.github.io/open-x-analytics/"><img src="https://img.shields.io/badge/Web%20Dashboard-Online%20Interactive-blue?style=for-the-badge&logo=react" alt="Web Dashboard"></a>
   <a href="https://x.com/realchendahuang"><img src="https://img.shields.io/twitter/follow/realchendahuang?style=social&logo=x" alt="Twitter Follow"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="#"><img src="https://img.shields.io/badge/Status-Living%20Dataset-success" alt="Living Dataset"></a>
-  <a href="examples/dashboard.html"><img src="https://img.shields.io/badge/Dashboard-ECharts%20Interactive-orange" alt="Dashboard"></a>
+  <a href="web/"><img src="https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite%20%2B%20Tailwind-purple" alt="React 19"></a>
   <a href="examples/stage_and_pitfall_analysis.py"><img src="https://img.shields.io/badge/Analysis-Cohort%20%26%20Pitfall-purple" alt="Cohort Analysis"></a>
   <a href="data/"><img src="https://img.shields.io/badge/Data%20Format-CSV%20%7C%20JSONL-brightgreen" alt="Format"></a>
   <a href="scripts/sync.py"><img src="https://img.shields.io/badge/Sync-Automated%20Pipeline-blue" alt="Sync"></a>
@@ -158,10 +159,21 @@ python3 examples/stage_and_pitfall_analysis.py
 
 ## 📊 交互式看板 (Interactive Dashboard)
 
-项目内置了单文件交互式看板 `examples/dashboard.html`，基于 ECharts 构建，采用深色主题：
-- **零依赖直开**：无需安装 Node.js、无需构建、无需配置本地 Web 服务器，直接在本地浏览器双击打开 `examples/dashboard.html`；
+### 🌐 在线访问
+> **在线看板地址**：[https://realchendahuang.github.io/open-x-analytics/](https://realchendahuang.github.io/open-x-analytics/)  
+> *(自定义域名镜像：`https://analytics.chendahuang.com/`)*
+
+本项目提供了全新的工业级模块化 React 看板（位于 `web/` 目录），基于 **React 19 + TypeScript + Vite + Tailwind CSS + ECharts + Lucide** 构建：
 - **全景数据穿透**：支持按破冰期/增长期/飞轮期切片查看散点图分布，支持一键筛选「高藏赞比资产帖」、「硬核踩坑帖」与「高转化破圈帖」；
-- **实时排行榜**：动态展示完整推文全文预览与各维度指标。
+- **全量推文检索**：内置实时正文搜索与多维交叉筛选，卡片直连 X 原推链接；
+- **逐日大盘趋势**：120 天全历程净增粉、总曝光与收藏走势双轴面积图，支持时间滑块缩放；
+- **本地极速预览**：
+  ```bash
+  pnpm dev     # 启动热重载开发预览
+  pnpm build   # 一键数据清洗与生产构建
+  ```
+
+此外，项目亦保留了单文件极简原型 `examples/dashboard.html`，无需任何依赖直接双击即可离线打开。
 
 ---
 

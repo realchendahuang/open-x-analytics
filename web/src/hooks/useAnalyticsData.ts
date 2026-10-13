@@ -12,10 +12,13 @@ export function useAnalyticsData() {
     async function loadData() {
       try {
         setLoading(true)
+        const baseUrl = import.meta.env.BASE_URL || './'
+        const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`
+
         const [postsRes, ovRes, sumRes] = await Promise.all([
-          fetch('/data/posts.json'),
-          fetch('/data/overview.json'),
-          fetch('/data/summary.json'),
+          fetch(`${cleanBase}data/posts.json`),
+          fetch(`${cleanBase}data/overview.json`),
+          fetch(`${cleanBase}data/summary.json`),
         ])
 
         if (!postsRes.ok || !ovRes.ok || !sumRes.ok) {
