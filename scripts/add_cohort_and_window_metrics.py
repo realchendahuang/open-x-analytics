@@ -29,9 +29,39 @@ DAILY_CSV = DATA_DIR / "csv" / "daily_overview.csv"
 POSTS_CSV = DATA_DIR / "csv" / "posts_content.csv"
 POSTS_JSONL = DATA_DIR / "jsonl" / "posts.jsonl"
 
-SNAPSHOT_DATE_STR = "2026-10-12"
-SNAPSHOT_DATETIME = datetime(2026, 10, 12, 23, 59, 59)
-SNAPSHOT_ISO = "2026-10-12T23:59:59+08:00"
+#: Fallback collection snapshot, used only when the data files carry no dates
+#: at all. The real snapshot is derived from the newest date present in the
+#: dataset (see `detect_snapshot`): hardcoding it meant every incremental sync
+#: silently kept computing observation windows against a stale "today", which
+#: understates post age and inflates the daily-normalised metrics.
+SNAPSHOT_FALLBACK = datetime(2026, 10, 14, 23, 59, 59)
+
+
+def detect_snapshot() -> tuple[datetime, str]:
+    """The dataset's own newest date, as an end-of-day snapshot.
+
+    Read from `daily_overview.csv` and the post dates, so a sync that brings in
+    a later export moves the snapshot forward without anyone editing this file.
+    """
+    newest = datetime.min
+    if DAILY_CSV.exists():
+        with open(DAILY_CSV, "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                parsed = parse_date(r.get("Date", ""))
+                if parsed > newest:
+                    newest = parsed
+    if POSTS_JSONL.exists():
+        with open(POSTS_JSONL, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                parsed = parse_date(json.loads(line).get("date", ""))
+                if parsed > newest:
+                    newest = parsed
+    if newest == datetime.min:
+        return SNAPSHOT_FALLBACK, SNAPSHOT_FALLBACK.strftime("%Y-%m-%d")
+    end_of_day = newest.replace(hour=23, minute=59, second=59)
+    return end_of_day, end_of_day.strftime("%Y-%m-%d")
 
 
 def parse_date(date_str: str) -> datetime:
@@ -93,6 +123,10 @@ def main():
     timeline = build_follower_timeline()
     print(f"[*] 成功计算 {len(timeline)} 天的粉丝成长轨迹。")
 
+    snapshot_dt, snapshot_day = detect_snapshot()
+    snapshot_iso = snapshot_dt.isoformat()
+    print(f"[*] 采集快照取自数据最新日期: {snapshot_iso}")
+
     if not POSTS_JSONL.exists():
         print(f"[-] Posts JSONL not found: {POSTS_JSONL}", file=sys.stderr)
         return
@@ -115,7 +149,7 @@ def main():
             # 兜底匹配最接近日期
             if post_dt < datetime(2026, 6, 15):
                 followers_at_post = 150
-            elif post_dt > datetime(2026, 10, 12):
+            elif post_dt > snapshot_dt.replace(hour=0, minute=0, second=0):
                 followers_at_post = 10000
             else:
                 followers_at_post = 2000
@@ -124,7 +158,7 @@ def main():
         stage_counts[stage] += 1
 
         # 计算发布后观察时间窗口（天数）
-        age_days = max((SNAPSHOT_DATETIME.date() - post_dt.date()).days, 1)
+        age_days = max((snapshot_dt.date() - post_dt.date()).days, 1)
 
         imp = int(p.get("impressions", 0) or 0)
         likes = int(p.get("likes", 0) or 0)
@@ -143,7 +177,7 @@ def main():
         follow_rate_per_10k = round(new_f / max(imp, 1) * 10000, 2)
 
         # 注入增强字段
-        p["snapshot_at"] = SNAPSHOT_ISO
+        p["snapshot_at"] = snapshot_iso
         p["post_age_days"] = age_days
         p["followers_at_post"] = followers_at_post
         p["follower_stage"] = stage
@@ -162,7 +196,7 @@ def main():
 
     print("\n" + "=" * 60)
     print("✅ 粉丝分段与观察窗口增强完成！")
-    print(f"1. 采集快照时间: {SNAPSHOT_ISO}")
+    print(f"1. 采集快照时间: {snapshot_iso}")
     print("2. 推文成长阶段分布:")
     for s, c in stage_counts.items():
         print(f"   ├─ {s}: {c} 篇 ({c/len(enhanced_posts)*100:.1f}%)")

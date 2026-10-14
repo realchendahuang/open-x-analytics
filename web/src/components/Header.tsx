@@ -18,7 +18,7 @@ function GithubIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
   )
 }
 
-export const Header: React.FC<HeaderProps> = ({ totalPosts = 2602, netFollows = 9851 }) => {
+export const Header: React.FC<HeaderProps> = ({ totalPosts = 0, netFollows = 0 }) => {
   return (
     <header className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
