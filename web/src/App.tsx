@@ -88,7 +88,7 @@ export function App() {
               chendahuang.com
             </a>
             <span>•</span>
-            <span>Cloudflare Edge Hosted</span>
+            <span>GitHub Pages Hosted</span>
           </div>
         </div>
       </footer>

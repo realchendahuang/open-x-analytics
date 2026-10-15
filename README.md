@@ -160,8 +160,7 @@ python3 examples/stage_and_pitfall_analysis.py
 ## 📊 交互式看板 (Interactive Dashboard)
 
 ### 🌐 在线访问
-> **在线看板地址**：[https://realchendahuang.github.io/open-x-analytics/](https://realchendahuang.github.io/open-x-analytics/)  
-> *(自定义域名镜像：`https://analytics.chendahuang.com/`)*
+> **在线看板地址**：[https://realchendahuang.github.io/open-x-analytics/](https://realchendahuang.github.io/open-x-analytics/)
 
 本项目提供了全新的工业级模块化 React 看板（位于 `web/` 目录），基于 **React 19 + TypeScript + Vite + Tailwind CSS + ECharts + Lucide** 构建：
 - **全景数据穿透**：支持按破冰期/增长期/飞轮期切片查看散点图分布，支持一键筛选「高藏赞比资产帖」、「硬核踩坑帖」与「高转化破圈帖」；
