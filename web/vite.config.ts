@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: './',
+  base: process.env.VITE_BASE || './',
   plugins: [tailwindcss(), react()],
   build: {
     rollupOptions: {

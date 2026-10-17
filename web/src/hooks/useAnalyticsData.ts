@@ -12,8 +12,16 @@ export function useAnalyticsData() {
     async function loadData() {
       try {
         setLoading(true)
-        const baseUrl = import.meta.env.BASE_URL || './'
-        const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`
+        let cleanBase = import.meta.env.BASE_URL || './'
+        if (typeof window !== 'undefined') {
+          const pathname = window.location.pathname
+          if (pathname.startsWith('/x')) {
+            cleanBase = '/x/'
+          }
+        }
+        if (!cleanBase.endsWith('/')) {
+          cleanBase = `${cleanBase}/`
+        }
 
         const [postsRes, ovRes, sumRes] = await Promise.all([
           fetch(`${cleanBase}data/posts.json`),
