@@ -1,237 +1,163 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react'
-import * as echarts from 'echarts'
-import type { Post } from '../types/analytics'
-import { Layers, ExternalLink } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Layers } from 'lucide-react'
+import type { EChartsCoreOption } from 'echarts/core'
+import type { Post, StageKey } from '../types/analytics'
+import { useECharts } from '../hooks/useECharts'
+import { escapeHtml, formatInt, snippet } from '../lib/format'
+import { PITFALL_COLOR, STAGES, STAGE_ORDER } from '../lib/post'
+import { openPost } from '../lib/postHash'
+import { Section } from './Section'
 
-interface ScatterMatrixProps {
-  posts: Post[]
-  onSelectPost?: (post: Post) => void
+type StageFilter = StageKey | 'all'
+
+// 散点数据的列顺序：[曝光, 藏赞比, 增粉, 推文 id]
+type Point = [number, number, number, string]
+
+const AXIS_TEXT = { color: '#94a3b8', fontSize: 11 }
+const AXIS_NAME = { color: '#94a3b8', fontSize: 12 }
+
+function colorOf(post: Post): string {
+  return post.is_pitfall ? PITFALL_COLOR : STAGES[post.stage].color
 }
 
-export const ScatterMatrix: React.FC<ScatterMatrixProps> = ({ posts, onSelectPost }) => {
-  const chartRef = useRef<HTMLDivElement>(null)
-  const chartInstance = useRef<echarts.ECharts | null>(null)
-
-  const [stageFilter, setStageFilter] = useState<'all' | 'icebreaker' | 'growth' | 'flywheel'>('all')
+export default function ScatterMatrix({ posts }: { posts: Post[] }) {
+  const [stage, setStage] = useState<StageFilter>('all')
   const [pitfallOnly, setPitfallOnly] = useState(false)
-  const [activePost, setActivePost] = useState<Post | null>(null)
 
-  // Filter main posts (excluding pure replies for clarity)
-  const filteredPosts = useMemo(() => {
-    return posts.filter(p => {
-      if (p.is_reply) return false
-      if (stageFilter === 'icebreaker' && !p.stage.includes('破冰')) return false
-      if (stageFilter === 'growth' && !p.stage.includes('增长')) return false
-      if (stageFilter === 'flywheel' && !p.stage.includes('飞轮')) return false
-      if (pitfallOnly && !p.is_pitfall) return false
-      return true
-    })
-  }, [posts, stageFilter, pitfallOnly])
+  const filtered = useMemo(
+    () => posts.filter(p => (stage === 'all' || p.stage === stage) && (!pitfallOnly || p.is_pitfall)),
+    [posts, stage, pitfallOnly],
+  )
+  // 对数轴无法表示 0，曝光为 0 的帖子不画，但在图例里说明数量
+  const visible = useMemo(() => filtered.filter(p => p.impressions > 0), [filtered])
+  const hidden = filtered.length - visible.length
 
-  useEffect(() => {
-    if (!chartRef.current) return
+  const option = useMemo<EChartsCoreOption>(() => {
+    const byId = new Map(visible.map(p => [p.id, p]))
+    const data = visible.map(p => ({
+      value: [p.impressions, p.bm_like_ratio, p.new_follows, p.id] satisfies Point,
+      itemStyle: { color: colorOf(p) },
+    }))
 
-    if (!chartInstance.current) {
-      chartInstance.current = echarts.init(chartRef.current)
-      
-      chartInstance.current.on('click', (params: any) => {
-        if (params.data && params.data[5]) {
-          const post = params.data[5] as Post
-          setActivePost(post)
-          if (onSelectPost) onSelectPost(post)
-        }
-      })
-    }
-
-    const dataPoints = filteredPosts.map(p => [
-      p.impressions,
-      p.bm_like_ratio,
-      p.new_follows,
-      p.text.slice(0, 70),
-      p.stage,
-      p, // raw post object
-    ])
-
-    const option: any = {
+    return {
       backgroundColor: 'transparent',
+      animation: false,
       tooltip: {
+        confine: true,
         backgroundColor: '#0f172a',
         borderColor: '#334155',
-        borderWidth: 1,
-        padding: 12,
         textStyle: { color: '#f8fafc', fontSize: 12 },
-        formatter: (params: any) => {
-          const d = params.data
-          const post = d[5] as Post
+        formatter: (params: { value: Point }) => {
+          const post = byId.get(params.value[3])
+          if (!post) return ''
+          const meta = STAGES[post.stage]
           return `
-            <div style="font-weight:600; font-size:12px; color:#38bdf8; margin-bottom:4px;">
-              ${post.stage} · ${post.date}
-            </div>
-            <div style="max-width:280px; font-size:12px; color:#cbd5e1; margin-bottom:8px; line-height:1.4;">
-              ${post.text.slice(0, 90)}${post.text.length > 90 ? '...' : ''}
-            </div>
-            <div style="display:flex; justify-content:space-between; gap:12px; font-size:11px; color:#94a3b8; border-top:1px solid #1e293b; padding-top:6px;">
-              <span>曝光: <b style="color:#f8fafc;">${post.impressions.toLocaleString()}</b></span>
-              <span>藏赞比: <b style="color:#a855f7;">${post.bm_like_ratio}</b></span>
-              <span>直接增粉: <b style="color:#10b981;">+${post.new_follows}</b></span>
-            </div>
-          `
+            <div style="max-width:280px;white-space:normal">
+              <div style="color:#38bdf8;font-weight:600;margin-bottom:4px">${meta.emoji} ${meta.label} · ${escapeHtml(post.date)}</div>
+              <div style="color:#cbd5e1;line-height:1.5;margin-bottom:8px">${escapeHtml(snippet(post.text, 90))}</div>
+              <div style="color:#94a3b8;border-top:1px solid #1e293b;padding-top:6px">
+                曝光 <b style="color:#f8fafc">${formatInt(post.impressions)}</b> ·
+                藏赞比 <b style="color:#c084fc">${post.bm_like_ratio.toFixed(2)}</b> ·
+                增粉 <b style="color:#34d399">+${post.new_follows}</b>
+              </div>
+              <div style="color:#64748b;font-size:11px;margin-top:4px">点击查看全文</div>
+            </div>`
         },
       },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '10%',
-        top: '6%',
-        containLabel: true,
-      },
+      grid: { left: 12, right: 24, top: 16, bottom: 8, containLabel: true },
       xAxis: {
         type: 'log',
-        name: '曝光量 (对数轴)',
+        name: '累计曝光（对数轴）',
         nameLocation: 'middle',
-        nameGap: 28,
-        nameTextStyle: { color: '#64748b', fontSize: 11 },
+        nameGap: 32,
+        nameTextStyle: AXIS_NAME,
         axisLine: { lineStyle: { color: '#334155' } },
         splitLine: { lineStyle: { color: '#1e293b' } },
-        axisLabel: { color: '#94a3b8', fontSize: 10 },
+        axisLabel: { ...AXIS_TEXT, formatter: (v: number) => (v >= 10000 ? `${v / 10000} 万` : String(v)) },
       },
       yAxis: {
         type: 'value',
-        name: '藏赞比 (Bookmarks / Likes)',
-        nameTextStyle: { color: '#64748b', fontSize: 11 },
+        name: '藏赞比',
+        nameLocation: 'end',
+        nameTextStyle: { ...AXIS_NAME, align: 'left' },
         axisLine: { lineStyle: { color: '#334155' } },
         splitLine: { lineStyle: { color: '#1e293b' } },
-        axisLabel: { color: '#94a3b8', fontSize: 10 },
+        axisLabel: AXIS_TEXT,
       },
       series: [
         {
           type: 'scatter',
-          symbolSize: (val: any) => {
-            const nf = val[2]
-            return Math.max(Math.min(nf * 0.7 + 6, 32), 6)
-          },
-          data: dataPoints,
-          itemStyle: {
-            color: (param: any) => {
-              const post = param.data[5] as Post
-              if (post.is_pitfall) return '#f43f5e' // Rose for pitfalls
-              if (post.stage.includes('破冰')) return '#2dd4bf' // Teal
-              if (post.stage.includes('增长')) return '#60a5fa' // Blue
-              return '#a78bfa' // Purple
-            },
-            opacity: 0.8,
-            borderColor: '#ffffff22',
-            borderWidth: 1,
-          },
+          data,
+          symbolSize: (value: Point) => Math.min(6 + Math.sqrt(value[2]) * 2.2, 34),
+          itemStyle: { opacity: 0.78, borderColor: 'rgba(255,255,255,0.25)', borderWidth: 1 },
+          emphasis: { focus: 'self', itemStyle: { opacity: 1, borderColor: '#fff' } },
         },
       ],
     }
+  }, [visible])
 
-    chartInstance.current.setOption(option)
-
-    const handleResize = () => {
-      chartInstance.current?.resize()
-    }
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [filteredPosts, onSelectPost])
+  const containerRef = useECharts(option, params => {
+    const value = (params.data as { value?: Point } | undefined)?.value
+    if (value) openPost(value[3])
+  })
 
   return (
-    <div className="rounded-2xl bg-slate-900/70 border border-slate-800 p-5 shadow-xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Layers className="h-4 w-4 text-indigo-400" />
-              推文资产分布矩阵 (藏赞比 vs 曝光量)
-            </h2>
-          </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            气泡大小 = 单推带粉数 ｜ 右上角为破圈案头帖，左上方为高净值避坑手册 (点击气泡查看原文)
-          </p>
-        </div>
-
-        {/* 筛选控制器 */}
+    <Section
+      title="推文资产分布：藏赞比 × 曝光"
+      icon={<Layers className="h-4 w-4 text-indigo-400" aria-hidden="true" />}
+      description="每个点是一篇原创主帖，点越大单帖增粉越多。越靠上越像「收藏备查」型内容，越靠右传播越广。点击任意一点查看全文。"
+      actions={
         <div className="flex items-center gap-2 flex-wrap text-xs">
-          <div className="inline-flex rounded-lg bg-slate-800/80 p-0.5 border border-slate-700">
+          <div role="group" aria-label="成长阶段" className="inline-flex rounded-lg bg-slate-800/80 p-0.5 border border-slate-700">
             <button
-              onClick={() => setStageFilter('all')}
-              className={`px-2.5 py-1 rounded-md transition ${
-                stageFilter === 'all' ? 'bg-indigo-600 text-white font-semibold' : 'text-slate-400 hover:text-white'
-              }`}
+              aria-pressed={stage === 'all'}
+              onClick={() => setStage('all')}
+              className={`px-2.5 py-1 rounded-md transition ${stage === 'all' ? 'bg-indigo-600 text-white font-semibold' : 'text-slate-400 hover:text-white'}`}
             >
-              全部阶段
+              全部
             </button>
-            <button
-              onClick={() => setStageFilter('icebreaker')}
-              className={`px-2.5 py-1 rounded-md transition ${
-                stageFilter === 'icebreaker' ? 'bg-teal-600 text-white font-semibold' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              🌱 破冰期
-            </button>
-            <button
-              onClick={() => setStageFilter('growth')}
-              className={`px-2.5 py-1 rounded-md transition ${
-                stageFilter === 'growth' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              🚀 增长期
-            </button>
-            <button
-              onClick={() => setStageFilter('flywheel')}
-              className={`px-2.5 py-1 rounded-md transition ${
-                stageFilter === 'flywheel' ? 'bg-purple-600 text-white font-semibold' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              ⚡ 飞轮期
-            </button>
+            {STAGE_ORDER.map(key => (
+              <button
+                key={key}
+                aria-pressed={stage === key}
+                onClick={() => setStage(key)}
+                className={`px-2.5 py-1 rounded-md transition ${stage === key ? `${STAGES[key].active} font-semibold` : 'text-slate-400 hover:text-white'}`}
+              >
+                {STAGES[key].emoji} {STAGES[key].label}
+              </button>
+            ))}
           </div>
-
           <button
-            onClick={() => setPitfallOnly(!pitfallOnly)}
-            className={`px-2.5 py-1.5 rounded-lg border text-xs font-medium transition flex items-center gap-1.5 ${
+            aria-pressed={pitfallOnly}
+            onClick={() => setPitfallOnly(v => !v)}
+            className={`px-2.5 py-1.5 rounded-lg border font-medium transition ${
               pitfallOnly
                 ? 'bg-rose-500/20 text-rose-300 border-rose-500/50'
                 : 'bg-slate-800/60 text-slate-400 border-slate-700 hover:text-white'
             }`}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />
-            仅看技术踩坑帖
+            仅看踩坑复盘
           </button>
         </div>
-      </div>
-
-      <div ref={chartRef} className="w-full h-84" />
-
-      {activePost && (
-        <div className="mt-3 p-3.5 rounded-xl bg-slate-800/50 border border-slate-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-          <div className="space-y-1 max-w-3xl">
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-medium">
-                {activePost.stage}
-              </span>
-              <span className="text-slate-400">{activePost.date}</span>
-              <span className="text-emerald-400 font-semibold">+{activePost.new_follows} 关注</span>
-              <span className="text-purple-400 font-semibold">{activePost.bm_like_ratio} 藏赞比</span>
-              <span className="text-slate-300">{activePost.impressions.toLocaleString()} 曝光</span>
-            </div>
-            <p className="text-slate-200 line-clamp-2">{activePost.text}</p>
-          </div>
-          <a
-            href={activePost.link}
-            target="_blank"
-            rel="noreferrer"
-            className="shrink-0 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium inline-flex items-center gap-1.5 transition"
-          >
-            直达 X 原推
-            <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-        </div>
-      )}
-    </div>
+      }
+    >
+      <ul className="flex items-center gap-x-4 gap-y-1 flex-wrap mb-2 text-[11px] text-slate-400" aria-label="图例">
+        {STAGE_ORDER.map(key => (
+          <li key={key} className="inline-flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full" style={{ background: STAGES[key].color }} aria-hidden="true" />
+            {STAGES[key].label}
+          </li>
+        ))}
+        <li className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: PITFALL_COLOR }} aria-hidden="true" />
+          踩坑复盘（覆盖阶段色）
+        </li>
+        <li className="ml-auto tabular-nums" title="X 后台没有导出这些帖子的曝光数据（多为回填的历史内容），对数轴无法表示 0">
+          {formatInt(visible.length)} 个点
+          {hidden > 0 && ` · 另有 ${formatInt(hidden)} 篇无曝光数据未显示`}
+        </li>
+      </ul>
+      <div ref={containerRef} className="w-full h-80 sm:h-96" role="img" aria-label="藏赞比与曝光量的散点图" />
+    </Section>
   )
 }

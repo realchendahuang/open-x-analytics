@@ -1,91 +1,107 @@
-import React from 'react'
+import type { LucideIcon } from 'lucide-react'
+import { Bookmark, Eye, Flame, Terminal, TrendingUp, UserPlus } from 'lucide-react'
 import type { Summary } from '../types/analytics'
-import { Eye, UserPlus, Bookmark, TrendingUp, Flame, Terminal } from 'lucide-react'
+import { formatCompact, formatInt } from '../lib/format'
+import { Skeleton } from './Section'
 
-interface KPICardsProps {
-  summary: Summary | null
+interface Card {
+  label: string
+  value: string
+  subtext: string
+  icon: LucideIcon
+  border: string
+  iconColor: string
+  glow: string
 }
 
-export const KPICards: React.FC<KPICardsProps> = ({ summary }) => {
-  if (!summary) return null
-
-  const cards = [
+function buildCards(s: Summary): Card[] {
+  return [
     {
-      label: '总曝光曝光量 (Impressions)',
-      value: (summary.total_impressions / 10000).toFixed(1) + ' 万',
-      subtext: `大盘逐日汇总 ${(summary.overview_impressions / 10000).toFixed(1)} 万`,
+      label: '总曝光',
+      value: formatCompact(s.overview_impressions),
+      subtext: `推文明细累计 ${formatCompact(s.total_impressions)}`,
       icon: Eye,
-      accent: 'from-blue-500/20 to-blue-600/5',
       border: 'border-blue-500/30',
       iconColor: 'text-blue-400',
+      glow: 'bg-blue-500/20',
     },
     {
-      label: '全期净增粉丝 (Net Follows)',
-      value: '+' + summary.overview_net_follows.toLocaleString(),
-      subtext: `新增 ${summary.overview_new_follows} ｜ 留存率 ${summary.retention_rate}%`,
+      label: '净增粉丝',
+      value: `+${formatInt(s.overview_net_follows)}`,
+      subtext: `新增 ${formatInt(s.overview_new_follows)} · 留存 ${s.retention_rate}%`,
       icon: UserPlus,
-      accent: 'from-emerald-500/20 to-emerald-600/5',
       border: 'border-emerald-500/30',
       iconColor: 'text-emerald-400',
+      glow: 'bg-emerald-500/20',
     },
     {
-      label: '全盘藏赞比 (Bookmarks / Likes)',
-      value: summary.overall_bm_like_ratio.toString(),
-      subtext: '远超泛娱乐推文 0.1 ~ 0.2',
+      label: '藏赞比',
+      value: s.overall_bm_like_ratio.toFixed(3),
+      subtext: '收藏 ÷ 点赞，泛娱乐内容通常 0.1~0.2',
       icon: Bookmark,
-      accent: 'from-purple-500/20 to-purple-600/5',
       border: 'border-purple-500/30',
       iconColor: 'text-purple-400',
+      glow: 'bg-purple-500/20',
     },
     {
-      label: '总收藏数 (Bookmarks)',
-      value: summary.total_bookmarks.toLocaleString(),
-      subtext: '案头备查手册型技术资产',
+      label: '总收藏',
+      value: formatInt(s.total_bookmarks),
+      subtext: `点赞 ${formatInt(s.total_likes)}`,
       icon: TrendingUp,
-      accent: 'from-amber-500/20 to-amber-600/5',
       border: 'border-amber-500/30',
       iconColor: 'text-amber-400',
+      glow: 'bg-amber-500/20',
     },
     {
-      label: '单篇推文直接增粉最高',
-      value: `+${summary.max_single_follow} 人`,
-      subtext: '精准价值交付引发读者关注',
+      label: '单帖最高增粉',
+      value: `+${s.max_single_follow}`,
+      subtext: '单条推文直接带来的新关注',
       icon: Flame,
-      accent: 'from-rose-500/20 to-rose-600/5',
       border: 'border-rose-500/30',
       iconColor: 'text-rose-400',
+      glow: 'bg-rose-500/20',
     },
     {
-      label: '硬核踩坑与 Bug 复盘推文',
-      value: `${summary.pitfall_count} 篇`,
-      subtext: '架构实战避坑与深度沉淀',
+      label: '踩坑复盘帖',
+      value: `${s.pitfall_count} 篇`,
+      subtext: `共 ${formatInt(s.main_posts)} 篇主帖 + ${formatInt(s.reply_posts)} 篇回复`,
       icon: Terminal,
-      accent: 'from-cyan-500/20 to-cyan-600/5',
       border: 'border-cyan-500/30',
       iconColor: 'text-cyan-400',
+      glow: 'bg-cyan-500/20',
     },
   ]
+}
+
+const GRID = 'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3'
+
+export function KPICards({ summary }: { summary: Summary | null }) {
+  if (!summary) {
+    return (
+      <div className={GRID}>
+        {Array.from({ length: 6 }, (_, i) => (
+          <Skeleton key={i} className="h-[104px]" />
+        ))}
+      </div>
+    )
+  }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-      {cards.map((c, idx) => {
-        const Icon = c.icon
+    <div className={GRID}>
+      {buildCards(summary).map(card => {
+        const Icon = card.icon
         return (
           <div
-            key={idx}
-            className={`relative overflow-hidden rounded-xl bg-slate-900/70 border ${c.border} p-4 flex flex-col justify-between shadow-lg shadow-black/20 hover:scale-[1.02] transition-transform duration-200`}
+            key={card.label}
+            className={`relative overflow-hidden rounded-xl bg-slate-900/70 border ${card.border} p-4 shadow-lg shadow-black/20`}
           >
-            <div className={`absolute -right-4 -top-4 w-16 h-16 rounded-full bg-gradient-to-br ${c.accent} blur-xl`} />
-            
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-medium text-slate-400 tracking-wide line-clamp-1">{c.label}</span>
-              <Icon className={`h-4 w-4 shrink-0 ${c.iconColor}`} />
+            <div className={`absolute -right-4 -top-4 w-16 h-16 rounded-full ${card.glow} blur-xl`} aria-hidden="true" />
+            <div className="relative flex items-center justify-between gap-2 mb-2">
+              <span className="text-xs font-medium text-slate-400">{card.label}</span>
+              <Icon className={`h-4 w-4 shrink-0 ${card.iconColor}`} aria-hidden="true" />
             </div>
-
-            <div>
-              <div className="text-xl sm:text-2xl font-black text-white tracking-tight">{c.value}</div>
-              <div className="text-[11px] text-slate-400 mt-1 line-clamp-1">{c.subtext}</div>
-            </div>
+            <div className="relative text-2xl font-black text-white tracking-tight tabular-nums">{card.value}</div>
+            <div className="relative text-[11px] text-slate-400 mt-1 leading-snug">{card.subtext}</div>
           </div>
         )
       })}

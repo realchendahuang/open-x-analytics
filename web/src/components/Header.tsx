@@ -1,14 +1,10 @@
-import React from 'react'
 import { Activity, ArrowUpRight } from 'lucide-react'
-
-interface HeaderProps {
-  totalPosts?: number
-  netFollows?: number
-}
+import type { Summary } from '../types/analytics'
+import { formatInt } from '../lib/format'
 
 function GithubIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -18,67 +14,49 @@ function GithubIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
   )
 }
 
-export const Header: React.FC<HeaderProps> = ({ totalPosts = 0, netFollows = 0 }) => {
+export function Header({ summary }: { summary: Summary | null }) {
   return (
-    <header className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 ring-1 ring-white/20">
-              <Activity className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                  Open X Analytics
-                  <span className="text-xs font-mono font-medium px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    v1.0
-                  </span>
-                </h1>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-400 mt-0.5 flex items-center gap-2 flex-wrap">
-                <span>独立开发者 0 ➔ 10K 粉丝真实全量数据分析</span>
-                <span className="hidden sm:inline text-slate-600">•</span>
-                <a
-                  href="https://x.com/realchendahuang"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-cyan-400 hover:text-cyan-300 font-medium inline-flex items-center gap-0.5 transition"
-                >
-                  @realchendahuang
-                  <ArrowUpRight className="h-3 w-3" />
-                </a>
-                <span className="hidden sm:inline text-slate-600">•</span>
-                <a
-                  href="https://chendahuang.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-slate-400 hover:text-slate-200 inline-flex items-center gap-0.5 transition"
-                >
-                  chendahuang.com
-                </a>
-              </p>
-            </div>
+    <header className="border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-xl sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-10 w-10 shrink-0 rounded-xl bg-linear-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 ring-1 ring-white/20">
+            <Activity className="h-5 w-5 text-white" />
           </div>
-
-          <div className="flex items-center gap-3 self-end md:self-auto">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs text-slate-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>{totalPosts.toLocaleString()} 篇推文</span>
-              <span className="text-slate-500">|</span>
-              <span className="text-emerald-400 font-semibold">+{netFollows.toLocaleString()} 净增粉</span>
-            </div>
-
-            <a
-              href="https://github.com/realchendahuang/open-x-analytics"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 hover:border-slate-600 transition shadow-sm"
-            >
-              <GithubIcon className="h-3.5 w-3.5" />
-              <span>GitHub 仓库</span>
-            </a>
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-black tracking-tight text-white truncate">Open X Analytics</h1>
+            <p className="text-xs text-slate-400 flex items-center gap-x-2 flex-wrap">
+              <span>独立开发者 0 → 10K 粉丝的全量数据</span>
+              <a
+                href="https://x.com/realchendahuang"
+                target="_blank"
+                rel="noreferrer"
+                className="text-cyan-400 hover:text-cyan-300 font-medium inline-flex items-center gap-0.5 transition"
+              >
+                @realchendahuang
+                <ArrowUpRight className="h-3 w-3" />
+              </a>
+            </p>
           </div>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0">
+          {summary && (
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs text-slate-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+              <span>{formatInt(summary.total_posts)} 篇推文</span>
+              <span className="text-slate-600">|</span>
+              <span>数据截至 {summary.data_through}</span>
+            </div>
+          )}
+          <a
+            href="https://github.com/realchendahuang/open-x-analytics"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 hover:border-slate-600 transition"
+          >
+            <GithubIcon />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
         </div>
       </div>
     </header>
