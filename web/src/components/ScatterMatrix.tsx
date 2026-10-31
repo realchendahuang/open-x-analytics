@@ -58,7 +58,7 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
               <div style="color:#94a3b8;border-top:1px solid #1e293b;padding-top:6px">
                 曝光 <b style="color:#f8fafc">${formatInt(post.impressions)}</b> ·
                 藏赞比 <b style="color:#c084fc">${post.bm_like_ratio.toFixed(2)}</b> ·
-                增粉 <b style="color:#34d399">+${post.new_follows}</b>
+                新增关注 <b style="color:#34d399">+${post.new_follows}</b>
               </div>
               <div style="color:#64748b;font-size:11px;margin-top:4px">点击查看全文</div>
             </div>`
@@ -67,7 +67,7 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
       grid: { left: 12, right: 24, top: 16, bottom: 8, containLabel: true },
       xAxis: {
         type: 'log',
-        name: '累计曝光（对数轴）',
+        name: '累计曝光（对数坐标）',
         nameLocation: 'middle',
         nameGap: 32,
         nameTextStyle: AXIS_NAME,
@@ -103,9 +103,9 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
 
   return (
     <Section
-      title="推文资产分布：藏赞比 × 曝光"
+      title="哪些推文被收藏，哪些被传播"
       icon={<Layers className="h-4 w-4 text-indigo-400" aria-hidden="true" />}
-      description="每个点是一篇原创主帖，点越大单帖增粉越多。越靠上越像「收藏备查」型内容，越靠右传播越广。点击任意一点查看全文。"
+      description="一个点是一篇原创主帖，点越大，带来的新关注越多。越靠上，收藏相对点赞越多，更像拿来备查的内容；越靠右，曝光越高。点击圆点可以看全文。"
       actions={
         <div className="flex items-center gap-2 flex-wrap text-xs">
           <div role="group" aria-label="成长阶段" className="inline-flex rounded-lg bg-slate-800/80 p-0.5 border border-slate-700">
@@ -136,7 +136,7 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
                 : 'bg-slate-800/60 text-slate-400 border-slate-700 hover:text-white'
             }`}
           >
-            仅看踩坑复盘
+            只看踩坑复盘
           </button>
         </div>
       }
@@ -150,11 +150,11 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
         ))}
         <li className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full" style={{ background: PITFALL_COLOR }} aria-hidden="true" />
-          踩坑复盘（覆盖阶段色）
+          踩坑复盘（优先于阶段色）
         </li>
-        <li className="ml-auto tabular-nums" title="X 后台没有导出这些帖子的曝光数据（多为回填的历史内容），对数轴无法表示 0">
+        <li className="ml-auto tabular-nums" title="这些帖子在 X 后台导出的数据里没有曝光量（多为补录的历史内容），对数坐标轴画不出 0">
           {formatInt(visible.length)} 个点
-          {hidden > 0 && ` · 另有 ${formatInt(hidden)} 篇无曝光数据未显示`}
+          {hidden > 0 && `，另有 ${formatInt(hidden)} 篇没有曝光数据，未显示`}
         </li>
       </ul>
       <div ref={containerRef} className="w-full h-80 sm:h-96" role="img" aria-label="藏赞比与曝光量的散点图" />

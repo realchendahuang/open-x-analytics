@@ -21,6 +21,7 @@ import csv
 import json
 from datetime import datetime
 from pathlib import Path
+from statistics import median
 
 ROOT = Path(__file__).resolve().parent.parent
 POSTS_PATH = ROOT / "data" / "jsonl" / "posts.jsonl"
@@ -152,15 +153,22 @@ def load_overview() -> list[dict]:
 
 
 def stage_stats(main_posts: list[dict]) -> list[dict]:
-    """按成长阶段聚合主帖。藏赞比用合计口径（总收藏 / 总点赞），避免被零赞帖拉偏。"""
+    """按成长阶段聚合主帖。
+
+    口径:
+      - 只统计「有曝光数据」的主帖。曝光为 0 的帖子是补录的历史内容，X 后台没有导出其指标，
+        计入会把各阶段均值整体压低。
+      - 藏赞比用合计口径（总收藏 / 总点赞），避免被零赞帖拉偏。
+      - 同时给出中位数：穿透倍率分布极度右偏，平均数会被少数爆款拉高。
+    """
     stats = []
     for _, key in STAGE_KEYS:
-        group = [p for p in main_posts if p["stage"] == key]
+        group = [p for p in main_posts if p["stage"] == key and p["impressions"] > 0]
         n = len(group)
         if n == 0:
             stats.append({
                 "key": key, "count": 0, "avg_impressions": 0, "avg_likes": 0,
-                "bm_like_ratio": 0, "avg_viral_ratio": 0, "max_viral_ratio": 0,
+                "bm_like_ratio": 0, "avg_viral_ratio": 0, "median_viral_ratio": 0, "max_viral_ratio": 0,
                 "max_viral_post_id": "", "max_viral_snippet": "",
             })
             continue
@@ -173,6 +181,7 @@ def stage_stats(main_posts: list[dict]) -> list[dict]:
             "avg_likes": round(likes / n, 1),
             "bm_like_ratio": round(sum(p["bookmarks"] for p in group) / max(likes, 1), 3),
             "avg_viral_ratio": round(sum(p["viral_ratio"] for p in group) / n, 1),
+            "median_viral_ratio": round(median(p["viral_ratio"] for p in group), 1),
             "max_viral_ratio": best["viral_ratio"],
             "max_viral_post_id": best["id"],
             "max_viral_snippet": " ".join(best["text"].split())[:40],

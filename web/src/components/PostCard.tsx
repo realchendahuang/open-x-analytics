@@ -48,8 +48,8 @@ export const PostCard = memo(function PostCard({ post }: { post: Post }) {
 
       <div className="pt-3 mt-3 border-t border-slate-700/50 flex items-center justify-between text-xs">
         <div className="flex items-center gap-3">
-          <span className="text-emerald-400 font-semibold tabular-nums" title="单帖直接增粉">
-            +{post.new_follows} 粉
+          <span className="text-emerald-400 font-semibold tabular-nums" title="这条推文直接带来的新关注">
+            +{post.new_follows} 关注
           </span>
           <span className="inline-flex items-center gap-1 text-purple-300 font-semibold tabular-nums" title="藏赞比">
             <Bookmark className="h-3 w-3 text-purple-400" aria-hidden="true" />

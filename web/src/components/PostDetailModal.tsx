@@ -46,15 +46,15 @@ interface Metric {
 function buildMetrics(post: Post): Metric[] {
   return [
     { label: '累计曝光', value: formatInt(post.impressions), icon: Eye, iconColor: 'text-blue-400', valueColor: 'text-white' },
-    { label: '直接增粉', value: `+${post.new_follows}`, icon: UserPlus, iconColor: 'text-emerald-400', valueColor: 'text-emerald-400' },
+    { label: '新增关注', value: `+${post.new_follows}`, icon: UserPlus, iconColor: 'text-emerald-400', valueColor: 'text-emerald-400' },
     { label: '收藏', value: formatInt(post.bookmarks), icon: Bookmark, iconColor: 'text-purple-400', valueColor: 'text-purple-300' },
     { label: '点赞', value: formatInt(post.likes), icon: Heart, iconColor: 'text-rose-400' },
     { label: '藏赞比', value: post.bm_like_ratio.toFixed(2), icon: TrendingUp, iconColor: 'text-indigo-400', valueColor: 'text-indigo-300' },
-    { label: '外链点击', value: formatInt(post.url_clicks), icon: MousePointerClick, iconColor: 'text-amber-400', valueColor: 'text-amber-300' },
+    { label: '链接点击', value: formatInt(post.url_clicks), icon: MousePointerClick, iconColor: 'text-amber-400', valueColor: 'text-amber-300' },
     { label: '回复', value: formatInt(post.replies), icon: MessageCircle, iconColor: 'text-sky-400' },
     { label: '转推', value: formatInt(post.reposts), icon: Share2, iconColor: 'text-teal-400' },
     { label: '日均曝光', value: formatInt(Math.round(post.daily_impressions)), icon: Activity, iconColor: 'text-blue-400' },
-    { label: '日均增粉', value: post.daily_new_follows.toFixed(1), icon: UserPlus, iconColor: 'text-emerald-400' },
+    { label: '日均新增关注', value: post.daily_new_follows.toFixed(1), icon: UserPlus, iconColor: 'text-emerald-400' },
     { label: '穿透倍率', value: `${post.viral_ratio.toFixed(1)}x`, icon: Sparkles, iconColor: 'text-cyan-400', valueColor: 'text-cyan-300', wide: true },
   ]
 }
@@ -208,7 +208,7 @@ export function PostDetailModal({ post, loading, notFound, onClose, onPrev, onNe
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 sm:px-5 py-5 space-y-6">
           {loading && <p className="py-16 text-center text-sm text-slate-400">正在加载…</p>}
-          {notFound && <p className="py-16 text-center text-sm text-slate-400">没有找到这条推文，链接可能已失效。</p>}
+          {notFound && <p className="py-16 text-center text-sm text-slate-400">没有找到这条推文，链接可能有误。</p>}
 
           {post && (
             <>
@@ -217,7 +217,7 @@ export function PostDetailModal({ post, loading, notFound, onClose, onPrev, onNe
                   <span className="font-mono text-slate-500">ID {post.id}</span>
                   {post.followers_at_post > 0 && (
                     <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px]">
-                      发帖时粉丝约 {formatInt(post.followers_at_post)}
+                      发帖时约 {formatInt(post.followers_at_post)} 粉丝（估算）
                     </span>
                   )}
                 </div>
@@ -247,12 +247,12 @@ export function PostDetailModal({ post, loading, notFound, onClose, onPrev, onNe
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
                     <Activity className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
-                    官方运营指标
+                    X 后台数据
                   </h3>
                   {post.bm_like_ratio >= 1 && (
                     <span className="text-xs text-purple-300 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded font-medium inline-flex items-center gap-1">
                       <Sparkles className="h-3 w-3" aria-hidden="true" />
-                      收藏数不低于点赞数
+                      收藏不少于点赞
                     </span>
                   )}
                 </div>
@@ -289,7 +289,7 @@ export function PostDetailModal({ post, loading, notFound, onClose, onPrev, onNe
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             上一篇
           </button>
-          <span className="text-slate-500 text-[11px] hidden sm:inline">← / → 切换，Esc 关闭</span>
+          <span className="text-slate-500 text-[11px] hidden sm:inline">键盘 ← → 切换，Esc 关闭</span>
           <button
             onClick={onNext}
             disabled={!onNext}

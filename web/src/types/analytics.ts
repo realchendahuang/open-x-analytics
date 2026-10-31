@@ -52,6 +52,7 @@ export interface StageStat {
   avg_likes: number
   bm_like_ratio: number
   avg_viral_ratio: number
+  median_viral_ratio: number
   max_viral_ratio: number
   max_viral_post_id: string
   max_viral_snippet: string

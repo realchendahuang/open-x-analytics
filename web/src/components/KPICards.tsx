@@ -19,7 +19,7 @@ function buildCards(s: Summary): Card[] {
     {
       label: '总曝光',
       value: formatCompact(s.overview_impressions),
-      subtext: `推文明细累计 ${formatCompact(s.total_impressions)}`,
+      subtext: `逐日大盘 ${s.overview_days} 天合计`,
       icon: Eye,
       border: 'border-blue-500/30',
       iconColor: 'text-blue-400',
@@ -28,7 +28,7 @@ function buildCards(s: Summary): Card[] {
     {
       label: '净增粉丝',
       value: `+${formatInt(s.overview_net_follows)}`,
-      subtext: `新增 ${formatInt(s.overview_new_follows)} · 留存 ${s.retention_rate}%`,
+      subtext: `新增 ${formatInt(s.overview_new_follows)}，取关 ${formatInt(s.overview_unfollows)}，留存 ${s.retention_rate}%`,
       icon: UserPlus,
       border: 'border-emerald-500/30',
       iconColor: 'text-emerald-400',
@@ -36,8 +36,8 @@ function buildCards(s: Summary): Card[] {
     },
     {
       label: '藏赞比',
-      value: s.overall_bm_like_ratio.toFixed(3),
-      subtext: '收藏 ÷ 点赞，泛娱乐内容通常 0.1~0.2',
+      value: s.overall_bm_like_ratio.toFixed(2),
+      subtext: '收藏数 ÷ 点赞数，全部推文合计',
       icon: Bookmark,
       border: 'border-purple-500/30',
       iconColor: 'text-purple-400',
@@ -46,16 +46,16 @@ function buildCards(s: Summary): Card[] {
     {
       label: '总收藏',
       value: formatInt(s.total_bookmarks),
-      subtext: `点赞 ${formatInt(s.total_likes)}`,
+      subtext: `推文明细合计，点赞 ${formatInt(s.total_likes)}`,
       icon: TrendingUp,
       border: 'border-amber-500/30',
       iconColor: 'text-amber-400',
       glow: 'bg-amber-500/20',
     },
     {
-      label: '单帖最高增粉',
+      label: '单帖增粉纪录',
       value: `+${s.max_single_follow}`,
-      subtext: '单条推文直接带来的新关注',
+      subtext: '一条推文直接带来的新关注数',
       icon: Flame,
       border: 'border-rose-500/30',
       iconColor: 'text-rose-400',
@@ -64,7 +64,7 @@ function buildCards(s: Summary): Card[] {
     {
       label: '踩坑复盘帖',
       value: `${s.pitfall_count} 篇`,
-      subtext: `共 ${formatInt(s.main_posts)} 篇主帖 + ${formatInt(s.reply_posts)} 篇回复`,
+      subtext: `共收录 ${formatInt(s.main_posts)} 篇主帖和 ${formatInt(s.reply_posts)} 篇回复`,
       icon: Terminal,
       border: 'border-cyan-500/30',
       iconColor: 'text-cyan-400',

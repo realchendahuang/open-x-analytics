@@ -65,7 +65,7 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
       yAxis: [
         {
           type: 'value',
-          name: '净增粉丝 / 收藏（人 / 次）',
+          name: '净增粉丝（人）、收藏（次）',
           nameTextStyle: { ...AXIS_TEXT, align: 'left' },
           axisLine: { show: false },
           splitLine: { lineStyle: { color: '#1e293b' } },
@@ -115,12 +115,15 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
   const containerRef = useECharts(option)
   const first = overview[0]?.date
   const last = overview[overview.length - 1]?.date
+  // 区间内应有的天数减去实际有数据的天数，即 X 后台未导出的缺失天数
+  const spanDays = first && last ? Math.round((Date.parse(last) - Date.parse(first)) / 86_400_000) + 1 : 0
+  const missingDays = Math.max(spanDays - overview.length, 0)
 
   return (
     <Section
-      title="逐日大盘趋势"
+      title="每天的曝光、收藏和涨粉"
       icon={<TrendingUp className="h-4 w-4 text-emerald-400" aria-hidden="true" />}
-      description={`${first ?? ''} 至 ${last ?? ''}，共 ${overview.length} 天。拖动底部滑块可缩放区间。`}
+      description={`${first ?? ''} 到 ${last ?? ''}，${overview.length} 天有数据${missingDays > 0 ? `，另有 ${missingDays} 天 X 后台没有导出` : ''}。数据来自 X 后台的账号总览，拖动下方滑块可以放大某一段。`}
     >
       <div ref={containerRef} className="w-full h-80 sm:h-96" role="img" aria-label="逐日曝光、收藏与净增粉丝走势图" />
     </Section>

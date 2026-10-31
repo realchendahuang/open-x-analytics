@@ -56,6 +56,7 @@ def main():
     print(f"{'成长阶段':<18} | {'推文数':<6} | {'平均曝光':<10} | {'平均点赞':<8} | {'平均穿透倍率':<12} | {'平均藏赞比':<8}")
     print("-" * 74)
 
+    stage_viral = {}
     for stage_name, s_posts in sorted(stages.items()):
         total_p = len(s_posts)
         avg_imp = sum(p.get("impressions", 0) for p in s_posts) / total_p
@@ -65,8 +66,13 @@ def main():
         avg_bm_ratio = sum(p.get("bookmark_like_ratio", 0) for p in bm_posts) / len(bm_posts) if bm_posts else 0.0
 
         print(f"{stage_name:<16} | {total_p:<6} | {avg_imp:<10,.0f} | {avg_likes:<8.1f} | {avg_viral:<10.1f}x | {avg_bm_ratio:<8.3f}")
+        stage_viral[stage_name] = avg_viral
 
-    print("\n💡 洞察：破冰期的平均穿透倍率往往最高！0 到 1,000 粉阶段的每一篇出圈推文，都依靠极高密度的干货撬动了数倍于自身粉丝基数的冷启动流量。\n")
+    # 结论由数据决定，不预设。注意：这里的统计包含回复帖，回复的曝光极低，会把各阶段均值整体拉低。
+    if stage_viral:
+        top_stage = max(stage_viral, key=stage_viral.get)
+        print(f"\n💡 平均穿透倍率最高的阶段：{top_stage}（{stage_viral[top_stage]:.1f}x）。")
+        print("   提示：上表包含回复帖，回复的曝光很低，会拉低各阶段均值；只看原创主帖请在网页看板里查看。\n")
 
     # 2. 破冰期 (0~1K) 的高穿透经典长尾帖
     stage_1_posts = stages.get("🌱 破冰期 (0~1K)", [])

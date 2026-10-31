@@ -25,7 +25,7 @@ export function Header({ summary }: { summary: Summary | null }) {
           <div className="min-w-0">
             <h1 className="text-lg sm:text-xl font-black tracking-tight text-white truncate">Open X Analytics</h1>
             <p className="text-xs text-slate-400 flex items-center gap-x-2 flex-wrap">
-              <span>独立开发者 0 → 10K 粉丝的全量数据</span>
+              <span>一个独立开发者从 0 到 1 万粉丝的完整数据</span>
               <a
                 href="https://x.com/realchendahuang"
                 target="_blank"
@@ -45,7 +45,7 @@ export function Header({ summary }: { summary: Summary | null }) {
               <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
               <span>{formatInt(summary.total_posts)} 篇推文</span>
               <span className="text-slate-600">|</span>
-              <span>数据截至 {summary.data_through}</span>
+              <span>数据更新到 {summary.data_through}</span>
             </div>
           )}
           <a

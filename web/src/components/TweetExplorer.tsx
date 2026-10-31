@@ -62,11 +62,11 @@ export function TweetExplorer({ posts }: { posts: Post[] }) {
 
   return (
     <Section
-      title="推文检索"
+      title="查找推文"
       icon={<Search className="h-4 w-4 text-blue-400" aria-hidden="true" />}
       description={
         <>
-          共匹配 <strong className="text-blue-400 tabular-nums">{formatInt(results.length)}</strong> 篇。点击卡片查看全文与完整指标。
+          找到 <strong className="text-blue-400 tabular-nums">{formatInt(results.length)}</strong> 篇。点击卡片可以看全文和完整数据。
         </>
       }
       actions={
@@ -78,7 +78,7 @@ export function TweetExplorer({ posts }: { posts: Post[] }) {
               onChange={e => update({ includeReplies: e.target.checked })}
               className="rounded bg-slate-800 border-slate-700 accent-indigo-500"
             />
-            包含回复帖
+            同时显示回复
           </label>
           <label className="inline-flex items-center gap-1.5 text-slate-400">
             <ArrowUpDown className="h-3.5 w-3.5" aria-hidden="true" />
@@ -90,7 +90,7 @@ export function TweetExplorer({ posts }: { posts: Post[] }) {
             >
               {SORTS.map(s => (
                 <option key={s.key} value={s.key}>
-                  按{s.label}
+                  按{s.label}排序
                 </option>
               ))}
             </select>
@@ -105,7 +105,7 @@ export function TweetExplorer({ posts }: { posts: Post[] }) {
             type="search"
             value={query.search}
             onChange={e => update({ search: e.target.value })}
-            placeholder="搜索正文或 Post ID，例如 Cloudflare、Agent、变现、踩坑"
+            placeholder="搜正文或推文 ID，例如 Cloudflare、Agent、变现、踩坑"
             aria-label="搜索推文"
             className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
           />
@@ -129,11 +129,11 @@ export function TweetExplorer({ posts }: { posts: Post[] }) {
           ))}
         </div>
 
-        {needReplies && replies.loading && <p className="text-xs text-slate-400">正在加载回复帖…</p>}
+        {needReplies && replies.loading && <p className="text-xs text-slate-400">正在加载回复…</p>}
         {replies.error && <ErrorNotice message={replies.error} onRetry={replies.retry} />}
 
         {shown.length === 0 ? (
-          <p className="py-12 text-center text-sm text-slate-500">没有符合条件的推文，换个关键词或筛选试试。</p>
+          <p className="py-12 text-center text-sm text-slate-500">没有找到符合条件的推文。换个关键词，或者去掉筛选再试试。</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {shown.map(post => (
@@ -148,7 +148,7 @@ export function TweetExplorer({ posts }: { posts: Post[] }) {
               onClick={() => setLimit(n => n + PAGE_SIZE)}
               className="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium border border-slate-700 transition"
             >
-              加载更多（{formatInt(shown.length)} / {formatInt(results.length)}）
+              显示更多（已显示 {formatInt(shown.length)} / {formatInt(results.length)}）
             </button>
           </div>
         )}
