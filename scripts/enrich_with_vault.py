@@ -17,7 +17,11 @@ from datetime import datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-VAULT_DIR = Path("/Users/kim/code/solo-life-os-vault")
+_CANDIDATE_VAULT = REPO_ROOT.parent / "solo-life-os-vault"
+VAULT_DIR = Path(
+    os.environ.get("VAULT_DIR")
+    or (_CANDIDATE_VAULT if _CANDIDATE_VAULT.is_dir() else Path.home() / "code" / "solo-life-os-vault")
+)
 DATA_DIR = REPO_ROOT / "data"
 CSV_PATH = DATA_DIR / "csv" / "posts_content.csv"
 JSONL_PATH = DATA_DIR / "jsonl" / "posts.jsonl"
