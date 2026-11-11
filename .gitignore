@@ -22,3 +22,7 @@ dist/
 .output/
 .wrangler/
 .env.local
+
+# Orbital 运行时状态与自动生成的 AGENTS.md，不进版本
+orbital/
+/AGENTS.md
