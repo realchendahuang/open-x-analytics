@@ -86,7 +86,7 @@ def format_display_date(date_val: str) -> str:
 def clean_body_text(raw_body: str) -> str:
     body = raw_body.strip()
     # 截断 ## 我的批注 或 ## 数据回采 之前的内容
-    body = re.split(r"\n##\s+(?:我的批注|数据回采)", body)[0].strip()
+    body = re.split(r"(?:^|\n)##\s+(?:我的批注|数据回采)", body)[0].strip()
     return body
 
 
@@ -165,8 +165,14 @@ def main():
     for pid, row in existing_rows.items():
         v = vault_posts.get(pid)
         current_text = row.get("Post text", "").strip()
-        if v and len(v["text"]) > len(current_text):
-            recovered_chars += (len(v["text"]) - len(current_text))
+        if current_text.startswith("## 我的批注"):
+            current_text = ""
+            row["Post text"] = ""
+        if v and v["text"] and (
+            len(v["text"]) > len(current_text)
+            or (v["text"].startswith("@") and not current_text.startswith("@"))
+        ):
+            recovered_chars += max(0, len(v["text"]) - len(current_text))
             upgraded_text_count += 1
             row["Post text"] = v["text"]
 
@@ -262,8 +268,10 @@ def main():
 
     with open(JSONL_PATH, "w", encoding="utf-8") as f:
         for row in sorted_rows:
+            pid = row.get("Post id", "").strip()
             text = row.get("Post text", "").strip()
-            is_reply = text.startswith("@")
+            v_entry = vault_posts.get(pid)
+            is_reply = text.startswith("@") or bool(v_entry and v_entry["is_reply"])
             likes = int(row.get("Likes", 0) or 0)
             bookmarks = int(row.get("Bookmarks", 0) or 0)
             impressions = int(row.get("Impressions", 0) or 0)
