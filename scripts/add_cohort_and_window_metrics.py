@@ -20,6 +20,7 @@ import sys
 import csv
 import json
 import re
+from bisect import bisect_right
 from datetime import datetime
 from pathlib import Path
 
@@ -106,6 +107,21 @@ def build_follower_timeline() -> dict[str, int]:
     return timeline
 
 
+def resolve_followers_at_post(
+    post_day_str: str, timeline: dict[str, int], sorted_days: list[str]
+) -> int:
+    """Resolve follower count for a post date by forward-filling the latest known day."""
+    exact = timeline.get(post_day_str)
+    if exact is not None:
+        return exact
+    if not sorted_days:
+        return 2000
+    if post_day_str < sorted_days[0]:
+        return 150
+    idx = bisect_right(sorted_days, post_day_str) - 1
+    return timeline[sorted_days[max(idx, 0)]]
+
+
 def get_follower_stage(followers: int) -> str:
     if followers < 1000:
         return "🌱 破冰期 (0~1K)"
@@ -121,6 +137,7 @@ def main():
     print("=" * 60)
 
     timeline = build_follower_timeline()
+    sorted_days = sorted(timeline)
     print(f"[*] 成功计算 {len(timeline)} 天的粉丝成长轨迹。")
 
     snapshot_dt, snapshot_day = detect_snapshot()
@@ -143,16 +160,8 @@ def main():
         post_dt = parse_date(p.get("date", ""))
         post_day_str = post_dt.strftime("%Y-%m-%d")
 
-        # 匹配发帖时粉丝基数
-        followers_at_post = timeline.get(post_day_str)
-        if not followers_at_post:
-            # 兜底匹配最接近日期
-            if post_dt < datetime(2026, 6, 15):
-                followers_at_post = 150
-            elif post_dt > snapshot_dt.replace(hour=0, minute=0, second=0):
-                followers_at_post = 10000
-            else:
-                followers_at_post = 2000
+        # 匹配发帖时粉丝基数；未命中具体日期时按已知大盘最近日期顺延，不再硬编码退回 2000
+        followers_at_post = resolve_followers_at_post(post_day_str, timeline, sorted_days)
 
         stage = get_follower_stage(followers_at_post)
         stage_counts[stage] += 1
