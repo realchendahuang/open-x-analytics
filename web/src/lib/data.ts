@@ -10,7 +10,7 @@ export function fetchData<T>(file: string): Promise<T> {
   if (cached) return cached as Promise<T>
 
   const url = new URL(`${import.meta.env.BASE_URL}data/${file}`, document.baseURI)
-  const request = fetch(url).then(res => {
+  const request = fetch(url).then((res) => {
     if (!res.ok) throw new Error(`${file} 加载失败（HTTP ${res.status}）`)
     return res.json() as Promise<T>
   })

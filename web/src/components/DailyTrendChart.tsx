@@ -1,9 +1,9 @@
-import { useMemo } from 'react'
-import { TrendingUp } from 'lucide-react'
 import type { EChartsCoreOption } from 'echarts/core'
-import type { DailyOverview } from '../types/analytics'
+import { TrendingUp } from 'lucide-react'
+import { useMemo } from 'react'
 import { useECharts } from '../hooks/useECharts'
 import { formatInt } from '../lib/format'
+import type { DailyOverview } from '../types/analytics'
 import { Section } from './Section'
 
 const AXIS_TEXT = { color: '#94a3b8', fontSize: 11 }
@@ -58,7 +58,7 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
       ],
       xAxis: {
         type: 'category',
-        data: overview.map(o => o.date),
+        data: overview.map((o) => o.date),
         axisLine: { lineStyle: { color: '#334155' } },
         axisLabel: { ...AXIS_TEXT, formatter: (v: string) => v.slice(5) },
       },
@@ -77,14 +77,17 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
           nameTextStyle: { ...AXIS_TEXT, align: 'right' },
           splitLine: { show: false },
           axisLine: { show: false },
-          axisLabel: { ...AXIS_TEXT, formatter: (v: number) => (v >= 10000 ? `${v / 10000} 万` : String(v)) },
+          axisLabel: {
+            ...AXIS_TEXT,
+            formatter: (v: number) => (v >= 10000 ? `${v / 10000} 万` : String(v)),
+          },
         },
       ],
       series: [
         {
           name: '净增粉丝',
           type: 'bar',
-          data: overview.map(o => o.net_follows),
+          data: overview.map((o) => o.net_follows),
           itemStyle: { color: gradient('#34d399', '#059669'), borderRadius: [3, 3, 0, 0] },
         },
         {
@@ -92,7 +95,7 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
           type: 'line',
           smooth: true,
           showSymbol: false,
-          data: overview.map(o => o.bookmarks),
+          data: overview.map((o) => o.bookmarks),
           itemStyle: { color: '#f59e0b' },
           lineStyle: { width: 2 },
         },
@@ -102,7 +105,7 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
           yAxisIndex: 1,
           smooth: true,
           showSymbol: false,
-          data: overview.map(o => o.impressions),
+          data: overview.map((o) => o.impressions),
           itemStyle: { color: '#38bdf8' },
           lineStyle: { width: 2 },
           areaStyle: { color: gradient('rgba(56,189,248,0.25)', 'rgba(56,189,248,0)') },
@@ -116,7 +119,8 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
   const first = overview[0]?.date
   const last = overview[overview.length - 1]?.date
   // 区间内应有的天数减去实际有数据的天数，即 X 后台未导出的缺失天数
-  const spanDays = first && last ? Math.round((Date.parse(last) - Date.parse(first)) / 86_400_000) + 1 : 0
+  const spanDays =
+    first && last ? Math.round((Date.parse(last) - Date.parse(first)) / 86_400_000) + 1 : 0
   const missingDays = Math.max(spanDays - overview.length, 0)
 
   return (
@@ -125,7 +129,12 @@ export default function DailyTrendChart({ overview }: { overview: DailyOverview[
       icon={<TrendingUp className="h-4 w-4 text-emerald-400" aria-hidden="true" />}
       description={`${first ?? ''} 到 ${last ?? ''}，${overview.length} 天有数据${missingDays > 0 ? `，另有 ${missingDays} 天 X 后台没有导出` : ''}。数据来自 X 后台的账号总览，拖动下方滑块可以放大某一段。`}
     >
-      <div ref={containerRef} className="w-full h-80 sm:h-96" role="img" aria-label="逐日曝光、收藏与净增粉丝走势图" />
+      <div
+        ref={containerRef}
+        className="h-80 w-full sm:h-96"
+        role="img"
+        aria-label="逐日曝光、收藏与净增粉丝走势图"
+      />
     </Section>
   )
 }

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import { Copy, Check, ExternalLink } from 'lucide-react'
+import React, { useState } from 'react'
 
 interface MarkdownRendererProps {
   content: string
@@ -26,7 +26,7 @@ function renderInlineText(text: string): React.ReactNode[] {
       return (
         <code
           key={idx}
-          className="px-1.5 py-0.5 mx-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-[11px] border border-slate-700/60"
+          className="mx-0.5 rounded border border-slate-700/60 bg-slate-800 px-1.5 py-0.5 font-mono text-[11px] text-indigo-300"
         >
           {part.slice(1, -1)}
         </code>
@@ -40,10 +40,10 @@ function renderInlineText(text: string): React.ReactNode[] {
           href={part}
           target="_blank"
           rel="noreferrer"
-          className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 break-all inline-flex items-center gap-0.5 mx-0.5"
+          className="mx-0.5 inline-flex items-center gap-0.5 break-all text-cyan-400 underline underline-offset-2 hover:text-cyan-300"
         >
           <span>{part.length > 40 ? `${part.slice(0, 37)}...` : part}</span>
-          <ExternalLink className="h-2.5 w-2.5 inline" />
+          <ExternalLink className="inline h-2.5 w-2.5" />
         </a>
       )
     }
@@ -56,7 +56,7 @@ function renderInlineText(text: string): React.ReactNode[] {
           href={`https://x.com/${handle}`}
           target="_blank"
           rel="noreferrer"
-          className="text-blue-400 hover:text-blue-300 font-medium inline-block hover:underline"
+          className="inline-block font-medium text-blue-400 hover:text-blue-300 hover:underline"
         >
           {part}
         </a>
@@ -71,7 +71,7 @@ function renderInlineText(text: string): React.ReactNode[] {
           href={`https://x.com/hashtag/${tag}`}
           target="_blank"
           rel="noreferrer"
-          className="text-purple-400 hover:text-purple-300 font-medium inline-block hover:underline"
+          className="inline-block font-medium text-purple-400 hover:text-purple-300 hover:underline"
         >
           {part}
         </a>
@@ -86,18 +86,18 @@ function CodeBlock({ code, lang }: { code: string; lang?: string }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(code)
+    void navigator.clipboard.writeText(code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   return (
-    <div className="relative group my-3 rounded-xl bg-slate-950 border border-slate-800 overflow-hidden font-mono text-xs">
-      <div className="flex items-center justify-between px-3.5 py-1.5 bg-slate-900/90 border-b border-slate-800 text-[11px] text-slate-400">
+    <div className="group relative my-3 overflow-hidden rounded-xl border border-slate-800 bg-slate-950 font-mono text-xs">
+      <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-3.5 py-1.5 text-[11px] text-slate-400">
         <span>{lang || 'code'}</span>
         <button
           onClick={handleCopy}
-          className="inline-flex items-center gap-1 text-slate-400 hover:text-white transition"
+          className="inline-flex items-center gap-1 text-slate-400 transition hover:text-white"
           title="复制代码"
         >
           {copied ? (
@@ -113,7 +113,7 @@ function CodeBlock({ code, lang }: { code: string; lang?: string }) {
           )}
         </button>
       </div>
-      <pre className="p-3.5 overflow-x-auto text-slate-200 leading-relaxed">
+      <pre className="overflow-x-auto p-3.5 leading-relaxed text-slate-200">
         <code>{code}</code>
       </pre>
     </div>
@@ -138,23 +138,23 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
     if (listBuffer.length === 0) return
     if (isOrderedList) {
       blocks.push(
-        <ol key={key} className="list-decimal list-inside space-y-1.5 my-2.5 text-slate-200 pl-2">
+        <ol key={key} className="my-2.5 list-inside list-decimal space-y-1.5 pl-2 text-slate-200">
           {listBuffer.map((item, i) => (
             <li key={i} className="leading-relaxed">
               {renderInlineText(item)}
             </li>
           ))}
-        </ol>
+        </ol>,
       )
     } else {
       blocks.push(
-        <ul key={key} className="list-disc list-inside space-y-1.5 my-2.5 text-slate-200 pl-2">
+        <ul key={key} className="my-2.5 list-inside list-disc space-y-1.5 pl-2 text-slate-200">
           {listBuffer.map((item, i) => (
             <li key={i} className="leading-relaxed">
               {renderInlineText(item)}
             </li>
           ))}
-        </ul>
+        </ul>,
       )
     }
     listBuffer = []
@@ -167,13 +167,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
     if (line.trim().startsWith('```')) {
       flushList(`list-before-code-${i}`)
       if (inCodeBlock) {
-        blocks.push(
-          <CodeBlock
-            key={`code-${i}`}
-            code={codeBuffer.join('\n')}
-            lang={codeLang}
-          />
-        )
+        blocks.push(<CodeBlock key={`code-${i}`} code={codeBuffer.join('\n')} lang={codeLang} />)
         codeBuffer = []
         codeLang = ''
         inCodeBlock = false
@@ -200,27 +194,33 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
     if (line.startsWith('# ')) {
       flushList(`list-before-h1-${i}`)
       blocks.push(
-        <h1 key={`h1-${i}`} className="text-xl sm:text-2xl font-black text-white mt-6 mb-3 tracking-tight">
+        <h1
+          key={`h1-${i}`}
+          className="mt-6 mb-3 text-xl font-black tracking-tight text-white sm:text-2xl"
+        >
           {renderInlineText(line.slice(2).trim())}
-        </h1>
+        </h1>,
       )
       continue
     }
     if (line.startsWith('## ')) {
       flushList(`list-before-h2-${i}`)
       blocks.push(
-        <h2 key={`h2-${i}`} className="text-lg sm:text-xl font-bold text-slate-100 mt-5 mb-2.5 border-b border-slate-800/80 pb-1.5">
+        <h2
+          key={`h2-${i}`}
+          className="mt-5 mb-2.5 border-b border-slate-800/80 pb-1.5 text-lg font-bold text-slate-100 sm:text-xl"
+        >
           {renderInlineText(line.slice(3).trim())}
-        </h2>
+        </h2>,
       )
       continue
     }
     if (line.startsWith('### ')) {
       flushList(`list-before-h3-${i}`)
       blocks.push(
-        <h3 key={`h3-${i}`} className="text-base sm:text-lg font-semibold text-slate-200 mt-4 mb-2">
+        <h3 key={`h3-${i}`} className="mt-4 mb-2 text-base font-semibold text-slate-200 sm:text-lg">
           {renderInlineText(line.slice(4).trim())}
-        </h3>
+        </h3>,
       )
       continue
     }
@@ -231,10 +231,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
       blocks.push(
         <blockquote
           key={`quote-${i}`}
-          className="border-l-4 border-indigo-500/80 pl-3.5 py-1 my-3 bg-indigo-500/5 rounded-r-lg text-slate-300 italic text-xs leading-relaxed"
+          className="my-3 rounded-r-lg border-l-4 border-indigo-500/80 bg-indigo-500/5 py-1 pl-3.5 text-xs leading-relaxed text-slate-300 italic"
         >
           {renderInlineText(line.slice(2).trim())}
-        </blockquote>
+        </blockquote>,
       )
       continue
     }
@@ -263,9 +263,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
       blocks.push(<div key={`empty-${i}`} className="h-2" />)
     } else {
       blocks.push(
-        <p key={`p-${i}`} className="my-1.5 text-slate-200 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">
+        <p
+          key={`p-${i}`}
+          className="my-1.5 text-xs leading-relaxed whitespace-pre-wrap text-slate-200 sm:text-sm"
+        >
           {renderInlineText(line)}
-        </p>
+        </p>,
       )
     }
   }
@@ -273,13 +276,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
   flushList('list-end')
 
   if (inCodeBlock && codeBuffer.length > 0) {
-    blocks.push(
-      <CodeBlock
-        key="code-unclosed"
-        code={codeBuffer.join('\n')}
-        lang={codeLang}
-      />
-    )
+    blocks.push(<CodeBlock key="code-unclosed" code={codeBuffer.join('\n')} lang={codeLang} />)
   }
 
   return <div className={`space-y-0.5 ${className}`}>{blocks}</div>

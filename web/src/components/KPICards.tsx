@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import { Bookmark, Eye, Flame, Terminal, TrendingUp, UserPlus } from 'lucide-react'
-import type { Summary } from '../types/analytics'
 import { formatCompact, formatInt } from '../lib/format'
+import type { Summary } from '../types/analytics'
 import { Skeleton } from './Section'
 
 interface Card {
@@ -88,20 +88,27 @@ export function KPICards({ summary }: { summary: Summary | null }) {
 
   return (
     <div className={GRID}>
-      {buildCards(summary).map(card => {
+      {buildCards(summary).map((card) => {
         const Icon = card.icon
         return (
           <div
             key={card.label}
-            className={`relative overflow-hidden rounded-xl bg-slate-900/70 border ${card.border} p-4 shadow-lg shadow-black/20`}
+            className={`relative overflow-hidden rounded-xl border bg-slate-900/70 ${card.border} p-4 shadow-lg shadow-black/20`}
           >
-            <div className={`absolute -right-4 -top-4 w-16 h-16 rounded-full ${card.glow} blur-xl`} aria-hidden="true" />
-            <div className="relative flex items-center justify-between gap-2 mb-2">
+            <div
+              className={`absolute -top-4 -right-4 h-16 w-16 rounded-full ${card.glow} blur-xl`}
+              aria-hidden="true"
+            />
+            <div className="relative mb-2 flex items-center justify-between gap-2">
               <span className="text-xs font-medium text-slate-400">{card.label}</span>
               <Icon className={`h-4 w-4 shrink-0 ${card.iconColor}`} aria-hidden="true" />
             </div>
-            <div className="relative text-2xl font-black text-white tracking-tight tabular-nums">{card.value}</div>
-            <div className="relative text-[11px] text-slate-400 mt-1 leading-snug">{card.subtext}</div>
+            <div className="relative text-2xl font-black tracking-tight text-white tabular-nums">
+              {card.value}
+            </div>
+            <div className="relative mt-1 text-[11px] leading-snug text-slate-400">
+              {card.subtext}
+            </div>
           </div>
         )
       })}

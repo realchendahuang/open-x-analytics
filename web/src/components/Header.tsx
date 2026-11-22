@@ -1,6 +1,6 @@
 import { Activity, ArrowUpRight } from 'lucide-react'
-import type { Summary } from '../types/analytics'
 import { formatInt } from '../lib/format'
+import type { Summary } from '../types/analytics'
 
 function GithubIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
   return (
@@ -16,21 +16,23 @@ function GithubIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
 
 export function Header({ summary }: { summary: Summary | null }) {
   return (
-    <header className="border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-xl sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="h-10 w-10 shrink-0 rounded-xl bg-linear-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 ring-1 ring-white/20">
+    <header className="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 via-indigo-500 to-purple-600 shadow-lg ring-1 shadow-indigo-500/20 ring-white/20">
             <Activity className="h-5 w-5 text-white" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-lg sm:text-xl font-black tracking-tight text-white truncate">Open X Analytics</h1>
-            <p className="text-xs text-slate-400 flex items-center gap-x-2 flex-wrap">
+            <h1 className="truncate text-lg font-black tracking-tight text-white sm:text-xl">
+              Open X Analytics
+            </h1>
+            <p className="flex flex-wrap items-center gap-x-2 text-xs text-slate-400">
               <span>一个独立开发者从 0 到 1 万粉丝的完整数据</span>
               <a
                 href="https://x.com/realchendahuang"
                 target="_blank"
                 rel="noreferrer"
-                className="text-cyan-400 hover:text-cyan-300 font-medium inline-flex items-center gap-0.5 transition"
+                className="inline-flex items-center gap-0.5 font-medium text-cyan-400 transition hover:text-cyan-300"
               >
                 @realchendahuang
                 <ArrowUpRight className="h-3 w-3" />
@@ -39,9 +41,9 @@ export function Header({ summary }: { summary: Summary | null }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex shrink-0 items-center gap-3">
           {summary && (
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs text-slate-300">
+            <div className="hidden items-center gap-2 rounded-lg border border-slate-700/60 bg-slate-800/60 px-3 py-1.5 text-xs text-slate-300 md:flex">
               <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
               <span>{formatInt(summary.total_posts)} 篇推文</span>
               <span className="text-slate-600">|</span>
@@ -52,7 +54,7 @@ export function Header({ summary }: { summary: Summary | null }) {
             href="https://github.com/realchendahuang/open-x-analytics"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 hover:border-slate-600 transition"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white transition hover:border-slate-600 hover:bg-slate-700"
           >
             <GithubIcon />
             <span className="hidden sm:inline">GitHub</span>

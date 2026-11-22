@@ -20,11 +20,12 @@ export function useJson<T>(file: string, enabled = true): JsonState<T> {
     if (!enabled) return
     let cancelled = false
     fetchData<T>(file).then(
-      data => {
+      (data) => {
         if (!cancelled) setResult({ data, error: null })
       },
       (err: unknown) => {
-        if (!cancelled) setResult({ data: null, error: err instanceof Error ? err.message : String(err) })
+        if (!cancelled)
+          setResult({ data: null, error: err instanceof Error ? err.message : String(err) })
       },
     )
     return () => {
@@ -34,7 +35,7 @@ export function useJson<T>(file: string, enabled = true): JsonState<T> {
 
   const retry = useCallback(() => {
     setResult({ data: null, error: null })
-    setAttempt(n => n + 1)
+    setAttempt((n) => n + 1)
   }, [])
 
   return {

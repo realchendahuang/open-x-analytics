@@ -61,14 +61,54 @@ export type FilterKey =
 
 export const FILTERS: { key: FilterKey; label: string; hint?: string; active: string }[] = [
   { key: 'all', label: '全部', active: 'bg-indigo-600 border-indigo-500' },
-  { key: 'articles', label: '长文', hint: '正文超过 800 字，或以 # 开头的 X Articles', active: 'bg-blue-600 border-blue-500' },
-  { key: 'business', label: '商业', hint: '正文含变现、获客、创业、成本等词', active: 'bg-emerald-600 border-emerald-500' },
-  { key: 'tools', label: '开源与工具', hint: '正文含开源、GitHub、插件、Cloudflare 等词', active: 'bg-cyan-600 border-cyan-500' },
-  { key: 'probes', label: '提问与讨论', hint: '正文含为什么、怎么、请教、Agent、架构等词', active: 'bg-sky-600 border-sky-500' },
-  { key: 'high_bm', label: '藏赞比 ≥ 1', hint: '收藏数不低于点赞数，多半是被人存下来备查的内容', active: 'bg-purple-600 border-purple-400' },
-  { key: 'conversion', label: '新增关注 ≥ 20', hint: '这条推文直接带来 20 个以上新关注', active: 'bg-amber-600 border-amber-400' },
-  { key: 'viral', label: '曝光 ≥ 5 万', hint: '累计曝光达到 50,000 以上', active: 'bg-orange-600 border-orange-400' },
-  { key: 'pitfall', label: '踩坑复盘', hint: '正文含踩坑、避坑、排查、复盘等词', active: 'bg-rose-500 border-rose-400' },
+  {
+    key: 'articles',
+    label: '长文',
+    hint: '正文超过 800 字，或以 # 开头的 X Articles',
+    active: 'bg-blue-600 border-blue-500',
+  },
+  {
+    key: 'business',
+    label: '商业',
+    hint: '正文含变现、获客、创业、成本等词',
+    active: 'bg-emerald-600 border-emerald-500',
+  },
+  {
+    key: 'tools',
+    label: '开源与工具',
+    hint: '正文含开源、GitHub、插件、Cloudflare 等词',
+    active: 'bg-cyan-600 border-cyan-500',
+  },
+  {
+    key: 'probes',
+    label: '提问与讨论',
+    hint: '正文含为什么、怎么、请教、Agent、架构等词',
+    active: 'bg-sky-600 border-sky-500',
+  },
+  {
+    key: 'high_bm',
+    label: '藏赞比 ≥ 1',
+    hint: '收藏数不低于点赞数，多半是被人存下来备查的内容',
+    active: 'bg-purple-600 border-purple-400',
+  },
+  {
+    key: 'conversion',
+    label: '新增关注 ≥ 20',
+    hint: '这条推文直接带来 20 个以上新关注',
+    active: 'bg-amber-600 border-amber-400',
+  },
+  {
+    key: 'viral',
+    label: '曝光 ≥ 5 万',
+    hint: '累计曝光达到 50,000 以上',
+    active: 'bg-orange-600 border-orange-400',
+  },
+  {
+    key: 'pitfall',
+    label: '踩坑复盘',
+    hint: '正文含踩坑、避坑、排查、复盘等词',
+    active: 'bg-rose-500 border-rose-400',
+  },
 ]
 
 export function matchesFilter(post: Post, filter: FilterKey): boolean {

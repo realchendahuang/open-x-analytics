@@ -1,17 +1,25 @@
 import { lazy, Suspense } from 'react'
-import type { DailyOverview, Post, Summary } from './types/analytics'
-import { useJson } from './hooks/useJson'
 import { Header } from './components/Header'
 import { KPICards } from './components/KPICards'
+import { ErrorNotice, Skeleton } from './components/Section'
 import { StageComparison } from './components/StageComparison'
 import { TweetExplorer } from './components/TweetExplorer'
-import { ErrorNotice, Skeleton } from './components/Section'
+import { useJson } from './hooks/useJson'
+import type { DailyOverview, Post, Summary } from './types/analytics'
 
 // 图表依赖 ECharts（体积大），拆成独立 chunk 按需加载，不阻塞首屏
 const ScatterMatrix = lazy(() => import('./components/ScatterMatrix'))
 const DailyTrendChart = lazy(() => import('./components/DailyTrendChart'))
 
-function SectionLoader({ error, retry, height }: { error: string | null; retry: () => void; height: string }) {
+function SectionLoader({
+  error,
+  retry,
+  height,
+}: {
+  error: string | null
+  retry: () => void
+  height: string
+}) {
   return error ? <ErrorNotice message={error} onRetry={retry} /> : <Skeleton className={height} />
 }
 
@@ -21,10 +29,10 @@ export function App() {
   const posts = useJson<Post[]>('posts.json')
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
       <Header summary={summary.data} />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-6 sm:px-6 lg:px-8">
         {summary.error && <ErrorNotice message={summary.error} onRetry={summary.retry} />}
         <KPICards summary={summary.data} />
         <StageComparison summary={summary.data} />
@@ -53,25 +61,35 @@ export function App() {
       </main>
 
       <footer className="border-t border-slate-800/80 bg-slate-900/50 py-6 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:flex-row sm:px-6 lg:px-8">
           <p>
             开源项目{' '}
             <a
               href="https://github.com/realchendahuang/open-x-analytics"
               target="_blank"
               rel="noreferrer"
-              className="text-slate-300 hover:text-white underline underline-offset-4 transition"
+              className="text-slate-300 underline underline-offset-4 transition hover:text-white"
             >
               open-x-analytics
             </a>{' '}
             · MIT License
           </p>
           <p className="flex items-center gap-3">
-            <a href="https://x.com/realchendahuang" target="_blank" rel="noreferrer" className="hover:text-cyan-400 transition">
+            <a
+              href="https://x.com/realchendahuang"
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-cyan-400"
+            >
               @realchendahuang
             </a>
             <span aria-hidden="true">·</span>
-            <a href="https://chendahuang.com" target="_blank" rel="noreferrer" className="hover:text-white transition">
+            <a
+              href="https://chendahuang.com"
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-white"
+            >
               chendahuang.com
             </a>
           </p>

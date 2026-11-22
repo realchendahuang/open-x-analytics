@@ -1,13 +1,20 @@
 {
   "name": "web",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsrs -b --noEmit --fast && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsrs -b --noEmit --fast",
+    "typecheck:strict": "tsrs -b --noEmit",
+    "typecheck:tsc": "tsc -b",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "check": "pnpm typecheck && pnpm lint && pnpm fmt:check"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -23,8 +30,10 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
-    "oxlint": "^1.81.0",
+    "oxfmt": "^0.79.0",
+    "oxlint": "^1.94.0",
     "tailwindcss": "^4.3.3",
+    "tsrs": "7.1.0-beta.tsrs4",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }

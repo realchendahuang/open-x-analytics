@@ -5,6 +5,14 @@
   "scripts": {
     "prepare:data": "python3 scripts/prepare_web_data.py",
     "dev": "pnpm prepare:data && pnpm --filter web dev",
-    "build": "pnpm prepare:data && pnpm --filter web build"
+    "build": "pnpm prepare:data && pnpm --filter web build",
+    "typecheck": "pnpm --filter web typecheck",
+    "typecheck:strict": "pnpm --filter web typecheck:strict",
+    "typecheck:tsc": "pnpm --filter web typecheck:tsc",
+    "lint": "pnpm --filter web lint",
+    "lint:fix": "pnpm --filter web lint:fix",
+    "fmt": "pnpm --filter web fmt",
+    "fmt:check": "pnpm --filter web fmt:check",
+    "check": "pnpm --filter web check"
   }
 }

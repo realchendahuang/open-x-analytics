@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @layer base {
   html {
@@ -9,13 +9,13 @@
     background-color: #090d16;
     color: #e2e8f0;
     font-family:
-      -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-      "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+      'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     min-height: 100vh;
   }
 
   button,
-  [role="button"] {
+  [role='button'] {
     cursor: pointer;
   }
 

@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
-import { Layers } from 'lucide-react'
 import type { EChartsCoreOption } from 'echarts/core'
-import type { Post, StageKey } from '../types/analytics'
+import { Layers } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { useECharts } from '../hooks/useECharts'
 import { escapeHtml, formatInt, snippet } from '../lib/format'
 import { PITFALL_COLOR, STAGES, STAGE_ORDER } from '../lib/post'
 import { openPost } from '../lib/postHash'
+import type { Post, StageKey } from '../types/analytics'
 import { Section } from './Section'
 
 type StageFilter = StageKey | 'all'
@@ -25,16 +25,17 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
   const [pitfallOnly, setPitfallOnly] = useState(false)
 
   const filtered = useMemo(
-    () => posts.filter(p => (stage === 'all' || p.stage === stage) && (!pitfallOnly || p.is_pitfall)),
+    () =>
+      posts.filter((p) => (stage === 'all' || p.stage === stage) && (!pitfallOnly || p.is_pitfall)),
     [posts, stage, pitfallOnly],
   )
   // 对数轴无法表示 0，曝光为 0 的帖子不画，但在图例里说明数量
-  const visible = useMemo(() => filtered.filter(p => p.impressions > 0), [filtered])
+  const visible = useMemo(() => filtered.filter((p) => p.impressions > 0), [filtered])
   const hidden = filtered.length - visible.length
 
   const option = useMemo<EChartsCoreOption>(() => {
-    const byId = new Map(visible.map(p => [p.id, p]))
-    const data = visible.map(p => ({
+    const byId = new Map(visible.map((p) => [p.id, p]))
+    const data = visible.map((p) => ({
       value: [p.impressions, p.bm_like_ratio, p.new_follows, p.id] satisfies Point,
       itemStyle: { color: colorOf(p) },
     }))
@@ -73,7 +74,10 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
         nameTextStyle: AXIS_NAME,
         axisLine: { lineStyle: { color: '#334155' } },
         splitLine: { lineStyle: { color: '#1e293b' } },
-        axisLabel: { ...AXIS_TEXT, formatter: (v: number) => (v >= 10000 ? `${v / 10000} 万` : String(v)) },
+        axisLabel: {
+          ...AXIS_TEXT,
+          formatter: (v: number) => (v >= 10000 ? `${v / 10000} 万` : String(v)),
+        },
       },
       yAxis: {
         type: 'value',
@@ -96,7 +100,7 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
     }
   }, [visible])
 
-  const containerRef = useECharts(option, params => {
+  const containerRef = useECharts(option, (params) => {
     const value = (params.data as { value?: Point } | undefined)?.value
     if (value) openPost(value[3])
   })
@@ -107,21 +111,25 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
       icon={<Layers className="h-4 w-4 text-indigo-400" aria-hidden="true" />}
       description="一个点是一篇原创主帖，点越大，带来的新关注越多。越靠上，收藏相对点赞越多，更像拿来备查的内容；越靠右，曝光越高。点击圆点可以看全文。"
       actions={
-        <div className="flex items-center gap-2 flex-wrap text-xs">
-          <div role="group" aria-label="成长阶段" className="inline-flex rounded-lg bg-slate-800/80 p-0.5 border border-slate-700">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <div
+            role="group"
+            aria-label="成长阶段"
+            className="inline-flex rounded-lg border border-slate-700 bg-slate-800/80 p-0.5"
+          >
             <button
               aria-pressed={stage === 'all'}
               onClick={() => setStage('all')}
-              className={`px-2.5 py-1 rounded-md transition ${stage === 'all' ? 'bg-indigo-600 text-white font-semibold' : 'text-slate-400 hover:text-white'}`}
+              className={`rounded-md px-2.5 py-1 transition ${stage === 'all' ? 'bg-indigo-600 font-semibold text-white' : 'text-slate-400 hover:text-white'}`}
             >
               全部
             </button>
-            {STAGE_ORDER.map(key => (
+            {STAGE_ORDER.map((key) => (
               <button
                 key={key}
                 aria-pressed={stage === key}
                 onClick={() => setStage(key)}
-                className={`px-2.5 py-1 rounded-md transition ${stage === key ? `${STAGES[key].active} font-semibold` : 'text-slate-400 hover:text-white'}`}
+                className={`rounded-md px-2.5 py-1 transition ${stage === key ? `${STAGES[key].active} font-semibold` : 'text-slate-400 hover:text-white'}`}
               >
                 {STAGES[key].emoji} {STAGES[key].label}
               </button>
@@ -129,11 +137,11 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
           </div>
           <button
             aria-pressed={pitfallOnly}
-            onClick={() => setPitfallOnly(v => !v)}
-            className={`px-2.5 py-1.5 rounded-lg border font-medium transition ${
+            onClick={() => setPitfallOnly((v) => !v)}
+            className={`rounded-lg border px-2.5 py-1.5 font-medium transition ${
               pitfallOnly
-                ? 'bg-rose-500/20 text-rose-300 border-rose-500/50'
-                : 'bg-slate-800/60 text-slate-400 border-slate-700 hover:text-white'
+                ? 'border-rose-500/50 bg-rose-500/20 text-rose-300'
+                : 'border-slate-700 bg-slate-800/60 text-slate-400 hover:text-white'
             }`}
           >
             只看踩坑复盘
@@ -141,23 +149,42 @@ export default function ScatterMatrix({ posts }: { posts: Post[] }) {
         </div>
       }
     >
-      <ul className="flex items-center gap-x-4 gap-y-1 flex-wrap mb-2 text-[11px] text-slate-400" aria-label="图例">
-        {STAGE_ORDER.map(key => (
+      <ul
+        className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-400"
+        aria-label="图例"
+      >
+        {STAGE_ORDER.map((key) => (
           <li key={key} className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: STAGES[key].color }} aria-hidden="true" />
+            <span
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ background: STAGES[key].color }}
+              aria-hidden="true"
+            />
             {STAGES[key].label}
           </li>
         ))}
         <li className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ background: PITFALL_COLOR }} aria-hidden="true" />
+          <span
+            className="h-2.5 w-2.5 rounded-full"
+            style={{ background: PITFALL_COLOR }}
+            aria-hidden="true"
+          />
           踩坑复盘（优先于阶段色）
         </li>
-        <li className="ml-auto tabular-nums" title="这些帖子在 X 后台导出的数据里没有曝光量（多为补录的历史内容），对数坐标轴画不出 0">
+        <li
+          className="ml-auto tabular-nums"
+          title="这些帖子在 X 后台导出的数据里没有曝光量（多为补录的历史内容），对数坐标轴画不出 0"
+        >
           {formatInt(visible.length)} 个点
           {hidden > 0 && `，另有 ${formatInt(hidden)} 篇没有曝光数据，未显示`}
         </li>
       </ul>
-      <div ref={containerRef} className="w-full h-80 sm:h-96" role="img" aria-label="藏赞比与曝光量的散点图" />
+      <div
+        ref={containerRef}
+        className="h-80 w-full sm:h-96"
+        role="img"
+        aria-label="藏赞比与曝光量的散点图"
+      />
     </Section>
   )
 }

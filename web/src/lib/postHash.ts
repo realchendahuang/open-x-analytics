@@ -13,7 +13,7 @@ function parse(): string | null {
 }
 
 function emit() {
-  listeners.forEach(fn => fn())
+  listeners.forEach((fn) => fn())
 }
 
 function subscribe(callback: () => void) {

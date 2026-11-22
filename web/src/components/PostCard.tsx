@@ -1,61 +1,74 @@
-import { memo } from 'react'
 import { Bookmark, ExternalLink, Eye, FileText } from 'lucide-react'
-import type { Post } from '../types/analytics'
+import { memo } from 'react'
 import { formatCompact, formatInt, snippet } from '../lib/format'
 import { STAGES } from '../lib/post'
 import { openPost } from '../lib/postHash'
+import type { Post } from '../types/analytics'
 
 export const PostCard = memo(function PostCard({ post }: { post: Post }) {
   const stage = STAGES[post.stage]
   return (
-    <article className="group relative flex flex-col justify-between min-w-0 rounded-xl bg-slate-800/40 hover:bg-slate-800/70 border border-slate-700/60 hover:border-indigo-500/70 p-4 transition focus-within:border-indigo-400">
+    <article className="group relative flex min-w-0 flex-col justify-between rounded-xl border border-slate-700/60 bg-slate-800/40 p-4 transition focus-within:border-indigo-400 hover:border-indigo-500/70 hover:bg-slate-800/70">
       <div>
-        <div className="flex items-center justify-between gap-2 mb-2 text-[11px]">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className={`px-2 py-0.5 rounded-full font-medium border ${stage.badge}`}>
+        <div className="mb-2 flex items-center justify-between gap-2 text-[11px]">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className={`rounded-full border px-2 py-0.5 font-medium ${stage.badge}`}>
               {stage.emoji} {stage.label}
             </span>
             {post.is_article && (
-              <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold inline-flex items-center gap-0.5">
+              <span className="inline-flex items-center gap-0.5 rounded border border-indigo-500/30 bg-indigo-500/20 px-1.5 py-0.5 font-semibold text-indigo-300">
                 <FileText className="h-2.5 w-2.5" aria-hidden="true" />
                 长文
               </span>
             )}
             {post.is_pitfall && (
-              <span className="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-semibold">
+              <span className="rounded border border-rose-500/20 bg-rose-500/10 px-1.5 py-0.5 font-semibold text-rose-400">
                 踩坑
               </span>
             )}
-            {post.is_reply && <span className="px-1.5 py-0.5 rounded bg-slate-700/80 text-slate-300">回复</span>}
+            {post.is_reply && (
+              <span className="rounded bg-slate-700/80 px-1.5 py-0.5 text-slate-300">回复</span>
+            )}
           </div>
-          <time dateTime={post.date} className="text-slate-500 font-mono shrink-0">
+          <time dateTime={post.date} className="shrink-0 font-mono text-slate-500">
             {post.date}
           </time>
         </div>
 
         <button
           onClick={() => openPost(post.id)}
-          className="block w-full text-left text-sm text-slate-200 group-hover:text-white leading-relaxed line-clamp-4 [overflow-wrap:anywhere] after:absolute after:inset-0 after:content-[''] focus:outline-none"
+          className="line-clamp-4 block w-full text-left text-sm leading-relaxed [overflow-wrap:anywhere] text-slate-200 group-hover:text-white after:absolute after:inset-0 after:content-[''] focus:outline-none"
           aria-label={`查看推文：${snippet(post.text, 30)}`}
         >
           {snippet(post.text, 240)}
         </button>
 
         {post.text.length > 300 && (
-          <div className="mt-2 text-[11px] text-slate-500">全文约 {formatInt(post.text.length)} 字</div>
+          <div className="mt-2 text-[11px] text-slate-500">
+            全文约 {formatInt(post.text.length)} 字
+          </div>
         )}
       </div>
 
-      <div className="pt-3 mt-3 border-t border-slate-700/50 flex items-center justify-between text-xs">
+      <div className="mt-3 flex items-center justify-between border-t border-slate-700/50 pt-3 text-xs">
         <div className="flex items-center gap-3">
-          <span className="text-emerald-400 font-semibold tabular-nums" title="这条推文直接带来的新关注">
+          <span
+            className="font-semibold text-emerald-400 tabular-nums"
+            title="这条推文直接带来的新关注"
+          >
             +{post.new_follows} 关注
           </span>
-          <span className="inline-flex items-center gap-1 text-purple-300 font-semibold tabular-nums" title="藏赞比">
+          <span
+            className="inline-flex items-center gap-1 font-semibold text-purple-300 tabular-nums"
+            title="藏赞比"
+          >
             <Bookmark className="h-3 w-3 text-purple-400" aria-hidden="true" />
             {post.bm_like_ratio.toFixed(2)}
           </span>
-          <span className="inline-flex items-center gap-1 text-slate-400 tabular-nums" title="累计曝光">
+          <span
+            className="inline-flex items-center gap-1 text-slate-400 tabular-nums"
+            title="累计曝光"
+          >
             <Eye className="h-3 w-3 text-slate-500" aria-hidden="true" />
             {formatCompact(post.impressions)}
           </span>
@@ -65,7 +78,7 @@ export const PostCard = memo(function PostCard({ post }: { post: Post }) {
           href={post.link}
           target="_blank"
           rel="noreferrer"
-          className="relative z-10 p-1 -m-1 text-slate-500 hover:text-blue-400 transition"
+          className="relative z-10 -m-1 p-1 text-slate-500 transition hover:text-blue-400"
           title="在 X 打开原帖"
           aria-label="在 X 打开原帖"
         >
