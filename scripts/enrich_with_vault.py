@@ -13,6 +13,7 @@ import sys
 import csv
 import json
 import re
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -49,7 +50,14 @@ CSV_FIELDNAMES = [
     "URL Clicks",
     "Hashtag Clicks",
     "Permalink Clicks",
+    "Media views",
+    "Video views",
 ]
+
+
+def to_int(value) -> int:
+    text = str(value or "").strip()
+    return int(text) if text else 0
 
 
 def parse_date(date_str: str) -> datetime:
@@ -142,9 +150,13 @@ def main():
 
     # 1. 加载现有数据
     existing_rows = {}
+    csv_fieldnames = list(CSV_FIELDNAMES)
     if CSV_PATH.exists():
-        with open(CSV_PATH, "r", encoding="utf-8") as f:
+        with open(CSV_PATH, "r", encoding="utf-8-sig") as f:
             reader = csv.DictReader(f)
+            for col in reader.fieldnames or []:
+                if col and col not in csv_fieldnames:
+                    csv_fieldnames.append(col)
             for row in reader:
                 pid = row["Post id"].strip()
                 existing_rows[pid] = row
@@ -240,6 +252,8 @@ def main():
             "URL Clicks": link_clicks,
             "Hashtag Clicks": hashtag_clicks,
             "Permalink Clicks": permalink_clicks,
+            "Media views": "",
+            "Video views": "",
         }
         merged_data[pid] = new_row
 
@@ -250,12 +264,19 @@ def main():
         reverse=True,
     )
 
-    # 5. 写回 CSV
+    # 5. 写回 CSV（原子替换，避免中途异常截断原文件）
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(CSV_PATH, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
-        writer.writeheader()
-        writer.writerows(sorted_rows)
+    fd, tmp_csv = tempfile.mkstemp(prefix=".tmp_", suffix=".csv", dir=str(CSV_PATH.parent))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=csv_fieldnames, restval="", extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(sorted_rows)
+        os.replace(tmp_csv, CSV_PATH)
+    except Exception:
+        if os.path.exists(tmp_csv):
+            os.unlink(tmp_csv)
+        raise
 
     # 6. 生成标准 JSONL
     JSONL_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -272,9 +293,9 @@ def main():
             text = row.get("Post text", "").strip()
             v_entry = vault_posts.get(pid)
             is_reply = text.startswith("@") or bool(v_entry and v_entry["is_reply"])
-            likes = int(row.get("Likes", 0) or 0)
-            bookmarks = int(row.get("Bookmarks", 0) or 0)
-            impressions = int(row.get("Impressions", 0) or 0)
+            likes = to_int(row.get("Likes"))
+            bookmarks = to_int(row.get("Bookmarks"))
+            impressions = to_int(row.get("Impressions"))
 
             total_likes += likes
             total_bookmarks += bookmarks
@@ -294,16 +315,18 @@ def main():
                 "impressions": impressions,
                 "likes": likes,
                 "bookmarks": bookmarks,
-                "engagements": int(row.get("Engagements", 0) or 0),
-                "shares": int(row.get("Shares", 0) or 0),
-                "new_follows": int(row.get("New follows", 0) or 0),
-                "replies": int(row.get("Replies", 0) or 0),
-                "reposts": int(row.get("Reposts", 0) or 0),
-                "profile_visits": int(row.get("Profile visits", 0) or 0),
-                "detail_expands": int(row.get("Detail Expands", 0) or 0),
-                "url_clicks": int(row.get("URL Clicks", 0) or 0),
-                "hashtag_clicks": int(row.get("Hashtag Clicks", 0) or 0),
-                "permalink_clicks": int(row.get("Permalink Clicks", 0) or 0),
+                "engagements": to_int(row.get("Engagements")),
+                "shares": to_int(row.get("Shares")),
+                "new_follows": to_int(row.get("New follows")),
+                "replies": to_int(row.get("Replies")),
+                "reposts": to_int(row.get("Reposts")),
+                "profile_visits": to_int(row.get("Profile visits")),
+                "detail_expands": to_int(row.get("Detail Expands")),
+                "url_clicks": to_int(row.get("URL Clicks")),
+                "hashtag_clicks": to_int(row.get("Hashtag Clicks")),
+                "permalink_clicks": to_int(row.get("Permalink Clicks")),
+                "media_views": to_int(row.get("Media views")),
+                "video_views": to_int(row.get("Video views")),
                 "bookmark_like_ratio": round(bookmarks / likes, 3) if likes > 0 else 0.0,
             }
             f.write(json.dumps(item, ensure_ascii=False) + "\n")

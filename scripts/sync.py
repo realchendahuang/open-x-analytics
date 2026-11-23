@@ -17,6 +17,7 @@ import sys
 import csv
 import json
 import argparse
+import tempfile
 from datetime import datetime
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,25 +40,53 @@ def parse_date(date_str):
     return datetime.min
 
 
+def merge_fieldnames(existing, incoming):
+    merged = list(existing or [])
+    for col in incoming or []:
+        if col and col not in merged:
+            merged.append(col)
+    return merged
+
+
+def to_int(value):
+    text = str(value or "").strip()
+    return int(text) if text else 0
+
+
+def write_csv_atomic(path, fieldnames, rows):
+    parent = os.path.dirname(os.path.abspath(path))
+    os.makedirs(parent, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(prefix=".tmp_", suffix=".csv", dir=parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames, restval="", extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(rows)
+        os.replace(tmp_path, path)
+    except Exception:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
+
+
 def merge_overview(canonical_path, new_path):
     if not os.path.exists(new_path):
         print(f"[-] Overview source file not found: {new_path}")
         return
 
     existing_rows = {}
-    fieldnames = None
+    fieldnames = []
 
     if os.path.exists(canonical_path):
-        with open(canonical_path, "r", encoding="utf-8") as f:
+        with open(canonical_path, "r", encoding="utf-8-sig") as f:
             reader = csv.DictReader(f)
-            fieldnames = reader.fieldnames
+            fieldnames = merge_fieldnames(fieldnames, reader.fieldnames)
             for row in reader:
                 existing_rows[row["Date"].strip()] = row
 
-    with open(new_path, "r", encoding="utf-8") as f:
+    with open(new_path, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        if not fieldnames:
-            fieldnames = reader.fieldnames
+        fieldnames = merge_fieldnames(fieldnames, reader.fieldnames)
         new_count = 0
         updated_count = 0
         for row in reader:
@@ -71,10 +100,7 @@ def merge_overview(canonical_path, new_path):
     # Sort rows by Date descending (latest first)
     sorted_rows = sorted(existing_rows.values(), key=lambda x: parse_date(x["Date"]), reverse=True)
 
-    with open(canonical_path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(sorted_rows)
+    write_csv_atomic(canonical_path, fieldnames, sorted_rows)
 
     print(f"[+] Synced {os.path.basename(canonical_path)}: {len(sorted_rows)} total days (+{new_count} new, ~{updated_count} updated).")
 
@@ -85,19 +111,18 @@ def merge_content(canonical_path, new_path):
         return
 
     existing_rows = {}
-    fieldnames = None
+    fieldnames = []
 
     if os.path.exists(canonical_path):
-        with open(canonical_path, "r", encoding="utf-8") as f:
+        with open(canonical_path, "r", encoding="utf-8-sig") as f:
             reader = csv.DictReader(f)
-            fieldnames = reader.fieldnames
+            fieldnames = merge_fieldnames(fieldnames, reader.fieldnames)
             for row in reader:
                 existing_rows[row["Post id"].strip()] = row
 
-    with open(new_path, "r", encoding="utf-8") as f:
+    with open(new_path, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        if not fieldnames:
-            fieldnames = reader.fieldnames
+        fieldnames = merge_fieldnames(fieldnames, reader.fieldnames)
         new_count = 0
         updated_count = 0
         for row in reader:
@@ -111,10 +136,7 @@ def merge_content(canonical_path, new_path):
     # Sort rows by Date descending, then Post id
     sorted_rows = sorted(existing_rows.values(), key=lambda x: (parse_date(x.get("Date", "")), x.get("Post id", "")), reverse=True)
 
-    with open(canonical_path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(sorted_rows)
+    write_csv_atomic(canonical_path, fieldnames, sorted_rows)
 
     print(f"[+] Synced {os.path.basename(canonical_path)}: {len(sorted_rows)} total posts (+{new_count} new, ~{updated_count} updated).")
     regenerate_jsonl(canonical_path, JSONL_FILE)
@@ -123,7 +145,7 @@ def merge_content(canonical_path, new_path):
 def regenerate_jsonl(csv_path, jsonl_path):
     os.makedirs(os.path.dirname(jsonl_path), exist_ok=True)
     count = 0
-    with open(csv_path, "r", encoding="utf-8") as f_in, open(jsonl_path, "w", encoding="utf-8") as f_out:
+    with open(csv_path, "r", encoding="utf-8-sig") as f_in, open(jsonl_path, "w", encoding="utf-8") as f_out:
         reader = csv.DictReader(f_in)
         for row in reader:
             item = {
@@ -132,19 +154,21 @@ def regenerate_jsonl(csv_path, jsonl_path):
                 "text": row.get("Post text", "").strip(),
                 "link": row.get("Post Link", "").strip(),
                 "is_reply": row.get("Post text", "").strip().startswith("@"),
-                "impressions": int(row.get("Impressions", 0) or 0),
-                "likes": int(row.get("Likes", 0) or 0),
-                "bookmarks": int(row.get("Bookmarks", 0) or 0),
-                "engagements": int(row.get("Engagements", 0) or 0),
-                "shares": int(row.get("Shares", 0) or 0),
-                "new_follows": int(row.get("New follows", 0) or 0),
-                "replies": int(row.get("Replies", 0) or 0),
-                "reposts": int(row.get("Reposts", 0) or 0),
-                "profile_visits": int(row.get("Profile visits", 0) or 0),
-                "detail_expands": int(row.get("Detail Expands", 0) or 0),
-                "url_clicks": int(row.get("URL Clicks", 0) or 0),
-                "hashtag_clicks": int(row.get("Hashtag Clicks", 0) or 0),
-                "permalink_clicks": int(row.get("Permalink Clicks", 0) or 0),
+                "impressions": to_int(row.get("Impressions")),
+                "likes": to_int(row.get("Likes")),
+                "bookmarks": to_int(row.get("Bookmarks")),
+                "engagements": to_int(row.get("Engagements")),
+                "shares": to_int(row.get("Shares")),
+                "new_follows": to_int(row.get("New follows")),
+                "replies": to_int(row.get("Replies")),
+                "reposts": to_int(row.get("Reposts")),
+                "profile_visits": to_int(row.get("Profile visits")),
+                "detail_expands": to_int(row.get("Detail Expands")),
+                "url_clicks": to_int(row.get("URL Clicks")),
+                "hashtag_clicks": to_int(row.get("Hashtag Clicks")),
+                "permalink_clicks": to_int(row.get("Permalink Clicks")),
+                "media_views": to_int(row.get("Media views")),
+                "video_views": to_int(row.get("Video views")),
             }
             item["bookmark_like_ratio"] = round(item["bookmarks"] / item["likes"], 3) if item["likes"] > 0 else 0.0
             f_out.write(json.dumps(item, ensure_ascii=False) + "\n")
