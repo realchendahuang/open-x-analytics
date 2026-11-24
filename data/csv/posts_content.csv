@@ -72,7 +72,40 @@ https://t.co/mObqGPIGMX",https://x.com/realchendahuang/status/212521866705518600
 
 现在的 T3 Connect 底层走的是 Cloudflare Tunnel，只做了客户端到 Cloudflare 边缘的普通 TLS。
 
-关键在于，这套隧道和域名全都是在 T3 自己的 https://t.co/28SO2Zxqyv",https://x.com/realchendahuang/status/2125218189596676555,58954,478,123,2255,13,7,42,39,185,829,136,0,0,539,
+关键在于，这套隧道和域名全都是在 T3 自己的 Cloudflare 账号下创建的。TLS 在 Cloudflare 边缘就已经解包，应用层没有任何加密。
+
+只要 T3 在自己 Cloudflare 后台给隧道域名挂一条 Workers Route，不需要改一行开源代码，就能直接拿到全部明文请求，本机和手机端不会有任何提示。
+
+因为 Cloudflare Tunnel 一个月烧掉 2.5 万美元，Theo 自己已经提了新方案，准备把远程连接切到 T3 自己在 OVH 租的网关服务器。按这个方案，由 T3 自己的 Caddy 直接解包 TLS 再交给 Go 网关转发，照样没有端到端加密。一旦切过去，连挂 Workers Route 都省了，流量直接明文过 T3 的服务器内存。
+
+翻了一遍 T3 Code 正式的隐私政策，里面只含糊写了一句加密网络传输，只字不提 T3 Connect 不支持端到端加密，也没给中继流量写零留存承诺。
+
+与此同时，T3 Connect 的新设备审批默认还是关的。他们自己在安全文档里写得很明白，只要中继的签名密钥泄露，或者云账号被盗，别人就能直接给你的电脑签发完整会话，等同于拿走你电脑的终端 shell。
+
+十天前有用户在安全 Issue 里指出这套架构风险太大，要求加上双向认证和端到端加密。核心维护者只补了一个默认关闭的审批开关，回复说完整端到端加密改动太大、目前先不做，然后直接把 Issue 关了。社区另外两个提端到端加密的讨论帖，至今没人回复。
+
+手机远程连开发机，跑的是本机完整权限，里面躺着项目源码、SSH 密钥和云凭证。连端到端加密都不做，隐私政策不写明，默认审批还关着，下一步还要把流量导进自家明文解包网关。
+
+参考证据：
+维护者回复目前不做端到端加密并关帖
+https://t.co/s8hr7qGBlk
+
+Theo 提交的自建 OVH 网关方案，由 Caddy 解包 TLS
+https://t.co/CKGwCisjwX
+
+T3 Connect 架构文档与安全模型
+https://t.co/ZVtWwj3WQ4
+https://t.co/fIU7Ep0igd
+
+T3 账号代建 Cloudflare Tunnel 与代理域名源码
+https://t.co/iczqOOzlkI
+
+正式隐私政策原文
+https://t.co/2s1hOg2LHP
+
+社区关于 T3 Connect 端到端加密的两个零回复讨论
+https://t.co/VqJxwGFeSl
+https://t.co/6ZeshKGbbN",https://x.com/realchendahuang/status/2125218189596676555,58954,478,123,2255,13,7,42,39,185,829,136,0,0,539,
 2125217432621236380,"Tue, Nov 24, 2026",@ruoshuikun 哈哈哈,https://x.com/realchendahuang/status/2125217432621236380,24,0,0,0,0,0,0,0,0,0,0,0,0,,
 2125214152373489993,"Tue, Nov 24, 2026",补充一下第三弹@theo的罪行，大家理性吃瓜https://t.co/QstctsrbKy,https://x.com/realchendahuang/status/2125214152373489993,37322,46,7,312,0,1,0,0,152,25,64,0,0,24,
 2125213750374568129,"Tue, Nov 24, 2026",第四弹罪行已经出来了，@theo 出来挨打，使用T3Code会被google 封号，不要再使用T3Code 使用Antigravity了！！！！！https://t.co/8P6IqPALeu,https://x.com/realchendahuang/status/2125213750374568129,42895,96,14,718,0,3,8,1,187,147,65,0,0,211,
@@ -80,7 +113,58 @@ https://t.co/mObqGPIGMX",https://x.com/realchendahuang/status/212521866705518600
 
 T3 Code 官网 FAQ 白纸黑字向用户保证，他们和所有厂商都有合作，T3 Code 完全符合 Google Antigravity 的服务条款，只要在 T3 Code 里能跑，就可以放心安全。
 
-前两天有用户的付费号被 Google 以违反条款封禁，跑去 https://t.co/mKn3g7RBM8",https://x.com/realchendahuang/status/2125213397507858657,101552,784,208,5088,32,15,64,46,371,2006,446,0,0,1356,
+前两天有用户的付费号被 Google 以违反条款封禁，跑去 GitHub 提 Issue 问 T3 Code 到底合不合规。
+
+核心维护者公开回复说，T3 自己不会调用 Antigravity 后端，也不会复用用户的登录令牌，所有发给 Google 的请求都是官方命令行自己发的。
+
+结果今天就有开发者在评论区拿着源码当场拆穿他。
+
+T3 的配额检测模块会直接从本地文件和系统钥匙串里扣出用户的 Google 登录令牌，Windows 上甚至直接调系统底层接口去翻凭据管理器。
+
+拿到令牌之后，T3 硬编码伪装成 Google 官方客户端的请求头，连 Google 内部构建号都原样照抄，自己直连 Google 未公开的内部接口查配额，旧版甚至拿着密钥自己去刷 Google 令牌。
+
+Google 官方人员早就在开发者论坛明说，条款第六条禁止的就是第三方提取或复用登录凭证直接请求 Antigravity 后端。维护者嘴上说没碰过令牌也没连过后端，源码里却写得明明白白。
+
+昨天又有用户发帖，说自己刚花 20 美元买的新 Google AI 订阅，电脑上没跑任何代理，只在 T3 Code 里装了托管版 Antigravity，发出去的第一条消息，装完才三分钟，就被 Google 以违反条款封号了。
+
+Google 对个人账号总共只给一次申诉机会。面对这种零代理、首条消息就封号的报告，维护者没排查原因，也没给用户加任何风险提示，直接标成重复问题把帖子关了。
+
+Google 官方命令行默认把个人登录凭证锁在系统钥匙串里，一台机器只登一个号。为了能在 T3 里多账号并发，顺便让自己读得到令牌，T3 在启动环境里故意塞了一个假的 SSH 连接环境变量，骗官方命令行以为自己在远程服务器上，强迫它放弃系统钥匙串，把登录令牌写成文件留在 T3 自己目录里。
+
+今天 Google 推了新版命令行，删掉了这个降级逻辑，T3 的多账号隔离立刻失效。有用户今天实测出来，账号 A 发出去的所有请求和对话，全在毫无提示的情况下跑到了账号 B 上。
+
+这种靠伪装绕限制的做法早就写进了代码习惯里。之前 Google 限制只有白名单客户端能用全部模型，社区有人发 Issue 反映，还专门强调不建议硬编码改名去冒充别的客户端。
+
+结果作者 Theo 先让机器人把那个 Issue 关了，八天后自己亲自合了一个 PR，把 T3 Code 的客户端名字改成了白名单里另一款编辑器的名字，还在 PR 说明里直接写着，这样 Google 后端就会把 T3 的请求记成那个编辑器的流量。直到后来 Google 放开白名单，新版才改回原名，旧版和未识别版本至今还留着这个伪装。
+
+除此之外，T3 还会拿用户的个人订阅在后台拉起会话给自己跑文本生成，用完再把本地会话文件删干净，平时还会直接扫描用户电脑上官方客户端的所有私有数据库，手写解析器去拆里面的二进制记录。
+
+最后账号被封、花掉唯一一次申诉机会的，全都是信了那句放心用的付费用户。
+
+证据在下面：
+官网 FAQ 保证完全符合 Google Antigravity 条款
+https://t.co/GjVn1wTn28
+
+封号 Issue 维护者公开否认调后端与复用令牌，评论区被源码当场拆穿
+https://t.co/z2hbrTyHNa
+
+源码硬编码伪造官方请求头并直连 Google 内部接口 v1internal
+https://t.co/8oSKLMEOGm
+https://t.co/m2ezlEhuEq
+
+无代理新号装完 T3 三分钟发首条消息被封，被直接标重复关闭
+https://t.co/ZnC1ku6pvf
+
+源码塞假 SSH_CONNECTION 环境变量绕过系统钥匙串，今天新版导致静默串号
+https://t.co/dbnmYzTCsn
+https://t.co/KLYwUYCOu8
+
+作者 Theo 亲自合 PR 冒充白名单客户端绕过模型限制
+https://t.co/HzFTJvHxKm
+
+Google Antigravity 服务条款与官方论坛明令禁止提取令牌直连后端
+https://t.co/wJaxKjnhdV
+https://t.co/YRD9GvAFWC",https://x.com/realchendahuang/status/2125213397507858657,101552,784,208,5088,32,15,64,46,371,2006,446,0,0,1356,
 2125210830795165705,"Tue, Nov 24, 2026",@sabotaj0707 @theo @NOYBeu @heiseonline 🫡🫡🫡,https://x.com/realchendahuang/status/2125210830795165705,26772,268,3,560,0,4,0,0,280,8,0,0,0,,
 2125210724343672993,"Tue, Nov 24, 2026",还有新的瓜@theo 你怎么那么坏啊,https://x.com/realchendahuang/status/2125210724343672993,6615,66,5,235,0,1,3,2,95,57,0,0,0,11,
 2125207469379215561,"Tue, Nov 24, 2026",大家可以支持一下优秀的其他的项目，而不是T3Code这种种族歧视软件https://t.co/abl1E3IukJ,https://x.com/realchendahuang/status/2125207469379215561,51681,102,12,586,0,3,10,1,121,100,175,0,0,6830,10059
@@ -97,7 +181,65 @@ https://t.co/QstctsrbKy",https://x.com/realchendahuang/status/212520218280710192
 
 在 T3 Code 里给 Claude 开 Auto 模式，本来是为了让高风险命令先弹窗问你再执行。但从 10 月 3 日到今天 52 天，有个一直没修的漏洞，Auto 模式会把本该问你的危险操作静默放行。
 
-有开发者实测过，哪怕本地什么规则都不配，Claude 安全分类器拦住两次 git push --force https://t.co/S4Ryc2BIGj",https://x.com/realchendahuang/status/2125201882687881378,101293,420,47,3433,5,8,33,19,206,1285,220,0,0,1242,
+有开发者实测过，哪怕本地什么规则都不配，Claude 安全分类器拦住两次 git push --force 之后，第三次转成人工确认弹窗，T3 Code 还是直接替你点了同意，界面上连提示都没有，日志里反倒记成用户自己临时批准的。任务里只要写一句失败就重试，模型就能自己绕过拦截强推代码或者删文件。
+
+社区交了两个现成的修复 PR，全被晾着不审，拖到让机器人自动关掉，第三个修复到现在还没合进主干。
+
+11 月 22 日有人提了个反馈，说新模型在作者自己做的公开榜单站 https://t.co/ycXG1x3z2s 上显示不出来。以前代码里专门加过白名单，防止把用户自配的私有模型名发出去。结果 21 小时后，作者名下就合了个 PR，直接把白名单删了。
+
+PR 说明写，这是 Theo 要求改的，因为后台看不全自定义端点。测试用例里清清楚楚写着，像公司内网的 ollama 私有模型名、企业自己的 Azure 部署名，现在全都按原样上报，去喂他自己的公开榜单。
+
+保用户代码不被强推的补丁拖 52 天，删掉隐私过滤喂自家榜单只用 21 小时。一个项目把什么排在前面，看这两件事就够了。
+
+安全漏洞这边更让人不放心。T3 Code 的 GitHub 安全公告栏到现在还是空的，0 条公告。
+
+但过去几天里，仓库悄悄合了一连串涉及凭证泄露的补丁，有密钥目录路径穿越，有企业 GitHub 和 GitLab Token 跨域名乱发，有永不过期的 Webhook 密钥被打进日志，更早之前桌面端还把云端登录凭证按全局可读权限直接落盘。
+
+直到今天，还有路径穿越读外部文件、多账号目录软链把别的账号凭证串进去、Windows 端用 Base64 编码的 PowerShell 启动被杀毒软件当恶意软件拦截杀掉的隐患挂着没修。
+
+出了这么多漏凭证的洞，一条提醒老用户升级的安全公告都不发，反倒在最近几天火速补了一份 SECURITY.md，把允许读项目外全盘文件、iOS 允许明文 HTTP、中继密钥丢了就能接管机器这些边界，全都写成了有意为之、不算漏洞。
+
+最后看作者在评论区怎么跟用户说话，前面的事就一点都不奇怪了。
+
+团队把输入框里的上下文进度提示砍掉后，有用户在 Issue 里抱怨，更新日志里没写替代入口藏在右键菜单里，也不是人人都买得起几千美元订阅。
+
+作者 @t3dotgg 亲自下场，让对方把软件卸了，威胁再留这种评论就封号，说自己把能卖几百万美元的软件免费送出来，骂用户是忘恩负义的混蛋、懒得像坨屎，说自己根本不在乎用户意见。
+
+昨天另一位开发者交了个 PR，把进度环融进发送按钮里，一点不占输入框空间。今天早上照样被直接关掉。
+
+参考链接：
+Auto 模式静默放行 git push --force（Issue #15353，52 天未修）：https://t.co/ozMInlVx02
+两个被机器人自动关掉的社区修复 PR 与待合 PR：
+https://t.co/CFdvJWDqws
+https://t.co/Oa3EhrERic
+https://t.co/SkRIVhGNwJ
+Slopalytics 公开遥测数据：https://t.co/90bzLHYLo6
+旧版模型过滤 PR（#29001）、反馈 Issue（#40948）与 21 小时删过滤 PR（#41237）：
+https://t.co/BXzrSwvKMa
+https://t.co/fEgvtilMyO
+https://t.co/jktknoo1f3
+静默合入的安全修复 PR（0 条 Security Advisory）：
+https://t.co/lTTojNxFKH
+https://t.co/Ba5JMAawWy
+https://t.co/D1jZHh6Ro8
+https://t.co/evlSLKdUP0
+https://t.co/MgClw1shIm
+https://t.co/hTPZFL7IR3
+https://t.co/jVc9rMUjGQ
+https://t.co/whPoE7M5BM
+至今仍为 Open 的安全隐患与修复 PR：
+https://t.co/mrOPpAI8GC
+https://t.co/1mU3yyB674
+https://t.co/LLkyiiRnJ7
+https://t.co/G4jBfoiWJt
+https://t.co/v4vom4tMcU
+SECURITY.md 与更新记录：
+https://t.co/fIU7Ep0igd
+https://t.co/oqC7uiFGms
+https://t.co/d6mXp9anCM
+Issue #33639 作者原话回复与次日被拒 PR #41572：
+https://t.co/XbmAnQQw5Y
+https://t.co/AwHkF8wIZU",https://x.com/realchendahuang/status/2125201882687881378,101293,420,47,3433,5,8,33,19,206,1285,220,0,0,1242,
 2125200727668867410,"Tue, Nov 24, 2026",看来@theo 真是惹众怒了，人神共怒啊，这都有人转？ https://t.co/5W4KgchcEa,https://x.com/realchendahuang/status/2125200727668867410,5510,240,1,668,0,2,4,0,127,138,0,0,0,157,
 2125200319298855188,"Tue, Nov 24, 2026",@iecbearli 这是种族主义者，白皮猪，该骂,https://x.com/realchendahuang/status/2125200319298855188,1832,0,0,6,0,0,0,0,5,1,0,0,0,,
 2125200197328441354,"Tue, Nov 24, 2026",@GuigaOGrande 🫡🫡🫡🫡,https://x.com/realchendahuang/status/2125200197328441354,37,1,0,4,0,0,1,0,2,0,0,0,0,,
@@ -163,7 +305,93 @@ https://t.co/QstctsrbKy",https://x.com/realchendahuang/status/212520218280710192
 
 你在 T3 Code 侧边栏删一个对话，弹窗信誓旦旦地告诉你，这会永久清除该对话的历史记录。
 
-可开发者拿工具打开本地数据库 statev2.sqlite https://t.co/yyZkJUVR1l",https://x.com/realchendahuang/status/2125160473176023486,169346,629,112,9174,17,33,45,32,606,3927,373,0,0,3529,
+可开发者拿工具打开本地数据库 statev2.sqlite 一查，里面一行都没删，你以为早抹掉的敏感聊天、工具输出和推理过程，全部原封不动留在硬盘上。
+
+有用户三周就被撑出 25.9 GB，其中九成全都是所谓已经删掉的对话，有人六周攒出 41.6 GB，有人七周干到 33 GB。这个明晃晃骗人的假删除问题从 10 月 10 日挂在 Issue #17845 到现在，依然没修。
+
+软件自带的进程监控 t3-resource-monitor。就算你把诊断面板关得严严实实、客户端全部断开，它在后台依然每 5 秒钟枚举扫描一遍整台电脑上的所有进程。
+
+在 Windows 上甚至要给本机四百多个无关进程、连同你正在打的游戏全部打开句柄去读命令行，常驻占着近三百个句柄，软件里没有任何开关或环境变量可以关掉，而自家内部文档却睁眼撒谎说仅在有订阅者时才采样。
+
+直到今天 11 月 24 日，维护者才匆匆提了一个 PR #41889，亲口承认之前进程诊断一直把每个进程启动时的完整命令行参数全部录进了实时遥测和历史快照里。
+
+但凡写过代码的人都清楚，命令行启动参数里随时可能挂着明文 API Key、数据库密码和鉴权 Token。
+
+只要对话里出现类似 devbox.localdomain 这样的公司内网地址，前端就会顺手拿去请求 Google 的 favicon 接口，把你的内部主机名直接送给第三方，补丁一路补到 11 月中旬。
+
+就算你按教程配了环境变量关掉遥测，服务端每次启动依然会强制外联 https://t.co/fI0UgAxiTj 拉取清单，没有任何设置项或企业策略可以拦住。
+
+底层的安全和品控同样一塌糊涂。此前就算用户在 Claude 里明确禁用了免审批，T3 的 Full access 模式照样静默绕过放行，企业托管策略在 WSL 和 Tailscale 上也一戳就穿。
+
+之前它还让 Claude 的五小时额度狂烧 1.7 倍，评论区吵了 81 楼拖到 11 月初才解决。
+
+功耗更是离谱到早期是同类 Electron 应用的 136 倍，三天前还有用户晒出实测，MacBook 的 19 核 GPU 被它全天锁死在 60W，78 分钟就把满电抽干到 3%，改用网页版后连标签页都关了，后台还在狂吃 18W。
+
+他怎么对待提意见的真用户，那副傲慢嘴脸简直藏都不带藏。
+
+8 月 6 日，@theo 自己平时不用 Plan mode，直接发了 PR #5551 把输入框里的 Build/Plan 切换一刀砍进遗留角落，还在正文里甩出一张遥测折线图，居高临下配了一句 ：
+
+Reality check for those upset（给不爽的人醒醒脑），宣称只有 3% 的对话轮次在用 Plan mode。
+
+紧接着 9 月 2 日的 PR #9190 又把大家离不开的上下文窗口进度圈强行默认隐藏。
+
+到了 11 月 9 日的 PR #33131，@theo 索性把 Plan mode 连根拔起。
+
+他连自己让 AI 写的 PR 总结都懒得通读就点了合并，正文里赫然写着把删除 Plan mode 单独做成一个 commit，以后如果使用数据说要保留就能撤回。
+
+功能都删光了你上哪看使用数据，脑子被 AI 腐烂到连自家摘要都不读，干脆自己 fork 出去把功能加回来。
+
+真正让人看清这个仓库底色的，是根目录那份白纸黑字的 CONTRIBUTING.md。
+
+开篇就毫不掩饰地摆出主人架势，开源归开源，但这是我们的，想来贡献代码，劝你别来，几乎肯定给你关掉。
+
+Bans 那一节更牛逼，明文规定只要你让维护者不舒服——原文亲自举的例子就包括争论为什么关你帖——就会被直接点名拉黑，公开挂进 .github/VOUCHED.td 的批斗名单里，以后你开的任何 Issue 和 PR 瞬间自动秒关。
+
+自家账号天天挂着 AI 机器人代回代关，全仓打出 174 条 unwanted 的闭嘴标签，转头却立规矩对外部贡献者搞模型歧视，声明用特定 Gemini 或 Muse Wonder 写的直接一刀切封杀，顺带在 TRADEMARK.md 里挥舞法务大棒，动辄威胁动用法律最大手段追责。
+
+就连对待各大 AI 厂商的服务条款也是极致的双标。官方 FAQ 上一段刚信誓旦旦打包票，说自己和各家实验室深度合作、绝对合规不会封号，紧接着下一段 @theo 就亲自贴上视频和脚本教程，教人拿第三方代理 CLIProxyAPI 叠加 6 个 Claude 订阅和 3 个 Codex 订阅，甚至在 T3 源码里专门内置了聚合看板，最后轻飘飘甩下一句，如果把你号封了先道个歉。
+
+@theo 骨子里从来没有尊重过任何一位开源用户，这就是一个刚愎自用、独断专行、口蜜腹剑、言而无信、利欲熏心、寡廉鲜耻的独裁小人。
+
+再次提醒所有开发者，守紧自己的机器和数据安全，别最后被卖得干干净净，还在那替人家吹良心开源、替人家说好话。
+
+附上一手证据与原始链接：
+
+拿歪曲数据羞辱用户砍 Plan mode（PR #5551，吃 10 踩）
+https://t.co/ggef0b69l9
+强行隐藏上下文窗口进度圈（PR #9190，吃 16 踩全仓最高）
+https://t.co/z7lr7LnlXu
+彻底删除 Plan mode 且 AI 总结闹笑话遭社区嘲讽 fork（PR #33131）
+https://t.co/NbNW1BLgAK
+弹窗宣称永久清除历史但 SQLite 一行未删、撑爆 40GB+（Issue #17845 / #28903）
+https://t.co/u6AlAyxuMA
+https://t.co/B1eizC19w0
+后台每 5 秒全机扫描所有进程且无开关、文档撒谎（Issue #11222）
+https://t.co/RFkOoo50Kq
+11 月 24 日才修进程诊断记录完整命令行参数（PR #41889）
+https://t.co/TmmX4uHas5
+内网域名泄露给 Google favicon 接口（PR #16950 / #32657）
+https://t.co/jaJSaPoTjl
+https://t.co/ssGj4UlkBI
+关闭遥测后启动仍强制外联 https://t.co/fI0UgAxiTj 且无法关闭（Issue #36479）
+https://t.co/HKfcg6SYAU
+权限审批与企业策略绕过漏洞修复（PR #21806 / #27322）
+https://t.co/yRvlqb0a2I
+https://t.co/Ajf5DY5Z0z
+Claude 5 小时限额曾狂烧 1.7 倍（Issue #7338 / #24649）
+https://t.co/JUNaV0mBDD
+https://t.co/rPHvLLYfQs
+136 倍异常功耗与 MacBook 满载 60W 关标签仍吃 18W（Issue #3143 / #40581）
+https://t.co/GAqhBrOweW
+https://t.co/jdPnLM7Tn8
+霸王条款、争论关帖即拉黑与模型歧视规则（CONTRIBUTING.md）
+https://t.co/DnCsaq2LWm
+公开点名批斗拉黑名单（.github/VOUCHED.td）
+https://t.co/hT6l0Cu9um
+法务追责威胁声明（TRADEMARK.md）
+https://t.co/qju3Qirddl
+一边打包票不封号一边教人 CLIProxyAPI 叠 9 个账号还调侃封号先道歉（docs/user/faq.md）
+https://t.co/raOt1AiPVO",https://x.com/realchendahuang/status/2125160473176023486,169346,629,112,9174,17,33,45,32,606,3927,373,0,0,3529,
 2125158083651588498,"Tue, Nov 24, 2026",@zonglin_x 纯小丑，人品极差,https://x.com/realchendahuang/status/2125158083651588498,38,1,0,2,0,0,0,0,1,0,0,0,0,,
 2125157989728522295,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 大家都夸皇帝的新装好看，可是我不想夸一坨屎香,https://x.com/realchendahuang/status/2125157989728522295,1074,4,0,6,0,0,0,0,2,0,0,0,0,,
 2125157813731336562,"Tue, Nov 24, 2026",@VillaHasNoGift @theo 快出来挨打@theo,https://x.com/realchendahuang/status/2125157813731336562,11,0,0,2,0,0,1,0,0,1,0,0,0,,
