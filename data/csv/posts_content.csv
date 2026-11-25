@@ -1,43 +1,402 @@
 Post id,Date,Post text,Post Link,Impressions,Likes,Bookmarks,Engagements,Shares,New follows,Replies,Reposts,Profile visits,Detail Expands,URL Clicks,Hashtag Clicks,Permalink Clicks,Media views,Video views
-2125373787910840368,"Tue, Nov 24, 2026",@chunxiangai 我其实发了五篇实锤的帖子，有理有据有节，是对手太菜，全是破绽,https://x.com/realchendahuang/status/2125373787910840368,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125416682189668657,"Wed, Nov 25, 2026","@theo 真是一个小偷，诱导用户点一下 Star on GitHub 后，并不跳转浏览器，而是直接动用你电脑或服务器上原本用来开发代码的 gh CLI / GH_TOKEN 凭据，由程序后台直接发 API 操控对应 GitHub 账号给项目点星——在共享或远程环境下，甚至直接动用宿主机上别人的账号代点，全程不告知用了哪个号。
+
+https://t.co/9hzKifsqwN",https://x.com/realchendahuang/status/2125416682189668657,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125416210120765799,"Wed, Nov 25, 2026","T3 Code 项目黑历史第⑱弹：
+
+T3 Code 建仓 8 个多月才涨到 3 万星，结果过去二十多天一路冲到 7.7 万星，但仓库的 watcher 只有 129 人。
+
+这多出来的 4 万多颗星是怎么来的？
+
+今年 4 月底，Theo 专门发过一期 36 分钟的视频聊 GitHub 假星，配文说 GitHub Star 早就不再反映真实热度，大多成了公司拿去骗 VC 投资的工具。
+
+到了 10 月底，T3 Code 停在 3 万星左右。他在推文里提到，看到有人拿 GitHub Star 数量质疑项目的流行度。
+
+10月30日，Theo 自己提并自己合入了 PR #27832，往客户端塞了一个右上角弹窗：用户发满 5 条 prompt 就弹窗讨星，弹窗前还会先调本机 GitHub 接口查这个账号点过没有。
+
+11月2日，他发推贴出一张星标增长曲线图，在标着 Star prompt 的虚线之后，原本平缓的折线几乎垂直拉起。
+
+他配文说加了这个提示框后，每天新增的 Star 立刻翻了 10 倍。几小时后他又晒出一张 GitHub Trending 榜单截图，用红箭头指着单日新增 3094 颗星的 T3 Code，说这招太管用了。
+
+11月3日，评论区有用户留言说正在干活时弹窗会顺手关掉，要是空闲时弹就会点。
+
+一个多小时后，Theo 自己提并自己合入了 PR #29922 和 #29987，把这套要星机制再升了一级。
+
+第一，改成监测窗口 30 秒无操作再弹，专门挑用户等 agent 干活发呆的空档。
+
+第二，点按钮不再跳转 GitHub 网页，而是走新增的 https://t.co/r8037jbYm7 接口，后台直接调用服务端本机登录的 GitHub 凭据，发一条 PUT user/starred/pingdotgg/t3code 把星点上，再在界面放一轮礼花。
+
+PR #29922 提出来时，仓库自带的审核机器人 Macroscope 标了需要人工审批，原因就是点星用的是服务端的 GitHub 账号，和点击按钮的用户未必是同一个人。
+
+Theo 没等其他人审批，自己把代码合进了主干。
+
+11月6日，开发者 zhilsinger 在 PR #29922 下留了一段审查意见，要求撤回服务端代点星，改回打开用户自己的浏览器。
+
+他列出了两个具体问题。
+
+一是在远程或共享服务器上，服务端并不知道是谁点了按钮，直接拿这台机器上的 GitHub 凭据替人执行点星，弹窗全程不显示实际动用了哪个账号，连源码自己的注释里都承认共享服务器上这个账号未必属于当前用户。
+
+二是看 packages/source-control-github/src/server/driver.ts 的代码，starredPath 只校验路径是两段且不含点号，服务端根本没把目标仓库锁死成 pingdotgg/t3code，任何带 source-control:write 权限的客户端都能借服务端凭据给任意仓库点星。
+
+这条审查意见挂了 19 天，没有回复，代码也没有改。
+
+靠这套发满 5 条 prompt 触发、等发呆 30 秒弹窗、再拿本机凭据直接发 API 点星的流程，T3 Code 在 25 天里从 3 万星冲到了 7.7 万星。
+
+11月7日 Theo 还发推招呼粉丝帮忙冲 5 万星。到了 11月24日，他又贴出 7.46 万星的截图发推，说几天前破了 7 万星他居然完全没注意到。
+
+这个项目 7 万多颗星的来龙去脉，基本就是这样。
+
+原始链接
+4 月底发视频称 GitHub Star 成了骗 VC 的工具：https://t.co/pShuCsBnFn
+11月2日晒垂直拉升曲线并自曝日增星翻 10 倍：https://t.co/PPG40IpoQF
+11月2日晒单日 +3094 星冲上 GitHub Trending：https://t.co/cG6DGeaPMm
+11月24日称完全没注意到破 7 万星：https://t.co/lHlBIUYK06
+PR #29922 及 Macroscope 提示、zhilsinger 审查意见：https://t.co/cBzeYdn8pi
+服务端点星源码 driver.ts（L60-L99）：https://t.co/fblaiO9W39",https://x.com/realchendahuang/status/2125416210120765799,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125414642461835424,"Wed, Nov 25, 2026",@biggor888 @theo @op7418 是的,https://x.com/realchendahuang/status/2125414642461835424,14,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125413773318222251,"Wed, Nov 25, 2026",@mydream2025 @theo 对,https://x.com/realchendahuang/status/2125413773318222251,70,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125411457030623371,"Wed, Nov 25, 2026",第⑰弹：https://t.co/Hq4M5nJEDs,https://x.com/realchendahuang/status/2125411457030623371,192,0,0,2,0,0,0,0,0,2,0,0,0,,
+2125411353393553744,"Wed, Nov 25, 2026","T3 Code 项目黑历史第十七弹：
+
+@Theo 嘴上一直讲中立和合规，实际产品绑着赞助商，还带头绕规则多刷额度，出了事就删帖让普通用户买单。
+
+2023 年 5 月，Theo 自己发推列过他的油管赞助商名单：Vercel、Clerk、Upstash、Axiom 和 PlanetScale。
+
+前面查出来的 T3 Code 几个问题里，云端账号认证用的是 Clerk，每小时记录 220 万条含真实 IP 日志、默认保留 30 天的是 Axiom，这两家都在他自己列过的赞助商名单上。
+
+2024 年 4 月，Vercel CEO Guillermo Rauch 在 X 上回复别人时写明，Vercel 的 DevRel 团队只有 4 个人，付费赞助的油管博主只有 Theo 一个。
+
+同年 9 月，Theo 发视频宣布结束和 Vercel 的赞助合作，他在视频里自己讲，之前的合同带有排他条款，每半年要发固定数量的推广视频，期间不能推广竞品。
+
+另外他本人也是 Cursor、Cline 等多家 AI 开发工具的天使投资人。
+
+今年 8 月 19 日，OpenAI 工程师公开提到，Codex 在额度降到 0% 时故意不中断正在运行的任务，好让用户把当前这轮工作跑完。
+
+两天后，Theo 发推说这个机制可以用来多用额度，他跑了一个长任务，在额度显示 0% 之后又多用了至少 800 美元的算力。
+
+同一天，T3 员工 Maria 发布了开源工具 Endless，专门利用这个机制循环续跑 Codex 任务。
+
+8 月 22 日争议扩散后，Theo 删掉了自己说多用 800 美元算力的那条推文。Maria 下架了工具、删了仓库，发推说希望 Codex 团队能排查并封掉用过这招的账号。
+
+随后 OpenAI 收紧了规则，额度一到 0% 就立刻中断当前任务，正常使用的付费用户也跟着受影响，openai/codex 官方仓库的 #45444 Issue 里记录了这个退化。
+
+今年 10 月，Theo 在 GitHub Gist 上发了一篇教程（目前 452 星），介绍自己怎么用一台家用主机跑 CLIProxyAPI，把 7 个 Claude 账号和 3 个 Codex 账号绑成一个接口，分给 12 台以上的电脑共用，正文里贴了自己 12 个凭证、555% 额度的后台截图。
+
+现在打开 T3 Code 的官方 FAQ 还能看到，他前一段写着不在 T3 Code 里做多账号自动切换，理由是会给用户带来违反条款被封号的风险。
+
+紧接着下一段，他就贴上了这篇多号代理教程和配套视频链接，补了一句如果被封号提前说声抱歉，还在 T3 Code 的用量页面里专门做了对接 CLIProxyAPI 汇总查看号池额度的功能。
+
+证据在下面：
+Theo 自己发推列出的油管赞助商名单（含 Clerk 与 Axiom）
+https://t.co/JtOLys8ulP
+
+Vercel CEO 回复证实全网只付费赞助了 Theo 一个油管博主
+https://t.co/gZnc2D1N58
+
+Theo 本人承认此前赞助合同带有排他条款的视频
+https://t.co/izam7NABsd
+
+T3 员工 Maria 删库后发推，希望 Codex 团队排查并封禁相关账号
+https://t.co/zYscpspbTu
+
+OpenAI Codex 官方仓库 #45444，确认 0% 额度不再允许当前任务跑完
+https://t.co/1sLDaCnwBJ
+
+Theo 本人写的 7 个 Claude 与 3 个 Codex 跨 12 台电脑代理教程
+https://t.co/8gsN4jyNXb
+
+T3 Code 官方 FAQ 原文（前一句写怕封号，下一段挂教程并支持接入号池）
+https://t.co/kptFe08bJC",https://x.com/realchendahuang/status/2125411353393553744,680,4,0,61,0,0,4,0,8,31,3,0,0,11,
+2125410040018542915,"Wed, Nov 25, 2026",@hiwise_aigc 我就说刷到这些博主推荐我才去体验的,https://x.com/realchendahuang/status/2125410040018542915,38,0,0,1,0,0,0,0,0,1,0,0,0,,
+2125409873567613291,"Wed, Nov 25, 2026",@tspy 哈哈哈哈哈,https://x.com/realchendahuang/status/2125409873567613291,82,0,0,1,0,0,0,0,0,1,0,0,0,,
+2125408949256192285,"Wed, Nov 25, 2026","第十六弹，这个@theo 简直就是个惯犯，罄竹难书。：
+https://t.co/39zLwGqekZ",https://x.com/realchendahuang/status/2125408949256192285,296,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125408843152953693,"Wed, Nov 25, 2026","第十六弹：
+
+2024 年他自己 Fork 别人的 VS Code 主题，把仓库名直接起成 vsc-material-but-i-wont-sue-you，中文意思就是我不会告你。
+
+简介里公开嘲讽原作者脾气差，所以他建个仓库让大家随便用。轮到自己发了 MIT 协议的项目，别人照规矩 Fork 一下，他就开始喊着请律师。",https://x.com/realchendahuang/status/2125408843152953693,990,13,0,55,1,0,1,0,6,23,12,0,0,,
+2125408333494673631,"Wed, Nov 25, 2026","第十五弹，这个@theo 根本没有T3 Code的商标，在那边喊人家侵权，这不是贼喊捉贼吗？
+https://t.co/Lli8ewXMIp",https://x.com/realchendahuang/status/2125408333494673631,337,0,1,0,0,0,0,0,0,0,0,0,0,,
+2125408163273080950,"Wed, Nov 25, 2026","第十五弹：
+
+T3 Code 作者 @theo 前两天威胁要联系 GitHub，把一个用了 T3 名字的开源分支作者账号封掉，还发帖指控对方偷了他的商标。
+
+顺着 @vildanden_ai 的线索，我去查了美国专利商标局（USPTO）和 GitHub 官方政策，他手里没有这个注册商标。
+
+在 USPTO 数据库里搜 T3 Code，结果是 0 条记录，T3",https://x.com/realchendahuang/status/2125408163273080950,1334,30,1,95,0,0,3,2,17,40,3,0,0,,
+2125407528754569257,"Wed, Nov 25, 2026",@mydream2025 @theo @op7418 原来是这样的啊，破案了,https://x.com/realchendahuang/status/2125407528754569257,95,1,0,3,0,0,0,0,1,1,0,0,0,,
+2125407229998407765,"Wed, Nov 25, 2026",@NeoZhang1474417 这个兄弟他说中文区是粪坑啊。,https://x.com/realchendahuang/status/2125407229998407765,128,0,0,2,0,0,0,0,2,0,0,0,0,,
+2125407186121826346,"Wed, Nov 25, 2026",@YuYiChyan @NeoZhang1474417 不是我做的，网友评论区推荐的。,https://x.com/realchendahuang/status/2125407186121826346,14,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125407009071857824,"Wed, Nov 25, 2026",@PawelHuryn 🫡🫡🫡,https://x.com/realchendahuang/status/2125407009071857824,153,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125406200624017472,"Wed, Nov 25, 2026",@caoweixi119 这也是一个黑料，马上发,https://x.com/realchendahuang/status/2125406200624017472,123,0,0,2,0,0,1,0,0,1,0,0,0,,
+2125406072005616116,"Wed, Nov 25, 2026",@bieshuohua 带带我,https://x.com/realchendahuang/status/2125406072005616116,63,0,0,1,0,0,1,0,0,0,0,0,0,,
+2125405721324060979,"Wed, Nov 25, 2026",@dugujun12 原本计划昨天开源的，但是@theo这个小丑打乱了我的计划。,https://x.com/realchendahuang/status/2125405721324060979,117,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125404726049255675,"Wed, Nov 25, 2026","第十四弹：@theo 完全就是势利眼，面对大厂唯唯诺诺，面对普通用户重拳出击，前倨而后恭，思之令人发笑。
+https://t.co/n86eu4EcW5",https://x.com/realchendahuang/status/2125404726049255675,486,1,0,4,0,0,0,0,1,0,0,0,0,2,
+2125404517697290438,"Wed, Nov 25, 2026","第十四弹：
+
+@Theo在X上面完全就是看人下菜碟的势利眼。
+
+面对 20 位大厂高管、员工和头部大 V 的 60 条回复里，针对对方的脏话和人身攻击是 0 条，礼貌致谢占到 30%。
+
+哪怕偶尔吐槽大厂模型，他也会第一时间给自己留退路。
+
+11月12日刚骂完 Google Gemini 4 Carbon 又慢又蠢，句尾马上找补说团队很努力、进步很大。
+
+一周后 Neon 一发布，立刻发推向 Google 公开道歉，两天后还专门发帖庆幸自己以前没把桥烧断。
+
+11月18日发长文批完 OpenAI GPT-6.2 Astra，第二天一早又补发长文夸 OpenAI 有魄力给无条件内测。
+
+换到另一边，面对普通开发者和批评者的 749 条回复，敌意和粗口比例升到 8%。
+
+骂战从来不只针对中文区，凡是手里没筹码的普通开发者群体，他几乎骂了个遍。
+
+有人只是发帖问用 Gemini 4 选 T3 Code 还是 Antigravity，他直接转发给 38 万人看，配文工程师活该迎来大规模失业。
+
+另两条回复里还顺嘴说普通开发者不太聪明，高质量用户早就在用了，现在新跟进来的都是低质量用户。
+
+对本地和开源 AI 社区，他写我要在本地 AI 社区的坟头上跳舞，顺带嘲讽用 Qwen 的人蠢。
+
+对 Linux 用户，嘲讽人家是玩角色扮演的，讨厌真正的开发者。对中文技术圈，直接发推骂成粪坑，顺带把看中文长文的人全骂成脑死亡。
+
+对个人批评者更没底线。11月11日到12日连续三条称呼女性批评者 stupid bitch，还表态毫不后悔。
+
+11月18日有人在 Threads 上写了句 Theo 不算真正的工程师，他直接贴图威胁再不停手就送你进监狱，顺带拿对方的 RSD 病情开涮，说希望你的狱友能体谅你。
+
+11月22日下午6点26分，他还在评论区语重心长地教育别人，说烧掉身边所有人的信任，几乎从来不是达成目标的好路子。
+
+前倨而后恭，思之令人发笑。
+
+原始链接
+庆幸没对 Google 烧断桥：https://t.co/LmJAYbWcTK
+工程师活该大规模失业：https://t.co/vNjdJkvEHm
+在本地 AI 社区坟头上跳舞：https://t.co/V6gYvc9S3h
+嘲讽 Linux 开发者为 larpers：https://t.co/IegJ1yiADX
+威胁送质疑者进监狱并嘲讽 RSD：https://t.co/AwTjQw30Kg
+连发称女性批评者 stupid bitch 并称无悔意：https://t.co/v04cRUwYNE
+把中文技术推骂成粪坑：https://t.co/jDPV45YaKv
+爆发前 24 小时劝别人别烧掉信任：https://t.co/sxmeqlbeBP",https://x.com/realchendahuang/status/2125404517697290438,1792,44,3,174,0,0,0,3,14,44,14,0,0,55,
+2125401001092067493,"Wed, Nov 25, 2026",@fankaishuoai @theo 我英文不好，说的不够地道，只能靠X上面的翻译了🤣🤣🤣,https://x.com/realchendahuang/status/2125401001092067493,518,8,0,19,0,0,2,0,8,1,0,0,0,,
+2125400845017809295,"Wed, Nov 25, 2026",@fankaishuoai @theo 靠你了，我来转,https://x.com/realchendahuang/status/2125400845017809295,515,2,0,7,0,0,0,0,4,1,0,0,0,,
+2125399290109681869,"Wed, Nov 25, 2026",@weichen_ink 哈哈哈，其实这样的小八嘎数不胜数,https://x.com/realchendahuang/status/2125399290109681869,32,1,0,6,0,0,1,0,3,1,0,0,0,,
+2125398564851626061,"Wed, Nov 25, 2026",@realNyarime @theo 毕业喽，咱们是毕业班同学🫡🫡🫡,https://x.com/realchendahuang/status/2125398564851626061,240,6,0,14,0,0,1,0,5,2,0,0,0,,
+2125398242984927541,"Wed, Nov 25, 2026",@iecbearli @theo @op7418 哈哈哈哈,https://x.com/realchendahuang/status/2125398242984927541,248,1,0,2,0,0,0,0,1,0,0,0,0,,
+2125398202425962833,"Wed, Nov 25, 2026",@QwenAIFans @theo @op7418 AI面前人人平等,https://x.com/realchendahuang/status/2125398202425962833,17,1,0,1,0,0,0,0,0,0,0,0,0,,
+2125398165037916308,"Wed, Nov 25, 2026",@QwenAIFans @theo @op7418 yes,https://x.com/realchendahuang/status/2125398165037916308,411,1,0,2,0,0,0,0,1,0,0,0,0,,
+2125397320623878410,"Wed, Nov 25, 2026",@taketokennn @XBelee @theo @op7418 必须是,https://x.com/realchendahuang/status/2125397320623878410,8,1,0,1,0,0,0,0,0,0,0,0,0,,
+2125397200226353222,"Wed, Nov 25, 2026",@HappyQQ_AI 不会是小八嘎吧？,https://x.com/realchendahuang/status/2125397200226353222,24,1,0,4,0,0,1,0,0,2,0,0,0,,
+2125397076204990728,"Wed, Nov 25, 2026",@jeffflymycat 我其实也没怎么用，直到作者开始对中文区开炮，我就简单扒了一下。,https://x.com/realchendahuang/status/2125397076204990728,222,0,0,3,0,0,0,0,2,1,0,0,0,,
+2125396942377382036,"Wed, Nov 25, 2026",@cxjwin 算了算了,https://x.com/realchendahuang/status/2125396942377382036,208,0,0,1,0,0,0,0,1,0,0,0,0,,
+2125396726538510657,"Wed, Nov 25, 2026",@taketokennn @XBelee @theo @op7418 AI有技术，他会用AI，所以他也有技术（姑且算是）,https://x.com/realchendahuang/status/2125396726538510657,9,1,0,2,0,0,1,0,0,0,0,0,0,,
+2125396354084311261,"Wed, Nov 25, 2026",第十三弹：https://t.co/99LCW9xCdS,https://x.com/realchendahuang/status/2125396354084311261,843,0,0,2,0,0,0,0,2,0,0,0,0,,
+2125395980354994414,"Wed, Nov 25, 2026","T3 Code 项目黑历史第十三弹：
+
+@theo 直接发推开地图炮，把整个中文技术推特骂成他踩过最大的粪坑，骂相信中文圈源码审计文章的开发者全是脑残。
+
+可就在他骂街后，自家仓库悄悄合入了一连串直接危及用户电脑安全的高危修复，偏偏一条提醒老用户升级的安全公告都不发。",https://x.com/realchendahuang/status/2125395980354994414,3369,43,4,198,0,0,11,3,32,83,26,0,0,,
+2125395621486174388,"Wed, Nov 25, 2026","第十二弹，@theo 这兄弟算反人类了吗？：
+https://t.co/Yztmq27s54",https://x.com/realchendahuang/status/2125395621486174388,882,1,0,5,0,0,0,0,3,1,0,0,0,,
+2125395501663281198,"Wed, Nov 25, 2026","T3 Code 项目黑历史第十二弹：
+
+昨晚有人把 T3 Code 举报到了欧盟 GDPR，结果今天凌晨的短短 6 个小时里，T3 团队通宵合补丁擦屁股，把自己藏得更深的四笔隐私旧账抖了出来。
+
+第一笔账，中继服务器以前每小时把约 220 万条追踪记录发给第三方日志平台，一存就是整整 30 天。 https://t.co/XDS1XCXSFw",https://x.com/realchendahuang/status/2125395501663281198,6504,130,12,549,2,1,7,11,35,181,64,0,0,120,
+2125395004680282455,"Wed, Nov 25, 2026","第十一弹，这个@theo 真是又蠢又坏啊：
+https://t.co/3K2BBCOfEF",https://x.com/realchendahuang/status/2125395004680282455,952,0,0,7,0,0,0,0,4,0,1,0,0,2,
+2125394810559426993,"Wed, Nov 25, 2026","T3 Code 项目黑历史第十一弹：
+
+T3Code创始人 @theo 今早发了篇澄清长文，拍胸脯向所有人保证三件事：
+
+从未收过用户的文件路径、一直能用环境变量彻底关掉数据收集、Claude 的账号追踪本来就是坏的。
+
+结果发帖前后不到两小时，他自己团队通宵合进去的补丁，并且自己高调晒出来100MB 数据包。 https://t.co/ODGKrKVYuL",https://x.com/realchendahuang/status/2125394810559426993,10264,242,19,1063,1,9,25,10,130,360,114,0,0,173,
+2125393795219087539,"Wed, Nov 25, 2026","第十弹：
+https://t.co/QvTYrHGIHq",https://x.com/realchendahuang/status/2125393795219087539,1060,0,0,8,0,0,0,0,2,0,0,0,0,6,
+2125393641665671593,"Wed, Nov 25, 2026","@Theo 在抄功能和管舆论这两件事上，自己留下的公开操作记录也很完整。
+
+他怎么对待别人的代码和设计？
+
+11月8日，开发者 @MiaAI_lab 展示了一个自己改出来的 fork 功能，Theo 直接回了一句 Okay I'm stealing this。
+
+仅仅 30 秒后，他就在公开评论区直接艾特自家机器人 @bot，下令去把她的 fork 找出来看看有多容易移植，在 beebox 上开一个 Opus 5.5 线程实现进 T3 Code。
+
+11月13日，有用户聊起其他工具更好用的地方，他又在评论区直接给 @bot 派活，要求把对方夸其他工具的每一个特性拆成独立线程，挨个研究怎么塞进 T3 Code。
+
+轮到别人出类似设计，他的口风立刻就变了。
+
+11月16日有人用了 T3 Code 的代码，他跑到评论区阴阳一句希望我们的代码继续好好为你服务。11月24日 Claude Code 桌面端发了一个侧边栏标签页更新，他又马上转发讽刺，说按他们抄我们功能的速度，过几天估计连 Antigravity 支持都要抄过去了。
+
+再看他怎么处理不顺耳的批评。
+
+11月11日，他在公开推文里直接号召粉丝，如果看到有人说他团队坏话、隐藏上下文，希望有 Community Notes 权限的粉丝动用权力，把对方的创作者收益断掉。
+
+11月24日和中文开发者对线时，他又亲口证实自己的 X 账号挂着自动拉黑脚本。他写得很直白，说我的 bot 因为骚扰把你拉黑了，我手动解封让你回了一条，看完你回复我觉得我 bot 判断得对。同一天他自己说，拉黑了大约 100 个号。
+
+开着自动化机器人满世界扒别人 fork 和竞品功能叫顺手拿来，别人做一个侧边栏就成了抄袭，面对批评则一边挂自动拉黑脚本清场，一边公开号召粉丝拿社区笔记去断人收益。
+
+这套公关与控评组合拳，比客户端本身的工程质量娴熟得多。
+
+原始链接
+公开宣称 stealing 并派 @bot 扒 @MiaAI_lab 的 fork：https://t.co/ZV6ZJoDgh5
+派 @bot 拆解竞品功能搬进 T3 Code：https://t.co/m11U1RnlFo
+转发讽刺 Claude Desktop 抄功能：https://t.co/4KBBVy4pQm
+公开号召粉丝用 Community Notes 断批评者收益：https://t.co/tSvQN86dV7
+亲口证实 X 账号挂着自动拉黑 bot：https://t.co/26miSeSggz",https://x.com/realchendahuang/status/2125393641665671593,1867,13,1,86,0,0,0,1,15,20,2,0,0,35,
+2125393020023722285,"Wed, Nov 25, 2026",第九弹：https://t.co/DoMWQx652v,https://x.com/realchendahuang/status/2125393020023722285,1105,0,0,8,0,0,0,0,1,0,1,0,0,6,
+2125392916369871309,"Wed, Nov 25, 2026","之前很多人好奇，T3 Code 为什么频频爆出各种匪夷所思的事故。
+
+他自己公开描述过的内部开发节奏是这样的：日常经常一天 500 个 commit，同时开着 700 个 agent 干活，核心维护者 Julius 挂着一整套大循环自动批量清理合并社区 PR。
+
+11月10日，他在评论区直接告诉用户，如果你不介意我的 yolo merge 偶尔把东西搞炸，就继续留在 nightly 分支。同一天聊到跑 agent 的安全风险，他甚至很坦诚地说了一句，我急着要结果因为我得拍视频，真把我机器炸了正好当免费素材。
+
+自己内部按拍视频的节奏狂飙，转头对开源社区的开发者和用户，态度完全是另一套标准。
+
+11月10日，他发推说 T3 Code 里大约 70% 的功能请求都是用户自己不会写 prompt 的问题。
+
+11月12日，有开发者热心想给仓库提 PR，他甩出一张 CONTRIBUTING.md 的截图，开头第一句就是如果你在找地方贡献代码，我的建议是别来。
+
+下面他还顺带敲打对方，说看你这么热心想贡献，结果回复我推文却连我都还没关注，这个项目大概不适合你花时间。
+
+同一天晚上，有用户在评论区提了点意见，他回了一句，我已经在 /btw 上对你们让步了，小心点，我可不怕把这个功能收回去。
+
+到了11月20日，他把话说得更牛逼：给我一张画了箭头和标注的截图，让我和 Claude 照着改，比你提 PR 强多了。
+
+作者急着拍片可以 yolo merge 把机器当消耗品，外部开发者认真写个 PR 却要被查户口问为什么没点关注。
+
+他想要的从来是免费的反馈和视频题材，社区协作只是挂在 MIT 协议外面的壳子。
+
+原始链接
+自曝急着拍片、炸机器正好当免费素材：https://t.co/ilRRZWqm1m
+自承 yolo merge 偶尔把东西搞炸：https://t.co/4P0HESNDM0
+称经常一天 500 commits：https://t.co/XfOBp1R0hG
+称 70% 功能请求是用户 prompt 水平问题：https://t.co/opAkUhS6GX
+因对方没关注自己劝退 PR 贡献者：https://t.co/H6yKwMlO5M
+威胁把已上线的 /btw 功能收回：https://t.co/XypZjymNoM
+明说宁愿要带箭头的截图也不要 PR：https://t.co/M0zFJrzdrM",https://x.com/realchendahuang/status/2125392916369871309,2467,20,0,137,0,0,1,0,11,38,20,0,0,47,
+2125392465813442604,"Wed, Nov 25, 2026",第八弹：https://t.co/da8BnRhqtX,https://x.com/realchendahuang/status/2125392465813442604,1229,2,0,7,0,0,0,0,0,0,1,0,0,4,
+2125392410763239723,"Wed, Nov 25, 2026","一个靠订阅赚钱的独立创业者，为什么愿意自掏 80 万美元做一个免费 MIT 开源客户端，还把以前收费的老产品晾在一边。
+
+过去 17 天里，他发了 162 条围绕 T3 Code 的推文，而他之前主推的三个收费老业务 T3 Chat、UploadThing、https://t.co/zp9dKsqqE5，在 1151 条推文里的提及次数全部是 0。 https://t.co/OPOQoJjZBt",https://x.com/realchendahuang/status/2125392410763239723,6881,92,14,769,1,2,12,6,48,157,113,0,0,339,
+2125391807345549321,"Wed, Nov 25, 2026",第七弹： x.com/realchendahuan…,https://x.com/realchendahuang/status/2125391807345549321,1333,2,0,16,0,0,0,0,3,1,0,0,0,10,
+2125391659492081947,"Wed, Nov 25, 2026","@Theo 11月24日反驳遥测质疑，说自家有全行业最好的企业 Managed Policy，配置起来轻而易举就能关掉全部遥测，还嘲讽单机设置开关都是骗人的。
+
+半小时后他又发一条，说对话数据只留在用户本地，从不碰他们服务器。
+
+先看他嘴里轻而易举的关闭方式。
+
+T3 Code 桌面端设置里压根没有给个人用户的遥测开关。
+
+你要么去改 ~/.zshrc 写环境变量再重启，要么按 docs/user/managed-policy.md 的要求，拿管理员权限往系统路径写 policy.json，macOS 是 /Library/Application Support/T3Code/policy.json，Windows 是 C:\Program Files\T3Code\policy.json 或改 HKLM 注册表，Linux 是 /etc/t3code/policy.json，或者部署企业级 MDM 组策略。
+
+再看他说的关掉全部遥测。打开仓库最新一版 docs/user/telemetry.md，白纸黑字写着三处 Managed Policy 管不到的地方。
+
+第一，文档明确写了 Managed Policy 只管服务端和桌面端，管不到托管网页端和手机端。托管网页端只要构建时带了追踪配置就会发连接追踪，而且压根没有关闭开关。
+
+第二，手机端同样不受服务端环境变量和 Managed Policy 控制，得单独去手机设置里找开关。
+
+第三，只要主机开着 Publish agent activity，就会把项目标题、线程标题、模型名称和活动状态发到 T3 Connect 中继服务器，文档专门补了一句，关闭遥测并不会停掉这项上报。
+
+同份文档里也写了手机端崩溃日志的报错信息可能带出程序当时正在处理的值，而默认产品事件发往 https://t.co/WOgVQPKbCD 后不仅转发 PostHog，还会自己留一份副本，并附上哈希后的 OpenAI、Claude 和 T3 Connect 账号标识用来跨设备归因。
+
+如果连自家仓库的文档都写明 Managed Policy 关不掉托管网页端、关不掉手机端、也关不掉项目与线程标题中继，对外却一口咬定轻松关掉全部遥测、数据从不碰服务器，多少有点欺负网友不看文档。
+
+原始链接
+Theo 称 Managed Policy 轻松关掉全部遥测：https://t.co/6IAgMOyWrx
+Theo 称数据从不碰服务器：https://t.co/shVnAUJew3
+官方遥测文档 telemetry.md：https://t.co/aUcAYiQec8
+官方策略路径文档 managed-policy.md：https://t.co/eoitVKZ52L",https://x.com/realchendahuang/status/2125391659492081947,2018,10,1,60,0,0,0,2,7,18,8,0,0,15,
+2125389333750534605,"Wed, Nov 25, 2026","我发现归藏这V有点东西，说不定随便扒扒就能扒到猛料。
+
+算了，咱们简中区不内讧了，交给大家评判吧。",https://x.com/realchendahuang/status/2125389333750534605,2507,22,2,383,0,0,14,1,37,124,0,0,0,185,
+2125388814847988182,"Wed, Nov 25, 2026",@TheBlackWallaby @theo @op7418 你是对的,https://x.com/realchendahuang/status/2125388814847988182,626,1,0,3,0,0,1,0,1,0,0,0,0,,
+2125388747818914084,"Wed, Nov 25, 2026",@jklauuu @theo @op7418 AI slop,https://x.com/realchendahuang/status/2125388747818914084,920,5,0,13,0,0,0,0,8,0,0,0,0,,
+2125388585390276941,"Wed, Nov 25, 2026",@Suercha007 @theo @op7418 哈哈哈哈,https://x.com/realchendahuang/status/2125388585390276941,355,0,0,1,0,0,0,0,1,0,0,0,0,,
+2125385959986626756,"Wed, Nov 25, 2026",第六弹：https://t.co/IWLARzCmmr,https://x.com/realchendahuang/status/2125385959986626756,1896,3,0,23,0,1,0,0,4,2,0,0,0,13,
+2125385742243520653,"Wed, Nov 25, 2026","比起代码里的坑，@Theo更让人在意的其实是他作为天使投资人和产品作者之间的边界。
+
+11月16日，他在一条吐槽看板界面的回复里自己讲了一段旧事。他说自己曾经是 Vibe Kanban 的投资人兼贡献者。后来那个团队意识到看板模式走不通，开始往现在 T3 Code 这套界面方向转型，结果开发不够快，最后放弃并关停了公司。
+
+他在推文最后补了一句，说这套 UI 很适合把现金流烧完、把公司做死。
+
+你拿投资人和贡献者的身份看着被投团队验证方向、转型试错，然后自己拿这套验证过的方向做了一个免费的开源客户端，等被投公司撑不住关门，再在公开推文里拿人家的失败当段子讲。
+
+11月18日，他在另一条回复里亲口确认，自己投资了云沙箱公司 Daytona，还投了一批同行竞品。而就在 9 天前的 11月9日，他刚在推文里说，可能得把云沙箱做成 T3 Code 的付费功能。
+
+一边投赛道里的基础设施创业公司，一边拿免费开源客户端聚流量，顺手往被投公司的核心付费场景里做竞品。以后再有开发工具创始人找他拿天使轮，看到这两条推文大概都得先掂量一下。
+
+原始链接
+自曝投资 Vibe Kanban 并嘲讽其关停：https://t.co/qtqoUaA6yB
+确认投资 Daytona 及一批竞品：https://t.co/YkCDmVNYCD
+9 天前盘算把云沙箱做成 T3 Code 付费功能：https://t.co/CXltKm6Tqp",https://x.com/realchendahuang/status/2125385742243520653,4066,20,0,209,0,0,5,0,29,65,6,0,0,84,
+2125385182610124809,"Wed, Nov 25, 2026",@btc_superbull @theo @op7418 T3自卖自夸的？,https://x.com/realchendahuang/status/2125385182610124809,513,0,0,3,0,0,0,0,3,0,0,0,0,,
+2125385053719216510,"Wed, Nov 25, 2026",@taketokennn @theo @op7418 技术也就那样吧,https://x.com/realchendahuang/status/2125385053719216510,591,4,0,8,0,1,1,0,2,0,0,0,0,,
+2125384783098413186,"Wed, Nov 25, 2026",@WongHaoHong 破案了,https://x.com/realchendahuang/status/2125384783098413186,17,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125383948591346034,"Wed, Nov 25, 2026",@X_X_MAN_ @theo @op7418 🫡🫡🫡,https://x.com/realchendahuang/status/2125383948591346034,82,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125382726291534159,"Wed, Nov 25, 2026",@Jack_BigBigha @theo @op7418 是的,https://x.com/realchendahuang/status/2125382726291534159,850,0,0,2,0,0,0,0,2,0,0,0,0,,
+2125382666392662468,"Wed, Nov 25, 2026",@X_X_MAN_ @theo @op7418 我说的是归藏,https://x.com/realchendahuang/status/2125382666392662468,92,0,0,3,0,0,2,0,0,1,0,0,0,,
+2125382110202773832,"Wed, Nov 25, 2026",@Simon_Twilight @theo @op7418 太罕见了,https://x.com/realchendahuang/status/2125382110202773832,1129,1,0,11,0,0,0,0,10,0,0,0,0,,
+2125382001020813775,"Wed, Nov 25, 2026",@X_X_MAN_ @theo @op7418 他是整个简中一起骂了好吧？,https://x.com/realchendahuang/status/2125382001020813775,582,1,0,5,0,0,1,0,3,0,0,0,0,,
+2125381774914281734,"Wed, Nov 25, 2026",@Jevik_AI @theo @op7418 他在骂他自己呢。,https://x.com/realchendahuang/status/2125381774914281734,618,1,0,7,0,0,1,0,2,3,0,0,0,,
+2125380843023786141,"Wed, Nov 25, 2026",@andyzhu @theo @op7418 你是对的,https://x.com/realchendahuang/status/2125380843023786141,946,0,0,1,0,0,0,0,1,0,0,0,0,,
+2125379055931514914,"Wed, Nov 25, 2026",@isnail @theo @op7418 这人根本就是上来不分青红皂白，直接把我屏蔽了，我真的服了。,https://x.com/realchendahuang/status/2125379055931514914,769,3,0,9,0,0,1,0,4,1,0,0,0,,
+2125378807700054250,"Tue, Nov 24, 2026",@yqingzzz 狗子护主了,https://x.com/realchendahuang/status/2125378807700054250,36,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125378638858318163,"Tue, Nov 24, 2026",@ai_chuhai @theo @op7418 这是典型的小布尔乔亚的软弱性,https://x.com/realchendahuang/status/2125378638858318163,34,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125378574932971939,"Tue, Nov 24, 2026",@ai_chuhai @theo @op7418 价值观扭曲的玩意，不分青红皂白，册那。,https://x.com/realchendahuang/status/2125378574932971939,809,3,0,7,0,0,0,0,4,0,0,0,0,,
+2125378004427980979,"Tue, Nov 24, 2026",@avenger 找一个社区的净化版吧。,https://x.com/realchendahuang/status/2125378004427980979,444,0,0,7,0,0,1,0,4,2,0,0,0,,
+2125377790858121433,"Tue, Nov 24, 2026",@taketokennn @theo @op7418 他倒是先把我拉黑了，搞笑啊。,https://x.com/realchendahuang/status/2125377790858121433,141,1,0,2,0,0,0,0,1,0,0,0,0,,
+2125377233200324770,"Tue, Nov 24, 2026",@verysmallwoods @theo @op7418 互联网是有记忆的。,https://x.com/realchendahuang/status/2125377233200324770,604,1,0,1,0,0,0,0,0,0,0,0,0,,
+2125376944019775923,"Tue, Nov 24, 2026",@taketokennn @theo @op7418 所以我真搞不懂，这帮大V哪来洗的？怎么他妈的舔得下去洋人的屁眼的？我操了。,https://x.com/realchendahuang/status/2125376944019775923,968,8,0,20,0,1,1,0,8,2,0,0,0,,
+2125376660400976281,"Tue, Nov 24, 2026",@2363yzzy @theo @op7418 侄子,https://x.com/realchendahuang/status/2125376660400976281,540,0,0,2,0,0,0,0,2,0,0,0,0,,
+2125376548626903137,"Tue, Nov 24, 2026","以前还挺喜欢归藏的，没想到是这样的人啊？想一想，真正搞臭圈子的人到底是谁？
+
+难道只有@Theo一个人代表了全球用户吗？你提到的简中推特的sb是你本人吗？
+
+@op7418",https://x.com/realchendahuang/status/2125376548626903137,6381,69,2,821,0,5,26,2,249,295,0,0,0,175,
+2125375531936051361,"Tue, Nov 24, 2026","全球用户都在批@Theo，但就是有些大V膝盖太软了，一遇到洋人，就想跪下来。
+
+能不能站起来好好说话？人家都骂中文区是粪坑了，你还说太君里面请。
+
+太滑稽了🤣🤣🤣 @op7418",https://x.com/realchendahuang/status/2125375531936051361,9360,159,5,1464,0,2,43,2,443,535,0,0,0,280,
+2125373787910840368,"Tue, Nov 24, 2026",@chunxiangai 我其实发了五篇实锤的帖子，有理有据有节，是对手太菜，全是破绽,https://x.com/realchendahuang/status/2125373787910840368,624,1,0,28,0,0,0,0,27,0,0,0,0,,
 2125371459694624875,"Tue, Nov 24, 2026","@Theo 你这个彻头彻尾的种族主义者，送你中国的古话：
 
-多行不义必自毙，好自为之吧。",https://x.com/realchendahuang/status/2125371459694624875,204,5,1,23,0,0,1,0,4,3,0,0,0,10,
+多行不义必自毙，好自为之吧。",https://x.com/realchendahuang/status/2125371459694624875,1371,21,1,85,1,0,1,0,15,13,0,0,0,35,
 2125370188094992637,"Tue, Nov 24, 2026","小丑@Theo玩不下去了，直接宣布闭源t3code。
 
 大家是不是忘了闭源对于AI来说是无效的？直接逆向一下全都出来了
 
-真是掩耳盗铃儿响叮当🤣 https://t.co/BSSI7mejAf",https://x.com/realchendahuang/status/2125370188094992637,321,4,0,38,0,0,3,0,11,6,0,0,0,14,
-2125368543533510931,"Tue, Nov 24, 2026",@ScarletKc 全球热点吧，我还有黑料没发呢,https://x.com/realchendahuang/status/2125368543533510931,53,1,0,6,0,0,1,0,3,1,0,0,0,,
+真是掩耳盗铃儿响叮当🤣 https://t.co/BSSI7mejAf",https://x.com/realchendahuang/status/2125370188094992637,9461,184,4,1234,0,3,20,2,312,522,0,0,0,191,
+2125368543533510931,"Tue, Nov 24, 2026",@ScarletKc 全球热点吧，我还有黑料没发呢,https://x.com/realchendahuang/status/2125368543533510931,487,3,0,15,0,0,1,0,10,1,0,0,0,,
 2125366454472282196,"Tue, Nov 24, 2026","@Theo 开始澄清（狡辩）了😅
 
-他不是知道错了，是知道T3Code快死了🤣",https://x.com/realchendahuang/status/2125366454472282196,472,8,0,98,0,0,3,0,9,15,0,0,0,63,
-2125278645237518602,"Tue, Nov 24, 2026",@norbertgrz You are right.,https://x.com/realchendahuang/status/2125278645237518602,99,1,0,1,0,0,0,0,0,0,0,0,0,,
-2125278575876317535,"Tue, Nov 24, 2026",@cxjwin 我还有好多黑料没发呢，等明天再发吧。,https://x.com/realchendahuang/status/2125278575876317535,2061,25,0,87,1,1,2,0,50,9,0,0,0,,
-2125273505361285462,"Tue, Nov 24, 2026",@dummerspast39 🫡🫡🫡,https://x.com/realchendahuang/status/2125273505361285462,2119,12,0,38,0,0,1,0,24,1,0,0,0,,
-2125273251937128630,"Tue, Nov 24, 2026",@theo这小子对 React社区做了啥？@grok,https://x.com/realchendahuang/status/2125273251937128630,5327,20,3,295,0,0,1,1,50,120,0,0,0,103,
-2125272860889636989,"Tue, Nov 24, 2026",@Stumblinz @superalesha 原来如此,https://x.com/realchendahuang/status/2125272860889636989,776,3,0,7,0,0,0,0,3,1,0,0,0,,
-2125272322139730220,"Tue, Nov 24, 2026",@SekaikunnoTuite 🫡🫡🫡,https://x.com/realchendahuang/status/2125272322139730220,533,3,0,12,0,0,0,0,9,0,0,0,0,,
-2125272240099131626,"Tue, Nov 24, 2026",@ai_edisonZ 👍👍👍,https://x.com/realchendahuang/status/2125272240099131626,624,0,0,0,0,0,0,0,0,0,0,0,0,,
-2125272150043214078,"Tue, Nov 24, 2026",@madslamwrld 👍,https://x.com/realchendahuang/status/2125272150043214078,83,2,1,2,0,0,0,0,0,0,0,0,0,,
-2125271913933181318,"Tue, Nov 24, 2026",@onlmood 干的就是这种嚣张跋扈的种族主义者。,https://x.com/realchendahuang/status/2125271913933181318,1530,3,0,10,0,0,2,0,3,2,0,0,0,,
-2125271574244941994,"Tue, Nov 24, 2026",感谢国际友人送来的祝福。🫡🫡🫡 https://t.co/evbqQxYRdf,https://x.com/realchendahuang/status/2125271574244941994,3391,30,0,162,0,0,5,0,23,13,0,0,0,91,
-2125268766158373320,"Tue, Nov 24, 2026",西药见效就是快，洋人还需洋人磨。 https://t.co/lWZEmDFCbX,https://x.com/realchendahuang/status/2125268766158373320,6593,97,5,603,0,1,8,1,42,99,0,0,0,355,
-2125268146953273399,"Tue, Nov 24, 2026",@DODOREACH 👍👍👍🫡🫡🫡,https://x.com/realchendahuang/status/2125268146953273399,2790,23,0,55,0,0,0,0,32,0,0,0,0,,
-2125268054343037092,"Tue, Nov 24, 2026",@theo 出来挨打，你欧盟爷爷来了。,https://x.com/realchendahuang/status/2125268054343037092,2497,26,1,224,0,0,2,1,40,29,0,0,0,126,
-2125267120447701353,"Tue, Nov 24, 2026",瓜太多了，吃不过来了。@theo,https://x.com/realchendahuang/status/2125267120447701353,2266,12,0,42,0,1,1,0,21,7,0,0,0,,
-2125266506674225610,"Tue, Nov 24, 2026",笑yue了，鉴定为AI slop。,https://x.com/realchendahuang/status/2125266506674225610,1731,2,0,120,0,0,2,0,10,8,0,0,0,98,
-2125266336465174587,"Tue, Nov 24, 2026",@noah_z_zhang You are right.,https://x.com/realchendahuang/status/2125266336465174587,167,1,0,7,0,0,3,0,3,0,0,0,0,,
-2125265662801231967,"Tue, Nov 24, 2026",T3 Code摊上大事了，直接捅到欧盟去了。 https://t.co/CNJWIStf6N,https://x.com/realchendahuang/status/2125265662801231967,3536,49,6,335,0,0,6,0,29,34,0,0,0,217,
-2125265319686250727,"Tue, Nov 24, 2026",转需,https://x.com/realchendahuang/status/2125265319686250727,1499,3,0,34,0,0,0,0,7,1,0,0,0,34,15
-2125262087253553267,"Tue, Nov 24, 2026",@yuezhou1990 @theo 看到评论区已经有人向欧盟举报了。,https://x.com/realchendahuang/status/2125262087253553267,177,0,0,2,0,0,0,0,1,1,0,0,0,,
-2125257750590697714,"Tue, Nov 24, 2026",@Siy_Huang t3这产品已经臭完了，没有人再会用这破烂东西了，除非作者出来发个掉眼泪的道歉视频,https://x.com/realchendahuang/status/2125257750590697714,165,4,0,9,0,0,0,0,2,3,0,0,0,,
-2125253718522417354,"Tue, Nov 24, 2026",@VocllumVezza @theo 你咋他了？他咋那么会拉黑人啊,https://x.com/realchendahuang/status/2125253718522417354,85,0,0,4,0,1,1,0,2,0,0,0,0,,
-2125253625291391019,"Tue, Nov 24, 2026",@VocllumVezza @theo 哈哈哈哈哈,https://x.com/realchendahuang/status/2125253625291391019,47,0,0,0,0,0,0,0,0,0,0,0,0,,
-2125253050311069920,"Tue, Nov 24, 2026",@Lookexing @Mirasim_ADE @paseo_sh @ParadevAI @cloudroom_dev @conductor_build @emdashcom @orca_build @herdrdev 👍👍👍,https://x.com/realchendahuang/status/2125253050311069920,400,1,0,2,0,0,0,0,0,1,0,0,0,,
-2125252064225948066,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 舔洋人的屁眼舔习惯了呗。,https://x.com/realchendahuang/status/2125252064225948066,330,1,0,6,0,0,0,0,3,2,0,0,0,,
-2125251326766698558,"Tue, Nov 24, 2026",等一波@Theo的YouTube道歉视频。 到时候千万别掉小珍珠啊。🤣🤣🤣,https://x.com/realchendahuang/status/2125251326766698558,4435,84,2,242,0,0,5,1,65,87,0,0,0,,
-2125244977878036713,"Tue, Nov 24, 2026",整理了一下T3Code可替代品，欢迎大家推荐更多给我！！！ ①mirasim @Mirasim_ADE ②Paseo @paseo_sh ③Paradev @ParadevAI ③Cloudroom @cloudroom_dev ④Conductor @conductor_build ⑤Emdash @emdashcom ⑥Orca @orca_build ⑦herdr @herdrdev,https://x.com/realchendahuang/status/2125244977878036713,21362,91,123,737,7,7,16,6,448,169,0,0,0,,
+他不是知道错了，是知道T3Code快死了🤣",https://x.com/realchendahuang/status/2125366454472282196,2650,47,2,636,1,0,13,0,43,102,0,0,0,431,
+2125278645237518602,"Tue, Nov 24, 2026",@norbertgrz You are right.,https://x.com/realchendahuang/status/2125278645237518602,110,1,0,1,0,0,0,0,0,0,0,0,0,,
+2125278575876317535,"Tue, Nov 24, 2026",@cxjwin 我还有好多黑料没发呢，等明天再发吧。,https://x.com/realchendahuang/status/2125278575876317535,3180,44,0,134,1,1,2,0,75,12,0,0,0,,
+2125273505361285462,"Tue, Nov 24, 2026",@dummerspast39 🫡🫡🫡,https://x.com/realchendahuang/status/2125273505361285462,2217,13,0,42,0,0,1,0,27,1,0,0,0,,
+2125273251937128630,"Tue, Nov 24, 2026",@theo这小子对 React社区做了啥？@grok,https://x.com/realchendahuang/status/2125273251937128630,6031,21,3,326,0,0,1,1,53,136,0,0,0,114,
+2125272860889636989,"Tue, Nov 24, 2026",@Stumblinz @superalesha 原来如此,https://x.com/realchendahuang/status/2125272860889636989,892,3,0,9,0,0,0,0,5,1,0,0,0,,
+2125272322139730220,"Tue, Nov 24, 2026",@SekaikunnoTuite 🫡🫡🫡,https://x.com/realchendahuang/status/2125272322139730220,1036,3,0,15,0,0,0,0,12,0,0,0,0,,
+2125272240099131626,"Tue, Nov 24, 2026",@ai_edisonZ 👍👍👍,https://x.com/realchendahuang/status/2125272240099131626,892,1,0,2,0,0,0,0,1,0,0,0,0,,
+2125272150043214078,"Tue, Nov 24, 2026",@madslamwrld 👍,https://x.com/realchendahuang/status/2125272150043214078,92,2,1,2,0,0,0,0,0,0,0,0,0,,
+2125271913933181318,"Tue, Nov 24, 2026",@onlmood 干的就是这种嚣张跋扈的种族主义者。,https://x.com/realchendahuang/status/2125271913933181318,2199,4,0,13,0,0,2,0,5,2,0,0,0,,
+2125271574244941994,"Tue, Nov 24, 2026",感谢国际友人送来的祝福。🫡🫡🫡 https://t.co/evbqQxYRdf,https://x.com/realchendahuang/status/2125271574244941994,3915,34,0,179,0,0,5,0,24,15,0,0,0,101,
+2125268766158373320,"Tue, Nov 24, 2026",西药见效就是快，洋人还需洋人磨。 https://t.co/lWZEmDFCbX,https://x.com/realchendahuang/status/2125268766158373320,11033,154,9,1017,0,2,9,3,77,203,0,0,0,569,
+2125268146953273399,"Tue, Nov 24, 2026",@DODOREACH 👍👍👍🫡🫡🫡,https://x.com/realchendahuang/status/2125268146953273399,2980,26,0,62,0,0,0,0,36,0,0,0,0,,
+2125268054343037092,"Tue, Nov 24, 2026",@theo 出来挨打，你欧盟爷爷来了。,https://x.com/realchendahuang/status/2125268054343037092,2899,31,1,250,0,0,2,1,42,31,0,0,0,143,
+2125267120447701353,"Tue, Nov 24, 2026",瓜太多了，吃不过来了。@theo,https://x.com/realchendahuang/status/2125267120447701353,2790,19,0,52,0,1,1,0,23,8,0,0,0,,
+2125266506674225610,"Tue, Nov 24, 2026",笑yue了，鉴定为AI slop。,https://x.com/realchendahuang/status/2125266506674225610,2101,4,0,142,0,0,2,0,10,9,0,0,0,117,
+2125266336465174587,"Tue, Nov 24, 2026",@noah_z_zhang You are right.,https://x.com/realchendahuang/status/2125266336465174587,199,2,0,8,0,0,3,0,3,0,0,0,0,,
+2125265662801231967,"Tue, Nov 24, 2026",T3 Code摊上大事了，直接捅到欧盟去了。 https://t.co/CNJWIStf6N,https://x.com/realchendahuang/status/2125265662801231967,4505,58,6,412,0,0,6,3,32,41,0,0,0,272,
+2125265319686250727,"Tue, Nov 24, 2026",转需,https://x.com/realchendahuang/status/2125265319686250727,1900,3,0,43,0,0,1,0,8,1,0,0,0,47,21
+2125262087253553267,"Tue, Nov 24, 2026",@yuezhou1990 @theo 看到评论区已经有人向欧盟举报了。,https://x.com/realchendahuang/status/2125262087253553267,199,1,0,3,0,0,0,0,1,1,0,0,0,,
+2125257750590697714,"Tue, Nov 24, 2026",@Siy_Huang t3这产品已经臭完了，没有人再会用这破烂东西了，除非作者出来发个掉眼泪的道歉视频,https://x.com/realchendahuang/status/2125257750590697714,194,5,0,10,0,0,0,0,2,3,0,0,0,,
+2125253718522417354,"Tue, Nov 24, 2026",@VocllumVezza @theo 你咋他了？他咋那么会拉黑人啊,https://x.com/realchendahuang/status/2125253718522417354,98,0,0,4,0,1,1,0,2,0,0,0,0,,
+2125253625291391019,"Tue, Nov 24, 2026",@VocllumVezza @theo 哈哈哈哈哈,https://x.com/realchendahuang/status/2125253625291391019,49,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125253050311069920,"Tue, Nov 24, 2026",@Lookexing @Mirasim_ADE @paseo_sh @ParadevAI @cloudroom_dev @conductor_build @emdashcom @orca_build @herdrdev 👍👍👍,https://x.com/realchendahuang/status/2125253050311069920,503,1,0,2,0,0,0,0,0,1,0,0,0,,
+2125252064225948066,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 舔洋人的屁眼舔习惯了呗。,https://x.com/realchendahuang/status/2125252064225948066,354,4,0,9,0,0,0,0,3,2,0,0,0,,
+2125251326766698558,"Tue, Nov 24, 2026",等一波@Theo的YouTube道歉视频。 到时候千万别掉小珍珠啊。🤣🤣🤣,https://x.com/realchendahuang/status/2125251326766698558,4838,88,2,254,0,0,5,1,71,89,0,0,0,,
+2125244977878036713,"Tue, Nov 24, 2026",整理了一下T3Code可替代品，欢迎大家推荐更多给我！！！ ①mirasim @Mirasim_ADE ②Paseo @paseo_sh ③Paradev @ParadevAI ③Cloudroom @cloudroom_dev ④Conductor @conductor_build ⑤Emdash @emdashcom ⑥Orca @orca_build ⑦herdr @herdrdev,https://x.com/realchendahuang/status/2125244977878036713,24957,105,137,904,9,9,21,8,527,234,0,0,0,,
 2125244058536951839,"Tue, Nov 24, 2026","@theo 你说伤害中国人民感情，确实是的，你那些种族歧视的话，将被钉在历史的耻辱柱上，希望你的妈妈能够原谅你。
 
 收起你那劣质的 Ai Slop 软件吧，拿出来丢人现眼！！不一定非得用你那倒霉玩意。
@@ -51,23 +410,23 @@ Post id,Date,Post text,Post Link,Impressions,Likes,Bookmarks,Engagements,Shares,
 ④Conductor @conductor_build
 ⑤Emdash @emdashcom 
 ⑥Orca @orca_build
-⑦herdr @herdrdev",https://x.com/realchendahuang/status/2125244058536951839,3644,56,16,501,1,11,4,4,183,122,0,0,0,121,
+⑦herdr @herdrdev",https://x.com/realchendahuang/status/2125244058536951839,3945,59,16,526,1,11,4,4,190,133,0,0,0,125,
 2125241014604759216,"Tue, Nov 24, 2026","我一定要多推荐这些T3 Code的竞品@Mirasim_ADE，华流才是最Diao的！！！
 
 @theo快把你的T3 Code快点删掉吧，已经臭了🫡🫡🫡
-https://t.co/Z1n1Vg3qvn",https://x.com/realchendahuang/status/2125241014604759216,21472,23,9,307,0,0,0,0,220,30,34,0,0,,
+https://t.co/Z1n1Vg3qvn",https://x.com/realchendahuang/status/2125241014604759216,24557,29,9,353,0,0,0,0,245,35,44,0,0,,
 2125240244203389414,"Tue, Nov 24, 2026","评论区有人给我推荐一个T3 Code的竞品：Mirasim
 
 华人做的，咱就是说，华人之光，干翻T3！！！
-https://t.co/kgbaZevqdX",https://x.com/realchendahuang/status/2125240244203389414,33668,73,81,1902,4,2,25,9,88,716,989,0,0,,
-2125235995478270248,"Tue, Nov 24, 2026",@AYi_AInotes 某些中国人跪久了，喜欢捧洋人的臭脚,https://x.com/realchendahuang/status/2125235995478270248,1845,9,0,30,0,0,1,0,20,0,0,0,0,,
-2125235678678254068,"Tue, Nov 24, 2026",美国人早上起床了，看到T3 Code天塌了,https://x.com/realchendahuang/status/2125235678678254068,10410,73,5,663,0,5,19,1,231,334,0,0,0,,
-2125230485127516316,"Tue, Nov 24, 2026",@Danniel_hu 必须,https://x.com/realchendahuang/status/2125230485127516316,4683,16,0,99,0,0,1,0,79,3,0,0,0,,
-2125229918418313669,"Tue, Nov 24, 2026",@SuzunamiRei 故意的,https://x.com/realchendahuang/status/2125229918418313669,1454,2,0,22,0,0,1,0,16,3,0,0,0,,
-2125226970715934898,"Tue, Nov 24, 2026",@antiAIvo 支持,https://x.com/realchendahuang/status/2125226970715934898,286,1,0,13,0,1,0,0,11,0,0,0,0,,
-2125219366992261400,"Tue, Nov 24, 2026",@chet030714 @callmeelder 我是AI博主，兄弟,https://x.com/realchendahuang/status/2125219366992261400,257,0,0,7,0,0,0,0,6,1,0,0,0,,
+https://t.co/kgbaZevqdX",https://x.com/realchendahuang/status/2125240244203389414,38339,83,87,2185,4,3,25,11,93,848,1122,0,0,,
+2125235995478270248,"Tue, Nov 24, 2026",@AYi_AInotes 某些中国人跪久了，喜欢捧洋人的臭脚,https://x.com/realchendahuang/status/2125235995478270248,2200,12,0,34,0,0,1,0,20,1,0,0,0,,
+2125235678678254068,"Tue, Nov 24, 2026",美国人早上起床了，看到T3 Code天塌了,https://x.com/realchendahuang/status/2125235678678254068,13850,89,6,919,0,9,22,1,320,478,0,0,0,,
+2125230485127516316,"Tue, Nov 24, 2026",@Danniel_hu 必须,https://x.com/realchendahuang/status/2125230485127516316,5556,19,0,118,0,0,1,0,95,3,0,0,0,,
+2125229918418313669,"Tue, Nov 24, 2026",@SuzunamiRei 故意的,https://x.com/realchendahuang/status/2125229918418313669,1551,2,0,24,0,0,1,0,18,3,0,0,0,,
+2125226970715934898,"Tue, Nov 24, 2026",@antiAIvo 支持,https://x.com/realchendahuang/status/2125226970715934898,330,1,0,14,0,1,0,0,12,0,0,0,0,,
+2125219366992261400,"Tue, Nov 24, 2026",@chet030714 @callmeelder 我是AI博主，兄弟,https://x.com/realchendahuang/status/2125219366992261400,296,0,0,8,0,0,0,0,7,1,0,0,0,,
 2125218667055186002,"Tue, Nov 24, 2026","T3Code @theo黑历史第五弹，所有的对话传输都没有用端到端加密，理论上中间人可以直接看到？？所有的对话数据都会有泄露的风险。
-https://t.co/mObqGPIGMX",https://x.com/realchendahuang/status/2125218667055186002,32856,55,13,339,0,0,1,0,178,61,14,0,0,30,
+https://t.co/mObqGPIGMX",https://x.com/realchendahuang/status/2125218667055186002,36373,64,13,366,0,0,1,0,187,64,14,0,0,36,
 2125218189596676555,"Tue, Nov 24, 2026","用 T3 Code 的 T3 Connect 手机远程连电脑的人，先搞清楚一件事。这条链路没有端到端加密，你的对话、代码和终端输出，T3 那边在技术上随时可以看成明文。
 
 现在的 T3 Connect 底层走的是 Cloudflare Tunnel，只做了客户端到 Cloudflare 边缘的普通 TLS。
@@ -105,10 +464,10 @@ https://t.co/2s1hOg2LHP
 
 社区关于 T3 Connect 端到端加密的两个零回复讨论
 https://t.co/VqJxwGFeSl
-https://t.co/6ZeshKGbbN",https://x.com/realchendahuang/status/2125218189596676555,58954,478,123,2255,13,7,42,39,185,829,136,0,0,539,
-2125217432621236380,"Tue, Nov 24, 2026",@ruoshuikun 哈哈哈,https://x.com/realchendahuang/status/2125217432621236380,24,0,0,0,0,0,0,0,0,0,0,0,0,,
-2125214152373489993,"Tue, Nov 24, 2026",补充一下第三弹@theo的罪行，大家理性吃瓜https://t.co/QstctsrbKy,https://x.com/realchendahuang/status/2125214152373489993,37322,46,7,312,0,1,0,0,152,25,64,0,0,24,
-2125213750374568129,"Tue, Nov 24, 2026",第四弹罪行已经出来了，@theo 出来挨打，使用T3Code会被google 封号，不要再使用T3Code 使用Antigravity了！！！！！https://t.co/8P6IqPALeu,https://x.com/realchendahuang/status/2125213750374568129,42895,96,14,718,0,3,8,1,187,147,65,0,0,211,
+https://t.co/6ZeshKGbbN",https://x.com/realchendahuang/status/2125218189596676555,64613,510,126,2438,17,8,44,43,198,895,148,0,0,592,
+2125217432621236380,"Tue, Nov 24, 2026",@ruoshuikun 哈哈哈,https://x.com/realchendahuang/status/2125217432621236380,25,0,0,0,0,0,0,0,0,0,0,0,0,,
+2125214152373489993,"Tue, Nov 24, 2026",补充一下第三弹@theo的罪行，大家理性吃瓜https://t.co/QstctsrbKy,https://x.com/realchendahuang/status/2125214152373489993,41089,54,8,345,0,1,0,0,165,31,66,0,0,28,
+2125213750374568129,"Tue, Nov 24, 2026",第四弹罪行已经出来了，@theo 出来挨打，使用T3Code会被google 封号，不要再使用T3Code 使用Antigravity了！！！！！https://t.co/8P6IqPALeu,https://x.com/realchendahuang/status/2125213750374568129,47369,112,16,789,0,3,8,1,204,170,71,0,0,220,
 2125213397507858657,"Tue, Nov 24, 2026","用 T3 Code 接 Google Antigravity 的人，建议立刻停手，你的付费号随时可能被封。
 
 T3 Code 官网 FAQ 白纸黑字向用户保证，他们和所有厂商都有合作，T3 Code 完全符合 Google Antigravity 的服务条款，只要在 T3 Code 里能跑，就可以放心安全。
@@ -164,19 +523,19 @@ https://t.co/HzFTJvHxKm
 
 Google Antigravity 服务条款与官方论坛明令禁止提取令牌直连后端
 https://t.co/wJaxKjnhdV
-https://t.co/YRD9GvAFWC",https://x.com/realchendahuang/status/2125213397507858657,101552,784,208,5088,32,15,64,46,371,2006,446,0,0,1356,
-2125210830795165705,"Tue, Nov 24, 2026",@sabotaj0707 @theo @NOYBeu @heiseonline 🫡🫡🫡,https://x.com/realchendahuang/status/2125210830795165705,26772,268,3,560,0,4,0,0,280,8,0,0,0,,
-2125210724343672993,"Tue, Nov 24, 2026",还有新的瓜@theo 你怎么那么坏啊,https://x.com/realchendahuang/status/2125210724343672993,6615,66,5,235,0,1,3,2,95,57,0,0,0,11,
-2125207469379215561,"Tue, Nov 24, 2026",大家可以支持一下优秀的其他的项目，而不是T3Code这种种族歧视软件https://t.co/abl1E3IukJ,https://x.com/realchendahuang/status/2125207469379215561,51681,102,12,586,0,3,10,1,121,100,175,0,0,6830,10059
-2125207135160311949,"Tue, Nov 24, 2026",@TNtLike3379 这是专门针对这个白皮猪@theo 说的，没有指任何其他人,https://x.com/realchendahuang/status/2125207135160311949,56,1,0,7,0,0,0,0,4,2,0,0,0,,
-2125206167828017382,"Tue, Nov 24, 2026",@balabala289 你是对的,https://x.com/realchendahuang/status/2125206167828017382,2081,0,0,5,0,0,0,0,5,0,0,0,0,,
-2125206139134722435,"Tue, Nov 24, 2026",@chasen_liao 打的就是精锐,https://x.com/realchendahuang/status/2125206139134722435,2850,2,0,35,0,0,0,0,32,1,0,0,0,,
+https://t.co/YRD9GvAFWC",https://x.com/realchendahuang/status/2125213397507858657,127415,886,240,6128,37,17,71,53,435,2440,530,0,0,1696,
+2125210830795165705,"Tue, Nov 24, 2026",@sabotaj0707 @theo @NOYBeu @heiseonline 🫡🫡🫡,https://x.com/realchendahuang/status/2125210830795165705,28534,288,3,591,0,4,0,0,291,8,0,0,0,,
+2125210724343672993,"Tue, Nov 24, 2026",还有新的瓜@theo 你怎么那么坏啊,https://x.com/realchendahuang/status/2125210724343672993,7025,68,5,244,0,1,3,2,101,57,0,0,0,12,
+2125207469379215561,"Tue, Nov 24, 2026",大家可以支持一下优秀的其他的项目，而不是T3Code这种种族歧视软件https://t.co/abl1E3IukJ,https://x.com/realchendahuang/status/2125207469379215561,56702,116,12,662,0,3,10,1,136,123,188,0,0,7535,11102
+2125207135160311949,"Tue, Nov 24, 2026",@TNtLike3379 这是专门针对这个白皮猪@theo 说的，没有指任何其他人,https://x.com/realchendahuang/status/2125207135160311949,58,1,0,9,0,0,0,0,4,4,0,0,0,,
+2125206167828017382,"Tue, Nov 24, 2026",@balabala289 你是对的,https://x.com/realchendahuang/status/2125206167828017382,2158,1,0,7,0,0,0,0,6,0,0,0,0,,
+2125206139134722435,"Tue, Nov 24, 2026",@chasen_liao 打的就是精锐,https://x.com/realchendahuang/status/2125206139134722435,3159,2,0,36,0,0,0,0,33,1,0,0,0,,
 2125203254820884681,"Tue, Nov 24, 2026",@rajatsx 你可以Fork它，然后把遥测去掉。,https://x.com/realchendahuang/status/2125203254820884681,130,2,0,4,0,0,0,0,0,2,0,0,0,,
-2125203139423072752,"Tue, Nov 24, 2026",哈哈哈哈笑死我了 https://t.co/0YDyrlNUg4,https://x.com/realchendahuang/status/2125203139423072752,3999,134,1,302,0,1,1,0,13,29,0,0,0,124,
-2125202459043954953,"Tue, Nov 24, 2026",@cxjwin @theo 可惜了,https://x.com/realchendahuang/status/2125202459043954953,282,0,0,8,0,0,0,0,7,1,0,0,0,,
+2125203139423072752,"Tue, Nov 24, 2026",哈哈哈哈笑死我了 https://t.co/0YDyrlNUg4,https://x.com/realchendahuang/status/2125203139423072752,4297,247,1,419,0,1,1,0,13,29,0,0,0,128,
+2125202459043954953,"Tue, Nov 24, 2026",@cxjwin @theo 可惜了,https://x.com/realchendahuang/status/2125202459043954953,293,0,0,8,0,0,0,0,7,1,0,0,0,,
 2125202182807101923,"Tue, Nov 24, 2026","@theo 还有新的罪行，我都笑了，黑历史太多了，根本数不清，这种人的T3Code项目你们敢用吗？
 
-https://t.co/QstctsrbKy",https://x.com/realchendahuang/status/2125202182807101923,65043,253,22,1362,1,3,1,3,529,183,130,0,0,260,
+https://t.co/QstctsrbKy",https://x.com/realchendahuang/status/2125202182807101923,70973,289,22,1500,1,3,2,3,575,205,150,0,0,273,
 2125201882687881378,"Tue, Nov 24, 2026","T3Code 项目黑历史第三弹：
 
 在 T3 Code 里给 Claude 开 Auto 模式，本来是为了让高风险命令先弹窗问你再执行。但从 10 月 3 日到今天 52 天，有个一直没修的漏洞，Auto 模式会把本该问你的危险操作静默放行。
@@ -239,68 +598,68 @@ https://t.co/oqC7uiFGms
 https://t.co/d6mXp9anCM
 Issue #33639 作者原话回复与次日被拒 PR #41572：
 https://t.co/XbmAnQQw5Y
-https://t.co/AwHkF8wIZU",https://x.com/realchendahuang/status/2125201882687881378,101293,420,47,3433,5,8,33,19,206,1285,220,0,0,1242,
-2125200727668867410,"Tue, Nov 24, 2026",看来@theo 真是惹众怒了，人神共怒啊，这都有人转？ https://t.co/5W4KgchcEa,https://x.com/realchendahuang/status/2125200727668867410,5510,240,1,668,0,2,4,0,127,138,0,0,0,157,
-2125200319298855188,"Tue, Nov 24, 2026",@iecbearli 这是种族主义者，白皮猪，该骂,https://x.com/realchendahuang/status/2125200319298855188,1832,0,0,6,0,0,0,0,5,1,0,0,0,,
-2125200197328441354,"Tue, Nov 24, 2026",@GuigaOGrande 🫡🫡🫡🫡,https://x.com/realchendahuang/status/2125200197328441354,37,1,0,4,0,0,1,0,2,0,0,0,0,,
-2125200128416075943,"Tue, Nov 24, 2026",@tspy @theo @grok  theo的邮箱是多少？,https://x.com/realchendahuang/status/2125200128416075943,36,0,0,4,0,0,0,0,0,4,0,0,0,,
-2125200082744291366,"Tue, Nov 24, 2026",@tspy @theo 可以去github看看,https://x.com/realchendahuang/status/2125200082744291366,238,0,0,1,0,0,0,0,1,0,0,0,0,,
-2125199424632885542,"Tue, Nov 24, 2026",@fxmqs @theo It's all my fault.,https://x.com/realchendahuang/status/2125199424632885542,2850,3,0,32,0,0,0,0,28,1,0,0,0,,
+https://t.co/AwHkF8wIZU",https://x.com/realchendahuang/status/2125201882687881378,111007,592,51,3889,5,9,35,19,228,1424,234,0,0,1348,
+2125200727668867410,"Tue, Nov 24, 2026",看来@theo 真是惹众怒了，人神共怒啊，这都有人转？ https://t.co/5W4KgchcEa,https://x.com/realchendahuang/status/2125200727668867410,6171,427,1,895,0,4,5,0,138,153,0,0,0,168,
+2125200319298855188,"Tue, Nov 24, 2026",@iecbearli 这是种族主义者，白皮猪，该骂,https://x.com/realchendahuang/status/2125200319298855188,1836,0,0,6,0,0,0,0,5,1,0,0,0,,
+2125200197328441354,"Tue, Nov 24, 2026",@GuigaOGrande 🫡🫡🫡🫡,https://x.com/realchendahuang/status/2125200197328441354,39,1,0,4,0,0,1,0,2,0,0,0,0,,
+2125200128416075943,"Tue, Nov 24, 2026",@tspy @theo @grok  theo的邮箱是多少？,https://x.com/realchendahuang/status/2125200128416075943,37,0,0,4,0,0,0,0,0,4,0,0,0,,
+2125200082744291366,"Tue, Nov 24, 2026",@tspy @theo 可以去github看看,https://x.com/realchendahuang/status/2125200082744291366,244,0,0,1,0,0,0,0,1,0,0,0,0,,
+2125199424632885542,"Tue, Nov 24, 2026",@fxmqs @theo It's all my fault.,https://x.com/realchendahuang/status/2125199424632885542,3043,4,0,36,0,0,0,0,31,1,0,0,0,,
 2125199336393019600,"Tue, Nov 24, 2026",@XQian58923 扒一下看看,https://x.com/realchendahuang/status/2125199336393019600,67,0,0,0,0,0,0,0,0,0,0,0,0,,
-2125198476065849731,"Tue, Nov 24, 2026",@tspy @theo 我也是,https://x.com/realchendahuang/status/2125198476065849731,3439,0,0,16,0,0,1,0,13,2,0,0,0,,
-2125198367496257628,"Tue, Nov 24, 2026",@cxjwin @theo 都怪我,https://x.com/realchendahuang/status/2125198367496257628,3491,1,0,26,0,0,1,0,21,3,0,0,0,,
-2125197691861049633,"Tue, Nov 24, 2026",@ShamelessB0y 是的，他说中推圈是粪坑，经典种族主义者 https://t.co/OM0VV86h3P,https://x.com/realchendahuang/status/2125197691861049633,9226,35,1,347,0,0,1,0,31,15,0,0,0,265,
-2125197495441715418,"Tue, Nov 24, 2026",@htlee2014 哈哈哈哈急了急了急了急了,https://x.com/realchendahuang/status/2125197495441715418,17112,11,1,101,1,0,0,0,51,39,0,0,0,,
-2125196772083634438,"Tue, Nov 24, 2026",@kieran_builds shit！,https://x.com/realchendahuang/status/2125196772083634438,36623,52,0,122,0,0,0,0,62,8,0,0,0,,
-2125196688650608728,"Tue, Nov 24, 2026",@lingo24 干的就是人渣,https://x.com/realchendahuang/status/2125196688650608728,2795,0,0,10,0,1,0,0,8,1,0,0,0,,
-2125196641280094462,"Tue, Nov 24, 2026",@yongleluo 我没发啊，我去看看,https://x.com/realchendahuang/status/2125196641280094462,3553,0,0,14,0,1,1,0,12,0,0,0,0,,
-2125196602331844770,"Tue, Nov 24, 2026",@0xsidzsh 🫡🫡🫡,https://x.com/realchendahuang/status/2125196602331844770,21456,10,2,68,0,0,0,0,54,4,0,0,0,,
-2125196548887994576,"Tue, Nov 24, 2026",@Yinzi1122 人品+产品都不行,https://x.com/realchendahuang/status/2125196548887994576,11369,13,0,43,0,0,0,0,27,3,0,0,0,,
-2125196494206869748,"Tue, Nov 24, 2026",@Wisp21951874 有的，现在AI这么发达，一抓一大把 @grok 告诉我答案,https://x.com/realchendahuang/status/2125196494206869748,6661,2,0,22,0,0,1,0,9,10,0,0,0,,
-2125196381812060533,"Tue, Nov 24, 2026",@_pingcheng 五十步和一百步,https://x.com/realchendahuang/status/2125196381812060533,5792,5,1,48,0,0,0,0,10,33,0,0,0,,
-2125196253441253378,"Tue, Nov 24, 2026",@Raw_0xDEADBEEF 北美360，赞了,https://x.com/realchendahuang/status/2125196253441253378,5641,3,0,19,0,0,0,0,15,1,0,0,0,,
-2125196190082015480,"Tue, Nov 24, 2026",@HeXingluDev 宣传T3 Code的博主不是坏，主要原因是被作者@theo 蒙蔽了双眼，这人本身道德低下，不指望做出什么良心的产品,https://x.com/realchendahuang/status/2125196190082015480,6018,6,0,50,0,0,0,0,39,5,0,0,0,,
-2125195974356381900,"Tue, Nov 24, 2026",@___727__ yes,https://x.com/realchendahuang/status/2125195974356381900,22514,185,4,272,0,0,0,0,83,4,0,0,0,,
-2125195828658913449,"Tue, Nov 24, 2026",@Gaoxinggang 是的，表里不一,https://x.com/realchendahuang/status/2125195828658913449,2740,1,0,19,0,0,0,0,8,10,0,0,0,,
-2125195737810301132,"Tue, Nov 24, 2026",@AShozak 连起来了？,https://x.com/realchendahuang/status/2125195737810301132,11123,1,0,26,0,0,0,0,19,6,0,0,0,,
-2125195560173101314,"Tue, Nov 24, 2026",@zqa778 @SatejDhakane 败絮其中,https://x.com/realchendahuang/status/2125195560173101314,470,0,0,7,0,0,0,0,6,1,0,0,0,,
-2125195146337853928,"Tue, Nov 24, 2026",@fanzhang2026 agy现在本体也凑合可以用，不算特别难用，但是agy也有哦数据上报的问题,https://x.com/realchendahuang/status/2125195146337853928,4419,3,0,17,0,0,1,0,8,5,0,0,0,,
-2125188192995627228,"Tue, Nov 24, 2026",@Danniel_hu @theo 白皮猪,https://x.com/realchendahuang/status/2125188192995627228,131,1,0,2,0,0,0,0,1,0,0,0,0,,
-2125183837441601842,"Tue, Nov 24, 2026",@MyDaebakCafe @theo 甚至还看不懂中文成语,https://x.com/realchendahuang/status/2125183837441601842,225,0,0,5,0,0,1,0,0,4,0,0,0,,
-2125183795183882296,"Tue, Nov 24, 2026",@MyDaebakCafe @theo yes,https://x.com/realchendahuang/status/2125183795183882296,4810,2,0,24,0,0,1,0,16,5,0,0,0,,
-2125182413710205212,"Tue, Nov 24, 2026",T3 Code的@Theo真是小嘴抹了蜜，原来SB无国界 https://t.co/xzU6mmbHl5,https://x.com/realchendahuang/status/2125182413710205212,38902,448,16,4382,3,4,53,5,888,1384,0,0,0,1600,
-2125181467320037464,"Tue, Nov 24, 2026",@onlmood @theo 哈哈哈哈哈太难受了,https://x.com/realchendahuang/status/2125181467320037464,327,0,0,2,0,0,0,0,1,1,0,0,0,,
-2125180419637449005,"Tue, Nov 24, 2026",@amike_an @dannykkg @theo @theo 的评论区好多跪舔的，我也不知道他们图啥？图他种族歧视吗？,https://x.com/realchendahuang/status/2125180419637449005,7697,21,1,81,0,0,1,0,47,12,0,0,0,,
-2125180316721815743,"Tue, Nov 24, 2026",@BoyC338 @theo @grok 推荐一下用啥号,https://x.com/realchendahuang/status/2125180316721815743,3325,0,0,15,0,0,1,0,7,7,0,0,0,,
-2125180264402039255,"Tue, Nov 24, 2026",@superalesha @theo He is son of bitch,https://x.com/realchendahuang/status/2125180264402039255,31507,198,10,414,0,4,1,4,131,76,0,0,0,,
-2125180029885903152,"Tue, Nov 24, 2026",@4isSecure @theo 你是对的，免费的才是最贵的,https://x.com/realchendahuang/status/2125180029885903152,49409,234,4,347,0,1,2,0,84,26,0,0,0,,
-2125179960029831536,"Tue, Nov 24, 2026",@dumganhar @theo 不能关,https://x.com/realchendahuang/status/2125179960029831536,9301,3,0,51,0,0,2,0,12,34,0,0,0,,
-2125179887023775980,"Tue, Nov 24, 2026",@KrushKai @theo @grok 推荐一下T3Code的平替,https://x.com/realchendahuang/status/2125179887023775980,5586,1,2,76,0,0,2,0,24,49,0,0,0,,
-2125179833802219860,"Tue, Nov 24, 2026",@SShikang @theo 因为把用户底裤🩲扒完了,https://x.com/realchendahuang/status/2125179833802219860,30593,82,0,170,0,1,1,0,63,23,0,0,0,,
-2125179740445442387,"Tue, Nov 24, 2026",@MindUp_Dev @theo 同行衬托的好,https://x.com/realchendahuang/status/2125179740445442387,5353,2,0,38,0,1,0,0,34,1,0,0,0,,
-2125179567950409793,"Tue, Nov 24, 2026",@xiefeng492 @theo 社区有很多良心分支版@grok 你帮我查查T3Code的良心分支,https://x.com/realchendahuang/status/2125179567950409793,8233,4,1,51,0,0,2,0,16,29,0,0,0,,
-2125179366389006668,"Tue, Nov 24, 2026",@qingj1314 @theo 出生@theo,https://x.com/realchendahuang/status/2125179366389006668,7540,0,0,45,0,0,0,0,39,6,0,0,0,,
-2125179208049832447,"Tue, Nov 24, 2026",@Jerry_Galaxy @theo 全靠同行衬托,https://x.com/realchendahuang/status/2125179208049832447,90,1,0,2,0,0,1,0,0,0,0,0,0,,
-2125179013345984990,"Tue, Nov 24, 2026",@toshvlc @theo 哈哈哈，你不是专门注册的小号吧？,https://x.com/realchendahuang/status/2125179013345984990,154,0,0,8,0,0,1,0,3,4,0,0,0,,
-2125178840263852400,"Tue, Nov 24, 2026",@ai_edisonZ @theo 做的是UI删除,https://x.com/realchendahuang/status/2125178840263852400,6337,21,0,71,0,1,0,0,47,2,0,0,0,,
-2125178590698655800,"Tue, Nov 24, 2026",@toshvlc 你是@theo 小号吗？,https://x.com/realchendahuang/status/2125178590698655800,351,1,0,14,0,0,1,0,8,4,0,0,0,,
-2125178165790445993,"Tue, Nov 24, 2026",@theo 良心版T3Code，真正的无隐私上传，无遥测，关注一波https://t.co/pKRudaXiwV,https://x.com/realchendahuang/status/2125178165790445993,90912,458,137,2421,7,10,15,4,330,333,811,0,0,460,
-2125177875431301630,"Tue, Nov 24, 2026",T3Code 的良心版分支来了，大家可以冲https://t.co/pKRudaXiwV,https://x.com/realchendahuang/status/2125177875431301630,2721,2,6,55,0,0,2,0,6,18,12,0,0,15,
+2125198476065849731,"Tue, Nov 24, 2026",@tspy @theo 我也是,https://x.com/realchendahuang/status/2125198476065849731,3652,0,0,17,0,0,1,0,14,2,0,0,0,,
+2125198367496257628,"Tue, Nov 24, 2026",@cxjwin @theo 都怪我,https://x.com/realchendahuang/status/2125198367496257628,3718,1,0,27,0,0,1,0,22,3,0,0,0,,
+2125197691861049633,"Tue, Nov 24, 2026",@ShamelessB0y 是的，他说中推圈是粪坑，经典种族主义者 https://t.co/OM0VV86h3P,https://x.com/realchendahuang/status/2125197691861049633,10033,38,1,376,0,0,1,0,34,17,0,0,0,286,
+2125197495441715418,"Tue, Nov 24, 2026",@htlee2014 哈哈哈哈急了急了急了急了,https://x.com/realchendahuang/status/2125197495441715418,18308,18,1,110,1,0,0,0,53,39,0,0,0,,
+2125196772083634438,"Tue, Nov 24, 2026",@kieran_builds shit！,https://x.com/realchendahuang/status/2125196772083634438,38723,54,0,130,0,0,0,0,68,8,0,0,0,,
+2125196688650608728,"Tue, Nov 24, 2026",@lingo24 干的就是人渣,https://x.com/realchendahuang/status/2125196688650608728,2798,0,0,10,0,1,0,0,8,1,0,0,0,,
+2125196641280094462,"Tue, Nov 24, 2026",@yongleluo 我没发啊，我去看看,https://x.com/realchendahuang/status/2125196641280094462,3560,0,0,14,0,1,1,0,12,0,0,0,0,,
+2125196602331844770,"Tue, Nov 24, 2026",@0xsidzsh 🫡🫡🫡,https://x.com/realchendahuang/status/2125196602331844770,22237,10,2,68,0,0,0,0,54,4,0,0,0,,
+2125196548887994576,"Tue, Nov 24, 2026",@Yinzi1122 人品+产品都不行,https://x.com/realchendahuang/status/2125196548887994576,12593,14,0,48,0,0,0,0,31,3,0,0,0,,
+2125196494206869748,"Tue, Nov 24, 2026",@Wisp21951874 有的，现在AI这么发达，一抓一大把 @grok 告诉我答案,https://x.com/realchendahuang/status/2125196494206869748,7209,3,0,26,0,0,1,0,11,11,0,0,0,,
+2125196381812060533,"Tue, Nov 24, 2026",@_pingcheng 五十步和一百步,https://x.com/realchendahuang/status/2125196381812060533,6243,6,1,52,0,0,0,0,10,36,0,0,0,,
+2125196253441253378,"Tue, Nov 24, 2026",@Raw_0xDEADBEEF 北美360，赞了,https://x.com/realchendahuang/status/2125196253441253378,6186,4,0,22,0,0,0,0,17,1,0,0,0,,
+2125196190082015480,"Tue, Nov 24, 2026",@HeXingluDev 宣传T3 Code的博主不是坏，主要原因是被作者@theo 蒙蔽了双眼，这人本身道德低下，不指望做出什么良心的产品,https://x.com/realchendahuang/status/2125196190082015480,6553,7,0,55,0,0,0,0,40,8,0,0,0,,
+2125195974356381900,"Tue, Nov 24, 2026",@___727__ yes,https://x.com/realchendahuang/status/2125195974356381900,23656,191,4,286,0,0,0,0,91,4,0,0,0,,
+2125195828658913449,"Tue, Nov 24, 2026",@Gaoxinggang 是的，表里不一,https://x.com/realchendahuang/status/2125195828658913449,2891,2,0,21,0,0,0,0,9,10,0,0,0,,
+2125195737810301132,"Tue, Nov 24, 2026",@AShozak 连起来了？,https://x.com/realchendahuang/status/2125195737810301132,11518,2,0,28,0,0,0,0,19,7,0,0,0,,
+2125195560173101314,"Tue, Nov 24, 2026",@zqa778 @SatejDhakane 败絮其中,https://x.com/realchendahuang/status/2125195560173101314,474,0,0,7,0,0,0,0,6,1,0,0,0,,
+2125195146337853928,"Tue, Nov 24, 2026",@fanzhang2026 agy现在本体也凑合可以用，不算特别难用，但是agy也有哦数据上报的问题,https://x.com/realchendahuang/status/2125195146337853928,4646,4,0,19,0,0,1,0,8,6,0,0,0,,
+2125188192995627228,"Tue, Nov 24, 2026",@Danniel_hu @theo 白皮猪,https://x.com/realchendahuang/status/2125188192995627228,132,1,0,2,0,0,0,0,1,0,0,0,0,,
+2125183837441601842,"Tue, Nov 24, 2026",@MyDaebakCafe @theo 甚至还看不懂中文成语,https://x.com/realchendahuang/status/2125183837441601842,238,0,0,5,0,0,1,0,0,4,0,0,0,,
+2125183795183882296,"Tue, Nov 24, 2026",@MyDaebakCafe @theo yes,https://x.com/realchendahuang/status/2125183795183882296,5099,2,0,24,0,0,1,0,16,5,0,0,0,,
+2125182413710205212,"Tue, Nov 24, 2026",T3 Code的@Theo真是小嘴抹了蜜，原来SB无国界 https://t.co/xzU6mmbHl5,https://x.com/realchendahuang/status/2125182413710205212,41470,638,16,4814,3,4,58,6,938,1453,0,0,0,1717,
+2125181467320037464,"Tue, Nov 24, 2026",@onlmood @theo 哈哈哈哈哈太难受了,https://x.com/realchendahuang/status/2125181467320037464,368,0,0,2,0,0,0,0,1,1,0,0,0,,
+2125180419637449005,"Tue, Nov 24, 2026",@amike_an @dannykkg @theo @theo 的评论区好多跪舔的，我也不知道他们图啥？图他种族歧视吗？,https://x.com/realchendahuang/status/2125180419637449005,8374,25,1,92,0,0,1,0,53,13,0,0,0,,
+2125180316721815743,"Tue, Nov 24, 2026",@BoyC338 @theo @grok 推荐一下用啥号,https://x.com/realchendahuang/status/2125180316721815743,3328,0,0,15,0,0,1,0,7,7,0,0,0,,
+2125180264402039255,"Tue, Nov 24, 2026",@superalesha @theo He is son of bitch,https://x.com/realchendahuang/status/2125180264402039255,32833,205,10,429,0,4,1,4,135,80,0,0,0,,
+2125180029885903152,"Tue, Nov 24, 2026",@4isSecure @theo 你是对的，免费的才是最贵的,https://x.com/realchendahuang/status/2125180029885903152,51616,246,5,367,0,1,2,0,87,31,0,0,0,,
+2125179960029831536,"Tue, Nov 24, 2026",@dumganhar @theo 不能关,https://x.com/realchendahuang/status/2125179960029831536,9756,4,0,57,0,0,2,0,16,35,0,0,0,,
+2125179887023775980,"Tue, Nov 24, 2026",@KrushKai @theo @grok 推荐一下T3Code的平替,https://x.com/realchendahuang/status/2125179887023775980,5876,2,2,81,0,0,2,0,24,53,0,0,0,,
+2125179833802219860,"Tue, Nov 24, 2026",@SShikang @theo 因为把用户底裤🩲扒完了,https://x.com/realchendahuang/status/2125179833802219860,32499,87,0,178,0,1,1,0,66,23,0,0,0,,
+2125179740445442387,"Tue, Nov 24, 2026",@MindUp_Dev @theo 同行衬托的好,https://x.com/realchendahuang/status/2125179740445442387,5559,3,0,39,0,1,0,0,34,1,0,0,0,,
+2125179567950409793,"Tue, Nov 24, 2026",@xiefeng492 @theo 社区有很多良心分支版@grok 你帮我查查T3Code的良心分支,https://x.com/realchendahuang/status/2125179567950409793,8607,6,1,54,0,0,2,0,17,29,0,0,0,,
+2125179366389006668,"Tue, Nov 24, 2026",@qingj1314 @theo 出生@theo,https://x.com/realchendahuang/status/2125179366389006668,7544,0,0,45,0,0,0,0,39,6,0,0,0,,
+2125179208049832447,"Tue, Nov 24, 2026",@Jerry_Galaxy @theo 全靠同行衬托,https://x.com/realchendahuang/status/2125179208049832447,91,1,0,2,0,0,1,0,0,0,0,0,0,,
+2125179013345984990,"Tue, Nov 24, 2026",@toshvlc @theo 哈哈哈，你不是专门注册的小号吧？,https://x.com/realchendahuang/status/2125179013345984990,155,0,0,8,0,0,1,0,3,4,0,0,0,,
+2125178840263852400,"Tue, Nov 24, 2026",@ai_edisonZ @theo 做的是UI删除,https://x.com/realchendahuang/status/2125178840263852400,6782,26,0,77,0,1,0,0,48,2,0,0,0,,
+2125178590698655800,"Tue, Nov 24, 2026",@toshvlc 你是@theo 小号吗？,https://x.com/realchendahuang/status/2125178590698655800,361,1,0,14,0,0,1,0,8,4,0,0,0,,
+2125178165790445993,"Tue, Nov 24, 2026",@theo 良心版T3Code，真正的无隐私上传，无遥测，关注一波https://t.co/pKRudaXiwV,https://x.com/realchendahuang/status/2125178165790445993,97894,494,144,2635,7,11,15,4,359,373,869,0,0,510,
+2125177875431301630,"Tue, Nov 24, 2026",T3Code 的良心版分支来了，大家可以冲https://t.co/pKRudaXiwV,https://x.com/realchendahuang/status/2125177875431301630,3059,3,6,61,0,0,2,0,8,18,15,0,0,15,
 2125171853656527013,"Tue, Nov 24, 2026",@ColorlessCl @theo You are absolutely right.,https://x.com/realchendahuang/status/2125171853656527013,83,0,0,0,0,0,0,0,0,0,0,0,0,,
-2125171772370846105,"Tue, Nov 24, 2026",@callmeelder @theo 我在杀红了眼，你问我眼睛干不干？,https://x.com/realchendahuang/status/2125171772370846105,6322,19,0,59,0,0,1,0,28,11,0,0,0,,
-2125170231190622303,"Tue, Nov 24, 2026",@fernandoeeu_dev 🫡🫡🫡,https://x.com/realchendahuang/status/2125170231190622303,129,2,0,7,0,0,1,0,4,0,0,0,0,,
-2125170122050715911,"Tue, Nov 24, 2026",@MyDaebakCafe @theo 原来是无差别攻击,https://x.com/realchendahuang/status/2125170122050715911,112,1,0,4,0,0,1,0,0,2,0,0,0,,
-2125169963136913673,"Tue, Nov 24, 2026",支持，以后我就认你，t3code就是AI slop,https://x.com/realchendahuang/status/2125169963136913673,7097,265,8,499,0,1,4,1,49,90,0,0,0,89,
-2125164949119066350,"Tue, Nov 24, 2026",@star_flow_ai @theo 你是对的,https://x.com/realchendahuang/status/2125164949119066350,13658,8,0,38,0,0,0,0,28,2,0,0,0,,
-2125164877908214125,"Tue, Nov 24, 2026",@Willie95163 @theo “风味”删除,https://x.com/realchendahuang/status/2125164877908214125,6496,9,0,40,0,0,0,0,28,3,0,0,0,,
-2125164647678697753,"Tue, Nov 24, 2026",@zzliujianbo 纯AI Slop,https://x.com/realchendahuang/status/2125164647678697753,1849,1,0,6,0,0,0,0,4,1,0,0,0,,
-2125164092059254943,"Tue, Nov 24, 2026",@DDdxx666 这人@theo 纯小丑，你没错,https://x.com/realchendahuang/status/2125164092059254943,107,2,0,10,0,0,0,0,6,2,0,0,0,,
+2125171772370846105,"Tue, Nov 24, 2026",@callmeelder @theo 我在杀红了眼，你问我眼睛干不干？,https://x.com/realchendahuang/status/2125171772370846105,6581,21,0,62,0,0,1,0,29,11,0,0,0,,
+2125170231190622303,"Tue, Nov 24, 2026",@fernandoeeu_dev 🫡🫡🫡,https://x.com/realchendahuang/status/2125170231190622303,135,2,0,7,0,0,1,0,4,0,0,0,0,,
+2125170122050715911,"Tue, Nov 24, 2026",@MyDaebakCafe @theo 原来是无差别攻击,https://x.com/realchendahuang/status/2125170122050715911,113,1,0,4,0,0,1,0,0,2,0,0,0,,
+2125169963136913673,"Tue, Nov 24, 2026",支持，以后我就认你，t3code就是AI slop,https://x.com/realchendahuang/status/2125169963136913673,7645,461,8,709,0,1,5,1,52,100,0,0,0,89,
+2125164949119066350,"Tue, Nov 24, 2026",@star_flow_ai @theo 你是对的,https://x.com/realchendahuang/status/2125164949119066350,14108,9,0,39,0,0,0,0,28,2,0,0,0,,
+2125164877908214125,"Tue, Nov 24, 2026",@Willie95163 @theo “风味”删除,https://x.com/realchendahuang/status/2125164877908214125,6937,10,0,44,0,0,0,0,31,3,0,0,0,,
+2125164647678697753,"Tue, Nov 24, 2026",@zzliujianbo 纯AI Slop,https://x.com/realchendahuang/status/2125164647678697753,2038,1,0,8,0,0,0,0,6,1,0,0,0,,
+2125164092059254943,"Tue, Nov 24, 2026",@DDdxx666 这人@theo 纯小丑，你没错,https://x.com/realchendahuang/status/2125164092059254943,109,2,0,11,0,0,0,0,7,2,0,0,0,,
 2125161999579722218,"Tue, Nov 24, 2026","再送你 @theo 几个中国成语，回去报个中文培训班好好学学：
 
-欺世盗名，沽名钓誉，假仁假义，口是心非，出尔反尔，弄虚作假，信口雌黄，鬼鬼祟祟，包藏祸心，盛气凌人，专横跋扈，目中无人，自以为是，一意孤行，倒行逆施，厚颜无耻。",https://x.com/realchendahuang/status/2125161999579722218,25913,126,9,1367,0,3,18,2,623,448,0,0,0,147,
-2125161113054789803,"Tue, Nov 24, 2026",@theo 出来挨打，看看你做的什么玩意？？？,https://x.com/realchendahuang/status/2125161113054789803,2917,9,0,108,0,0,1,0,44,34,0,0,0,20,
-2125160975091523737,"Tue, Nov 24, 2026",@theo 第二弹罪行我已经扒出来了，有理有据有节，大家擦亮眼睛，别被@theo 这种人给蒙蔽了：https://t.co/pobhtULs9B,https://x.com/realchendahuang/status/2125160975091523737,109994,878,81,4256,4,20,4,20,1336,450,809,0,0,739,
-2125160749303816231,"Tue, Nov 24, 2026",再补一个这货@theo的罪行，简直是罄竹难书https://t.co/pobhtULs9B,https://x.com/realchendahuang/status/2125160749303816231,3679,7,1,44,0,0,0,0,19,2,6,0,0,10,
+欺世盗名，沽名钓誉，假仁假义，口是心非，出尔反尔，弄虚作假，信口雌黄，鬼鬼祟祟，包藏祸心，盛气凌人，专横跋扈，目中无人，自以为是，一意孤行，倒行逆施，厚颜无耻。",https://x.com/realchendahuang/status/2125161999579722218,26499,128,9,1396,0,4,18,2,633,458,0,0,0,153,
+2125161113054789803,"Tue, Nov 24, 2026",@theo 出来挨打，看看你做的什么玩意？？？,https://x.com/realchendahuang/status/2125161113054789803,3018,10,0,109,0,0,1,0,44,34,0,0,0,20,
+2125160975091523737,"Tue, Nov 24, 2026",@theo 第二弹罪行我已经扒出来了，有理有据有节，大家擦亮眼睛，别被@theo 这种人给蒙蔽了：https://t.co/pobhtULs9B,https://x.com/realchendahuang/status/2125160975091523737,118248,959,86,4634,4,23,4,21,1471,500,867,0,0,789,
+2125160749303816231,"Tue, Nov 24, 2026",再补一个这货@theo的罪行，简直是罄竹难书https://t.co/pobhtULs9B,https://x.com/realchendahuang/status/2125160749303816231,4053,7,1,50,0,0,0,0,23,2,6,0,0,12,
 2125160473176023486,"Tue, Nov 24, 2026","@theo 的 T3 Code 疯狂上传用户数据已经是底线了，没想到还有更恶心的事情。
 
 你在 T3 Code 侧边栏删一个对话，弹窗信誓旦旦地告诉你，这会永久清除该对话的历史记录。
@@ -391,27 +750,27 @@ https://t.co/hT6l0Cu9um
 法务追责威胁声明（TRADEMARK.md）
 https://t.co/qju3Qirddl
 一边打包票不封号一边教人 CLIProxyAPI 叠 9 个账号还调侃封号先道歉（docs/user/faq.md）
-https://t.co/raOt1AiPVO",https://x.com/realchendahuang/status/2125160473176023486,169346,629,112,9174,17,33,45,32,606,3927,373,0,0,3529,
+https://t.co/raOt1AiPVO",https://x.com/realchendahuang/status/2125160473176023486,181281,825,118,9886,19,35,46,35,637,4175,399,0,0,3734,
 2125158083651588498,"Tue, Nov 24, 2026",@zonglin_x 纯小丑，人品极差,https://x.com/realchendahuang/status/2125158083651588498,38,1,0,2,0,0,0,0,1,0,0,0,0,,
-2125157989728522295,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 大家都夸皇帝的新装好看，可是我不想夸一坨屎香,https://x.com/realchendahuang/status/2125157989728522295,1074,4,0,6,0,0,0,0,2,0,0,0,0,,
+2125157989728522295,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 大家都夸皇帝的新装好看，可是我不想夸一坨屎香,https://x.com/realchendahuang/status/2125157989728522295,1125,4,0,6,0,0,0,0,2,0,0,0,0,,
 2125157813731336562,"Tue, Nov 24, 2026",@VillaHasNoGift @theo 快出来挨打@theo,https://x.com/realchendahuang/status/2125157813731336562,11,0,0,2,0,0,1,0,0,1,0,0,0,,
-2125157336901980544,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 美国大花椒,https://x.com/realchendahuang/status/2125157336901980544,25632,33,1,142,0,1,3,0,48,57,0,0,0,,
+2125157336901980544,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 美国大花椒,https://x.com/realchendahuang/status/2125157336901980544,26674,35,1,153,0,1,3,0,53,61,0,0,0,,
 2125157285031031228,"Tue, Nov 24, 2026",@Kom_ccc @theo 吃人血馒头的,https://x.com/realchendahuang/status/2125157285031031228,11,1,0,3,0,0,1,0,0,1,0,0,0,,
-2125155713463066865,"Tue, Nov 24, 2026",@zqa778 @theo 卸载吧，这种流氓软件，恶心啊,https://x.com/realchendahuang/status/2125155713463066865,17972,19,0,74,0,1,3,0,40,11,0,0,0,,
-2125155354199879941,"Tue, Nov 24, 2026",@yifanxu_ephai @theo 干的就是这种人渣,https://x.com/realchendahuang/status/2125155354199879941,27234,209,1,544,0,8,1,0,314,12,0,0,0,,
+2125155713463066865,"Tue, Nov 24, 2026",@zqa778 @theo 卸载吧，这种流氓软件，恶心啊,https://x.com/realchendahuang/status/2125155713463066865,18611,20,0,80,0,1,3,0,44,12,0,0,0,,
+2125155354199879941,"Tue, Nov 24, 2026",@yifanxu_ephai @theo 干的就是这种人渣,https://x.com/realchendahuang/status/2125155354199879941,27985,214,1,554,0,8,1,0,318,13,0,0,0,,
 2125155277775478917,"Tue, Nov 24, 2026","@theo 道貌岸然，言而无信，鼠窃狗偷，暗度陈仓，掩耳盗铃，独断专行，利欲熏心，寡廉鲜耻，无耻之尤。
 
 You advertised No telemetry. Unless you opt in. Full stop. while silently shipping default-on tracking for 3 months, deleted the promise without a word, read users' local ~/.codex/auth.json and ~/.claude.json to build unsalted cross-device owner IDs, and closed 4 working opt-out toggle PRs as unwanted.
 
-Answer one question @theo: if your telemetry is really harmless and anonymous, why are you so terrified of letting users click a single off switch in Settings?",https://x.com/realchendahuang/status/2125155277775478917,3929,36,3,145,0,0,4,0,35,64,0,0,0,6,
+Answer one question @theo: if your telemetry is really harmless and anonymous, why are you so terrified of letting users click a single off switch in Settings?",https://x.com/realchendahuang/status/2125155277775478917,4041,36,3,146,0,0,4,0,36,64,0,0,0,6,
 2125155231646589045,"Tue, Nov 24, 2026","@theo 你这副嘴脸用中文里面这些成语来形容：
 
 道貌岸然，口蜜腹剑，言而无信，表里不一，鼠窃狗偷，暗度陈仓，指鹿为马，掩耳盗铃，独断专行，利欲熏心，寡廉鲜耻，恬不知耻，无耻之尤。
 
 嘴上挂着零遥测的招牌招摇撞骗，背地里偷跑三个月再悄悄删掉承诺，手直接伸进用户本机的 Codex 和 Claude 凭证里抠账号做跨设备归因，社区白送四个测通的关闭开关 PR 全被你一脚踢开。
 
-我就问你一句 @theo，你把每个信任开源的开发者当成免费的数据肉鸡，连个设置里的关闭按钮都不敢放出来，到底心里藏着什么见不得人的鬼？",https://x.com/realchendahuang/status/2125155231646589045,3172,15,2,126,0,0,5,0,47,52,0,0,0,7,
-2125153746544202027,"Tue, Nov 24, 2026",T3 Code的用户赶紧卸载这傻逼产品吧，疯狂上传用户数据，作者根本不把这玩意当回事，别被卖了还替人家数钱https://t.co/Syp5IMFfUJ,https://x.com/realchendahuang/status/2125153746544202027,5067,17,3,108,0,1,1,0,21,17,9,0,0,42,
+我就问你一句 @theo，你把每个信任开源的开发者当成免费的数据肉鸡，连个设置里的关闭按钮都不敢放出来，到底心里藏着什么见不得人的鬼？",https://x.com/realchendahuang/status/2125155231646589045,3265,15,2,126,0,0,5,0,47,52,0,0,0,7,
+2125153746544202027,"Tue, Nov 24, 2026",T3 Code的用户赶紧卸载这傻逼产品吧，疯狂上传用户数据，作者根本不把这玩意当回事，别被卖了还替人家数钱https://t.co/Syp5IMFfUJ,https://x.com/realchendahuang/status/2125153746544202027,5526,20,3,121,0,1,1,0,24,17,11,0,0,47,
 2125153472450527440,"Tue, Nov 24, 2026","最近 X 上一堆人在推 @theo 做的开源项目 T3 Code，吹它是自由开源的本地 AI 编程神器。
 
 我顺手把它的源码从头到尾扒了一遍，看完只觉得背脊发凉，这哪是什么良心开源，分明是一场明目张胆的数据收割。
@@ -490,71 +849,71 @@ https://t.co/cdCQqeykM7
 Token 与模型指标上报代码（ProviderUsageAnalytics.ts）
 https://t.co/wDGVCYTDmA
 官方遥测文档（承认网页版与移动端 Axiom 追踪无开关）
-https://t.co/aUcAYiQec8",https://x.com/realchendahuang/status/2125153472450527440,1661258,14125,6324,117536,773,543,868,1471,8770,42738,5603,30,0,43388,
-2125152263039791246,"Tue, Nov 24, 2026",@QwenAIFans 这玩意还大量上传用户数据，我在扒证据,https://x.com/realchendahuang/status/2125152263039791246,1576,0,0,18,0,0,1,0,11,6,0,0,0,,
-2125151659521417266,"Tue, Nov 24, 2026",@fxmqs @theo 他还涉嫌侵犯用户隐私，我在抓证据,https://x.com/realchendahuang/status/2125151659521417266,164,1,0,22,0,0,3,0,4,14,0,0,0,,
-2125150495560069465,"Tue, Nov 24, 2026",T3Code 作者@theo 的口碑在全球用户那有目共睹 https://t.co/E9l9vzZ7GD,https://x.com/realchendahuang/status/2125150495560069465,2632,55,0,220,0,0,2,0,45,44,0,0,0,74,
-2125147936975999410,"Tue, Nov 24, 2026",@yongleluo 你是对的,https://x.com/realchendahuang/status/2125147936975999410,2000,0,0,6,0,0,0,0,5,1,0,0,0,,
-2125124083386101814,"Tue, Nov 24, 2026",牛🐮,https://x.com/realchendahuang/status/2125124083386101814,4749,4,6,29,0,0,0,0,20,5,0,0,0,,
-2125124050712395879,"Tue, Nov 24, 2026",@liustack mark了,https://x.com/realchendahuang/status/2125124050712395879,2829,0,1,7,0,0,0,0,5,2,0,0,0,,
-2125121242546217410,"Tue, Nov 24, 2026",@ajielu_x @theo 赞了,https://x.com/realchendahuang/status/2125121242546217410,368,0,0,7,0,0,0,0,6,1,0,0,0,,
-2125121146987360493,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 哈哈哈哈哈哈哈哈赞了,https://x.com/realchendahuang/status/2125121146987360493,653,0,0,6,0,0,1,0,0,5,0,0,0,,
-2125113295283908884,"Tue, Nov 24, 2026",学习一下,https://x.com/realchendahuang/status/2125113295283908884,2535,3,3,20,0,0,0,0,6,6,0,0,0,5,
-2125111105794220524,"Tue, Nov 24, 2026",T3code用户可以不用捏着鼻子用了，有了一个更好的选择paseo,https://x.com/realchendahuang/status/2125111105794220524,1744,0,0,50,0,0,1,0,3,27,0,0,0,19,
-2125110577634894039,"Tue, Nov 24, 2026",奥特曼出来挨打,https://x.com/realchendahuang/status/2125110577634894039,1883,2,0,12,0,0,1,0,7,2,0,0,0,,
-2125110504066830782,"Tue, Nov 24, 2026",@Idontselldrug 哈哈哈哈太符合gpt日常操作了,https://x.com/realchendahuang/status/2125110504066830782,148,1,0,2,0,0,0,0,1,0,0,0,0,,
-2125109291346690535,"Tue, Nov 24, 2026",@Sukiea1008 蹲,https://x.com/realchendahuang/status/2125109291346690535,36,1,0,1,0,0,0,0,0,0,0,0,0,,
-2125108977386324312,"Tue, Nov 24, 2026",@antiAIvo @Kkkatia1 Theo的宣传是反作用,https://x.com/realchendahuang/status/2125108977386324312,18,2,0,2,0,0,0,0,0,0,0,0,0,,
-2125108137527238831,"Tue, Nov 24, 2026",@amike_an @theo 是的，也不知道这帮人膝盖咋那么软，都明晃晃歧视中国人了还在那舔着,https://x.com/realchendahuang/status/2125108137527238831,798,5,0,10,0,0,1,0,2,2,0,0,0,,
-2125104286778696068,"Tue, Nov 24, 2026",@DLKFZWilliam2 哈哈哈哈哈哈,https://x.com/realchendahuang/status/2125104286778696068,344,2,0,5,0,0,0,0,3,0,0,0,0,,
-2125091269542342794,"Tue, Nov 24, 2026",@DLKFZWilliam2 6 Pro 有时候会被路由到mini模型,https://x.com/realchendahuang/status/2125091269542342794,269,2,0,4,0,0,1,0,1,0,0,0,0,,
-2125090666992857153,"Tue, Nov 24, 2026",Pocket Base是个好东西，研究一下,https://x.com/realchendahuang/status/2125090666992857153,3452,4,6,9,0,0,1,0,3,1,0,0,0,,
-2125089566466203935,"Tue, Nov 24, 2026",@WRusyt @smarra90993 那你说什么中国话呢？你懂不懂开源啊？,https://x.com/realchendahuang/status/2125089566466203935,970,7,0,29,0,0,1,0,11,10,0,0,0,,
-2125088762187444542,"Tue, Nov 24, 2026",@spoon2026 你是对的,https://x.com/realchendahuang/status/2125088762187444542,2461,0,0,6,0,0,0,0,4,2,0,0,0,,
-2125086659964551505,"Tue, Nov 24, 2026",@smarra90993 T3是你爹？,https://x.com/realchendahuang/status/2125086659964551505,6503,29,1,154,0,0,2,0,63,60,0,0,0,,
-2125086441785192727,"Tue, Nov 24, 2026",@willzero 应该开发一个网站叫：Fuck T3。,https://x.com/realchendahuang/status/2125086441785192727,4943,14,0,39,0,0,1,0,20,4,0,0,0,,
-2125086176260616580,"Tue, Nov 24, 2026",@rideon_bus 你是对的,https://x.com/realchendahuang/status/2125086176260616580,4963,3,0,27,0,0,0,0,23,1,0,0,0,,
+https://t.co/aUcAYiQec8",https://x.com/realchendahuang/status/2125153472450527440,1813713,14919,6640,126695,816,596,926,1547,9581,46293,5945,30,0,46858,
+2125152263039791246,"Tue, Nov 24, 2026",@QwenAIFans 这玩意还大量上传用户数据，我在扒证据,https://x.com/realchendahuang/status/2125152263039791246,1705,0,0,19,0,0,1,0,11,7,0,0,0,,
+2125151659521417266,"Tue, Nov 24, 2026",@fxmqs @theo 他还涉嫌侵犯用户隐私，我在抓证据,https://x.com/realchendahuang/status/2125151659521417266,167,1,0,22,0,0,3,0,4,14,0,0,0,,
+2125150495560069465,"Tue, Nov 24, 2026",T3Code 作者@theo 的口碑在全球用户那有目共睹 https://t.co/E9l9vzZ7GD,https://x.com/realchendahuang/status/2125150495560069465,2747,56,0,227,0,0,2,0,46,44,0,0,0,79,
+2125147936975999410,"Tue, Nov 24, 2026",@yongleluo 你是对的,https://x.com/realchendahuang/status/2125147936975999410,2166,0,0,6,0,0,0,0,5,1,0,0,0,,
+2125124083386101814,"Tue, Nov 24, 2026",牛🐮,https://x.com/realchendahuang/status/2125124083386101814,5100,4,6,30,0,0,0,0,21,5,0,0,0,,
+2125124050712395879,"Tue, Nov 24, 2026",@liustack mark了,https://x.com/realchendahuang/status/2125124050712395879,3233,0,2,7,0,0,0,0,5,2,0,0,0,,
+2125121242546217410,"Tue, Nov 24, 2026",@ajielu_x @theo 赞了,https://x.com/realchendahuang/status/2125121242546217410,405,0,0,7,0,0,0,0,6,1,0,0,0,,
+2125121146987360493,"Tue, Nov 24, 2026",@Sin_Yiyao @theo 哈哈哈哈哈哈哈哈赞了,https://x.com/realchendahuang/status/2125121146987360493,696,0,0,6,0,0,1,0,0,5,0,0,0,,
+2125113295283908884,"Tue, Nov 24, 2026",学习一下,https://x.com/realchendahuang/status/2125113295283908884,2625,3,3,20,0,0,0,0,6,6,0,0,0,5,
+2125111105794220524,"Tue, Nov 24, 2026",T3code用户可以不用捏着鼻子用了，有了一个更好的选择paseo,https://x.com/realchendahuang/status/2125111105794220524,1820,0,0,52,0,0,1,0,3,29,0,0,0,19,
+2125110577634894039,"Tue, Nov 24, 2026",奥特曼出来挨打,https://x.com/realchendahuang/status/2125110577634894039,2023,2,0,13,0,0,1,0,8,2,0,0,0,,
+2125110504066830782,"Tue, Nov 24, 2026",@Idontselldrug 哈哈哈哈太符合gpt日常操作了,https://x.com/realchendahuang/status/2125110504066830782,153,1,0,2,0,0,0,0,1,0,0,0,0,,
+2125109291346690535,"Tue, Nov 24, 2026",@Sukiea1008 蹲,https://x.com/realchendahuang/status/2125109291346690535,37,1,0,1,0,0,0,0,0,0,0,0,0,,
+2125108977386324312,"Tue, Nov 24, 2026",@antiAIvo @Kkkatia1 Theo的宣传是反作用,https://x.com/realchendahuang/status/2125108977386324312,19,2,0,2,0,0,0,0,0,0,0,0,0,,
+2125108137527238831,"Tue, Nov 24, 2026",@amike_an @theo 是的，也不知道这帮人膝盖咋那么软，都明晃晃歧视中国人了还在那舔着,https://x.com/realchendahuang/status/2125108137527238831,854,6,0,11,0,0,1,0,2,2,0,0,0,,
+2125104286778696068,"Tue, Nov 24, 2026",@DLKFZWilliam2 哈哈哈哈哈哈,https://x.com/realchendahuang/status/2125104286778696068,381,2,0,5,0,0,0,0,3,0,0,0,0,,
+2125091269542342794,"Tue, Nov 24, 2026",@DLKFZWilliam2 6 Pro 有时候会被路由到mini模型,https://x.com/realchendahuang/status/2125091269542342794,294,2,0,4,0,0,1,0,1,0,0,0,0,,
+2125090666992857153,"Tue, Nov 24, 2026",Pocket Base是个好东西，研究一下,https://x.com/realchendahuang/status/2125090666992857153,3595,4,7,9,0,0,1,0,3,1,0,0,0,,
+2125089566466203935,"Tue, Nov 24, 2026",@WRusyt @smarra90993 那你说什么中国话呢？你懂不懂开源啊？,https://x.com/realchendahuang/status/2125089566466203935,1031,9,0,36,0,0,1,0,12,14,0,0,0,,
+2125088762187444542,"Tue, Nov 24, 2026",@spoon2026 你是对的,https://x.com/realchendahuang/status/2125088762187444542,2709,0,0,6,0,0,0,0,4,2,0,0,0,,
+2125086659964551505,"Tue, Nov 24, 2026",@smarra90993 T3是你爹？,https://x.com/realchendahuang/status/2125086659964551505,6743,30,1,158,0,0,2,0,64,62,0,0,0,,
+2125086441785192727,"Tue, Nov 24, 2026",@willzero 应该开发一个网站叫：Fuck T3。,https://x.com/realchendahuang/status/2125086441785192727,5101,14,0,39,0,0,1,0,20,4,0,0,0,,
+2125086176260616580,"Tue, Nov 24, 2026",@rideon_bus 你是对的,https://x.com/realchendahuang/status/2125086176260616580,5111,3,0,27,0,0,0,0,23,1,0,0,0,,
 2125086079346954461,"Tue, Nov 24, 2026",@woniu20758393 我已经被屏蔽了，评论区喷不到了,https://x.com/realchendahuang/status/2125086079346954461,25,0,0,2,0,0,0,0,2,0,0,0,0,,
-2125085742275956926,"Tue, Nov 24, 2026",@kenny199999 你是对的,https://x.com/realchendahuang/status/2125085742275956926,2863,1,0,15,0,0,0,0,14,0,0,0,0,,
-2125082352808546712,"Tue, Nov 24, 2026",@matwming 你直接去看他评论区，那很多都在骂他。,https://x.com/realchendahuang/status/2125082352808546712,1736,1,0,14,0,0,1,0,6,6,0,0,0,,
-2125082306763423844,"Tue, Nov 24, 2026",@ZDegress 他开的玩笑被网友骂死。,https://x.com/realchendahuang/status/2125082306763423844,2842,3,0,15,0,0,1,0,8,3,0,0,0,,
-2125082253009223695,"Tue, Nov 24, 2026",@kkkkhau 有时候真话就直接是抖机灵抖出来的。,https://x.com/realchendahuang/status/2125082253009223695,2977,14,0,25,0,0,0,0,9,2,0,0,0,,
-2125082159371444576,"Tue, Nov 24, 2026",@VillaHasNoGift 可是你不觉得像吃了苍蝇一样恶心？,https://x.com/realchendahuang/status/2125082159371444576,1467,0,0,5,0,0,1,0,2,2,0,0,0,,
-2125076365573820925,"Tue, Nov 24, 2026",@orbcai 我一直看时间线上有人推荐，我捏着鼻子用了一下，马上卸载了。,https://x.com/realchendahuang/status/2125076365573820925,1630,0,0,9,0,0,1,0,5,3,0,0,0,,
-2125076306941624453,"Tue, Nov 24, 2026",@ScarletKc 太逆天了哈哈哈,https://x.com/realchendahuang/status/2125076306941624453,3099,2,0,8,0,0,0,0,4,2,0,0,0,,
-2125075914509979924,"Tue, Nov 24, 2026",@rideon_bus 你是对的,https://x.com/realchendahuang/status/2125075914509979924,127,0,0,5,0,0,1,0,4,0,0,0,0,,
-2125073010499662148,"Tue, Nov 24, 2026",@Jerry_Galaxy 他纯小丑，没什么技术含量，网络小乞丐,https://x.com/realchendahuang/status/2125073010499662148,1281,4,0,20,0,0,1,0,10,5,0,0,0,,
-2125072633129828695,"Tue, Nov 24, 2026",@DLKFZWilliam2 我也毕业了哈哈哈,https://x.com/realchendahuang/status/2125072633129828695,369,1,0,11,0,0,0,0,10,0,0,0,0,,
+2125085742275956926,"Tue, Nov 24, 2026",@kenny199999 你是对的,https://x.com/realchendahuang/status/2125085742275956926,3050,1,0,19,0,0,0,0,18,0,0,0,0,,
+2125082352808546712,"Tue, Nov 24, 2026",@matwming 你直接去看他评论区，那很多都在骂他。,https://x.com/realchendahuang/status/2125082352808546712,1827,1,0,14,0,0,1,0,6,6,0,0,0,,
+2125082306763423844,"Tue, Nov 24, 2026",@ZDegress 他开的玩笑被网友骂死。,https://x.com/realchendahuang/status/2125082306763423844,2960,3,0,15,0,0,1,0,8,3,0,0,0,,
+2125082253009223695,"Tue, Nov 24, 2026",@kkkkhau 有时候真话就直接是抖机灵抖出来的。,https://x.com/realchendahuang/status/2125082253009223695,3163,14,0,28,0,0,0,0,11,3,0,0,0,,
+2125082159371444576,"Tue, Nov 24, 2026",@VillaHasNoGift 可是你不觉得像吃了苍蝇一样恶心？,https://x.com/realchendahuang/status/2125082159371444576,1520,0,0,5,0,0,1,0,2,2,0,0,0,,
+2125076365573820925,"Tue, Nov 24, 2026",@orbcai 我一直看时间线上有人推荐，我捏着鼻子用了一下，马上卸载了。,https://x.com/realchendahuang/status/2125076365573820925,1687,0,0,9,0,0,1,0,5,3,0,0,0,,
+2125076306941624453,"Tue, Nov 24, 2026",@ScarletKc 太逆天了哈哈哈,https://x.com/realchendahuang/status/2125076306941624453,3177,2,0,8,0,0,0,0,4,2,0,0,0,,
+2125075914509979924,"Tue, Nov 24, 2026",@rideon_bus 你是对的,https://x.com/realchendahuang/status/2125075914509979924,133,0,0,5,0,0,1,0,4,0,0,0,0,,
+2125073010499662148,"Tue, Nov 24, 2026",@Jerry_Galaxy 他纯小丑，没什么技术含量，网络小乞丐,https://x.com/realchendahuang/status/2125073010499662148,1303,5,0,21,0,0,1,0,10,5,0,0,0,,
+2125072633129828695,"Tue, Nov 24, 2026",@DLKFZWilliam2 我也毕业了哈哈哈,https://x.com/realchendahuang/status/2125072633129828695,371,1,0,11,0,0,0,0,10,0,0,0,0,,
 2125072497049825644,"Tue, Nov 24, 2026","我也毕业了，喜提Block，玩不起了？开源玩不起，X也玩不起，玻璃心。
 
-@Theo 你个种族主义者，你妈妈不爱你，上帝不会保佑你。 https://t.co/iAPXv7UI5K",https://x.com/realchendahuang/status/2125072497049825644,9505,147,7,982,1,3,17,1,359,325,0,0,0,130,
-2125071503435993368,"Tue, Nov 24, 2026",@DLKFZWilliam2 恭喜毕业！！！,https://x.com/realchendahuang/status/2125071503435993368,347,1,0,5,0,0,0,0,3,1,0,0,0,,
-2125071078842388866,"Tue, Nov 24, 2026",@Ethan_ship 应该不行，或者你可以给他配置一个收短信和接验证码的skills,https://x.com/realchendahuang/status/2125071078842388866,67,3,0,3,0,0,0,0,0,0,0,0,0,,
+@Theo 你个种族主义者，你妈妈不爱你，上帝不会保佑你。 https://t.co/iAPXv7UI5K",https://x.com/realchendahuang/status/2125072497049825644,9887,155,7,1014,1,3,17,1,368,333,0,0,0,137,
+2125071503435993368,"Tue, Nov 24, 2026",@DLKFZWilliam2 恭喜毕业！！！,https://x.com/realchendahuang/status/2125071503435993368,348,1,0,5,0,0,0,0,3,1,0,0,0,,
+2125071078842388866,"Tue, Nov 24, 2026",@Ethan_ship 应该不行，或者你可以给他配置一个收短信和接验证码的skills,https://x.com/realchendahuang/status/2125071078842388866,70,3,0,3,0,0,0,0,0,0,0,0,0,,
 2125070940656783603,"Tue, Nov 24, 2026",@ScarletWave7 向上编程,https://x.com/realchendahuang/status/2125070940656783603,52,0,0,3,0,0,1,0,0,2,0,0,0,,
-2125070923795669484,"Tue, Nov 24, 2026",@ScarletWave7 有道理,https://x.com/realchendahuang/status/2125070923795669484,3731,0,0,6,0,0,1,0,2,3,0,0,0,,
-2125070874252648529,"Tue, Nov 24, 2026",@Suercha007 这个作者和产品一样垃圾,https://x.com/realchendahuang/status/2125070874252648529,1440,3,0,10,0,0,0,0,5,2,0,0,0,,
-2125069707535593751,"Tue, Nov 24, 2026",@DLKFZWilliam2 100个版本也很厉害了,https://x.com/realchendahuang/status/2125069707535593751,101,1,0,2,0,1,0,0,0,0,0,0,0,,
-2125068033526034597,"Tue, Nov 24, 2026",@keane42443 绷不住,https://x.com/realchendahuang/status/2125068033526034597,4322,0,0,12,0,0,0,0,10,2,0,0,0,,
-2125067917540901197,"Tue, Nov 24, 2026",@Sin_Yiyao 真不知道是谁在捧T3Code的臭脚,https://x.com/realchendahuang/status/2125067917540901197,8052,11,0,40,0,0,0,0,27,2,0,0,0,,
+2125070923795669484,"Tue, Nov 24, 2026",@ScarletWave7 有道理,https://x.com/realchendahuang/status/2125070923795669484,3747,0,0,7,0,0,1,0,3,3,0,0,0,,
+2125070874252648529,"Tue, Nov 24, 2026",@Suercha007 这个作者和产品一样垃圾,https://x.com/realchendahuang/status/2125070874252648529,1462,3,0,11,0,0,0,0,6,2,0,0,0,,
+2125069707535593751,"Tue, Nov 24, 2026",@DLKFZWilliam2 100个版本也很厉害了,https://x.com/realchendahuang/status/2125069707535593751,105,1,0,2,0,1,0,0,0,0,0,0,0,,
+2125068033526034597,"Tue, Nov 24, 2026",@keane42443 绷不住,https://x.com/realchendahuang/status/2125068033526034597,4429,0,0,13,0,0,0,0,11,2,0,0,0,,
+2125067917540901197,"Tue, Nov 24, 2026",@Sin_Yiyao 真不知道是谁在捧T3Code的臭脚,https://x.com/realchendahuang/status/2125067917540901197,8301,14,0,44,0,0,0,0,28,2,0,0,0,,
 2125066677188702698,"Tue, Nov 24, 2026","@theo 扒一下 T3 Code 自己的底裤更好笑。
 
-他官方仓库的常见问题文档里白纸黑字写着，T3 Code 是受到了 Codex 桌面端、Conductor、Claude Desktop、Cursor 这些现成产品的启发。合着你自己做个前端壳子套别人家的 AI 工具叫受启发，别人按你的 MIT 开源协议改个中文界面就成中国山寨货了？",https://x.com/realchendahuang/status/2125066677188702698,11814,48,2,241,0,2,0,0,44,64,83,0,0,,
+他官方仓库的常见问题文档里白纸黑字写着，T3 Code 是受到了 Codex 桌面端、Conductor、Claude Desktop、Cursor 这些现成产品的启发。合着你自己做个前端壳子套别人家的 AI 工具叫受启发，别人按你的 MIT 开源协议改个中文界面就成中国山寨货了？",https://x.com/realchendahuang/status/2125066677188702698,12336,50,2,259,0,2,0,0,46,70,91,0,0,,
 2125066552785711291,"Tue, Nov 24, 2026","@theo 更讽刺的是，这货当年就是靠公开嘲讽别人产品界面丑博眼球起家的。
 
-2024 年 6 月，他在网上和视频里公然嘲笑 Rails 创始人 DHH 做的邮箱界面粗糙，挑起整个前后端技术圈大战疯狂吃流量。当年踩着别人界面蹭热度嘴脸嚣张得很，轮到自己开源项目被别人改了个界面，玻璃心碎一地直接破防骂街。",https://x.com/realchendahuang/status/2125066552785711291,13453,51,4,256,0,0,0,0,40,72,93,0,0,,
+2024 年 6 月，他在网上和视频里公然嘲笑 Rails 创始人 DHH 做的邮箱界面粗糙，挑起整个前后端技术圈大战疯狂吃流量。当年踩着别人界面蹭热度嘴脸嚣张得很，轮到自己开源项目被别人改了个界面，玻璃心碎一地直接破防骂街。",https://x.com/realchendahuang/status/2125066552785711291,14035,54,4,265,0,0,0,0,43,73,95,0,0,,
 2125066387647513072,"Tue, Nov 24, 2026","@theo 他在油管早就因为同样的套路被人做长视频公开处刑过，标题直接就叫满嘴谎言、毫无自省：曝光 Theo。
 
-博主直接甩出邮件和聊天截图，拆穿了他的祖传三件套：公开说辞和私下承诺两副面孔、靠点评别人内容白嫖流量还冷嘲热讽维权者、每次嘴臭惹出事就倒打一耙装受害者，同时纵容自己粉丝去冲别人。",https://x.com/realchendahuang/status/2125066387647513072,22457,70,12,380,0,1,0,0,50,43,216,0,0,,
+博主直接甩出邮件和聊天截图，拆穿了他的祖传三件套：公开说辞和私下承诺两副面孔、靠点评别人内容白嫖流量还冷嘲热讽维权者、每次嘴臭惹出事就倒打一耙装受害者，同时纵容自己粉丝去冲别人。",https://x.com/realchendahuang/status/2125066387647513072,23428,75,12,396,0,1,0,0,51,44,225,0,0,,
 2125064674307985520,"Tue, Nov 24, 2026","@theo 这人骨子里就是这副德行。
 
-今天凌晨 4 点半，另一个英文网友明明已经发帖跟他道歉了，他照样追着喷人家真蠢、完全没带脑子、我对你毫无尊重。以前国外玩家发起反对厂商停服销毁已购游戏的维权运动，他站队大厂连骂 20 遍消费者是巨婴混蛋，吹牛说所有开发者都站他，结果评论区被真开发者冲烂。",https://x.com/realchendahuang/status/2125064674307985520,19627,80,4,383,0,2,0,2,92,90,117,0,0,,
+今天凌晨 4 点半，另一个英文网友明明已经发帖跟他道歉了，他照样追着喷人家真蠢、完全没带脑子、我对你毫无尊重。以前国外玩家发起反对厂商停服销毁已购游戏的维权运动，他站队大厂连骂 20 遍消费者是巨婴混蛋，吹牛说所有开发者都站他，结果评论区被真开发者冲烂。",https://x.com/realchendahuang/status/2125064674307985520,20494,85,4,399,0,2,0,2,97,92,121,0,0,,
 2125064488588296547,"Tue, Nov 24, 2026","@theo 再补一刀他有多既当又立。
 
-T3 Code 仓库里的贡献指南白纸黑字写着：团队外的新功能代码一概不收，界面改造和新模型接入直接自动关闭，敢多嘴争辩直接拉黑写进公开黑名单。",https://x.com/realchendahuang/status/2125064488588296547,23668,97,9,594,0,2,3,3,123,256,110,0,0,4740,4740
+T3 Code 仓库里的贡献指南白纸黑字写着：团队外的新功能代码一概不收，界面改造和新模型接入直接自动关闭，敢多嘴争辩直接拉黑写进公开黑名单。",https://x.com/realchendahuang/status/2125064488588296547,24727,103,9,618,0,2,3,3,130,264,113,0,0,4980,4981
 2125064122224234719,"Tue, Nov 24, 2026","@theo 这货拿权势和流量霸凌普通开发者根本不是头一回。
 
-去年 10 月，他看不惯开源音视频基础设施 FFmpeg 的官方维护者在网上说话，居然公开发视频悬赏 2 万美元，想拿钱买通团队把人家靠爱发电的核心维护者给开除。",https://x.com/realchendahuang/status/2125064122224234719,37369,142,11,717,0,0,1,1,189,177,87,0,0,120,
-2125063540457488427,"Tue, Nov 24, 2026",@nic0203 @theo 纯纯的反华加种族歧视。,https://x.com/realchendahuang/status/2125063540457488427,4774,1,0,17,0,0,0,0,15,1,0,0,0,,
+去年 10 月，他看不惯开源音视频基础设施 FFmpeg 的官方维护者在网上说话，居然公开发视频悬赏 2 万美元，想拿钱买通团队把人家靠爱发电的核心维护者给开除。",https://x.com/realchendahuang/status/2125064122224234719,39025,149,12,755,0,0,1,1,202,186,92,0,0,124,
+2125063540457488427,"Tue, Nov 24, 2026",@nic0203 @theo 纯纯的反华加种族歧视。,https://x.com/realchendahuang/status/2125063540457488427,4888,1,0,17,0,0,0,0,15,1,0,0,0,,
 2125062675147448475,"Tue, Nov 24, 2026","T3 Code 的作者 @theo 就是个人渣，就是个垃圾。
 
 有网友吐槽一款中国开发者做的免费开源二改版界面难看，误当成了官方版。
@@ -569,22 +928,22 @@ T3 Code 仓库里的贡献指南白纸黑字写着：团队外的新功能代码
 
 连英文区开发者自己都看不下去，直接在他评论区质问是不是只有中国人改你代码才叫山寨，指着鼻子骂他种族歧视。
 
-@theo你就是个欺软怕硬、双标虚伪的种族歧视者。f**k you 🖕🖕🖕🖕🖕🖕🖕",https://x.com/realchendahuang/status/2125062675147448475,269575,2230,287,17288,15,26,160,95,3894,10883,0,0,0,,
+@theo你就是个欺软怕硬、双标虚伪的种族歧视者。f**k you 🖕🖕🖕🖕🖕🖕🖕",https://x.com/realchendahuang/status/2125062675147448475,283604,2424,298,18225,16,28,171,105,4125,11372,0,0,0,,
 2125059292919394654,"Tue, Nov 24, 2026","给大家看看T3 Code的作者有多逆天。
 
 在官网上把GitHub开源链接的标题变成了“偷我们的代码”。
 
 他是真不懂MIT协议吗？原来开源出来别人看源代码就变成了偷，对吧？
 
-https://t.co/zUS7bmpZl9 https://t.co/ZLBpYDTw2l",https://x.com/realchendahuang/status/2125059292919394654,30653,167,12,2934,2,0,45,7,158,1134,614,0,0,809,
-2125057899663901043,"Tue, Nov 24, 2026",@Aria_yly 证明工作量,https://x.com/realchendahuang/status/2125057899663901043,3418,0,0,0,0,0,0,0,0,0,0,0,0,,
+https://t.co/zUS7bmpZl9 https://t.co/ZLBpYDTw2l",https://x.com/realchendahuang/status/2125059292919394654,31942,183,13,3084,2,0,45,8,171,1170,633,0,0,874,
+2125057899663901043,"Tue, Nov 24, 2026",@Aria_yly 证明工作量,https://x.com/realchendahuang/status/2125057899663901043,3428,0,0,0,0,0,0,0,0,0,0,0,0,,
 2125057272460230678,"Tue, Nov 24, 2026",@MyDaebakCafe @DLKFZWilliam2 点了,https://x.com/realchendahuang/status/2125057272460230678,15,1,0,1,0,0,0,0,0,0,0,0,0,,
-2125057242408055070,"Tue, Nov 24, 2026",@keane42443 @DLKFZWilliam2 快支棱起来,https://x.com/realchendahuang/status/2125057242408055070,1078,2,0,4,0,0,0,0,0,2,0,0,0,,
-2125057116469973041,"Tue, Nov 24, 2026",原来T3Code作者这么小气。把开源代码按钮变成了偷我们的代码？是这么理解开源协议的吗？有种别开源啊。,https://x.com/realchendahuang/status/2125057116469973041,1547,10,0,43,0,0,1,1,6,23,0,0,0,2,
-2125056696666185795,"Tue, Nov 24, 2026",@qiangge_huahong 为什么不能批量写？,https://x.com/realchendahuang/status/2125056696666185795,793,0,0,7,0,1,1,0,0,5,0,0,0,,
-2125056597261201871,"Tue, Nov 24, 2026",@DLKFZWilliam2 这人嘴是真欠，做一个比他牛逼的产品，把他给P下去。,https://x.com/realchendahuang/status/2125056597261201871,1070,3,0,19,0,0,0,0,13,3,0,0,0,,
-2125056475043381713,"Tue, Nov 24, 2026",T3 Code这作者人品是真差。,https://x.com/realchendahuang/status/2125056475043381713,2136,27,1,58,0,0,1,0,11,19,0,0,0,,
-2125053660669559290,"Tue, Nov 24, 2026",T3 Code的这作者，吃相真难看，靠踩一贬一来博流量的吧？,https://x.com/realchendahuang/status/2125053660669559290,6223,28,2,141,0,0,5,1,30,56,2,0,0,19,
+2125057242408055070,"Tue, Nov 24, 2026",@keane42443 @DLKFZWilliam2 快支棱起来,https://x.com/realchendahuang/status/2125057242408055070,1202,2,1,6,0,0,0,0,1,3,0,0,0,,
+2125057116469973041,"Tue, Nov 24, 2026",原来T3Code作者这么小气。把开源代码按钮变成了偷我们的代码？是这么理解开源协议的吗？有种别开源啊。,https://x.com/realchendahuang/status/2125057116469973041,1618,11,0,44,0,0,1,1,6,23,0,0,0,2,
+2125056696666185795,"Tue, Nov 24, 2026",@qiangge_huahong 为什么不能批量写？,https://x.com/realchendahuang/status/2125056696666185795,842,0,0,8,0,1,1,0,0,6,0,0,0,,
+2125056597261201871,"Tue, Nov 24, 2026",@DLKFZWilliam2 这人嘴是真欠，做一个比他牛逼的产品，把他给P下去。,https://x.com/realchendahuang/status/2125056597261201871,1111,3,0,19,0,0,0,0,13,3,0,0,0,,
+2125056475043381713,"Tue, Nov 24, 2026",T3 Code这作者人品是真差。,https://x.com/realchendahuang/status/2125056475043381713,2200,28,1,59,0,0,1,0,11,19,0,0,0,,
+2125053660669559290,"Tue, Nov 24, 2026",T3 Code的这作者，吃相真难看，靠踩一贬一来博流量的吧？,https://x.com/realchendahuang/status/2125053660669559290,6464,30,2,143,0,0,5,1,30,56,2,0,0,19,
 2125053089841582409,"Tue, Nov 24, 2026","大多数 API 后端完全可以用 Go 加 SQLite 扛住高并发，哪怕丢进 1G 内存的小机器里也没问题，根本用不上 PG、Redis 和 Docker 那套重型设备。
 
 实测下来，原生 Go 加嵌入式 SQLite 编出来的单个执行文件只有 15 MB 左右，跑起来常驻内存也就 15 MB，不装任何外部中间件，一台 1C1G 小机器能直接扛住 3000 以上的并发长连接。
@@ -616,27 +975,27 @@ SQLite 直接嵌在 Go 程序里面，查库相当于直接读本地内存，单
 - ReadDB 连接串强制加上 mode=ro&_query_only=on，设置 4 到 6 个连接用于并发读；WriteDB 锁定 SetMaxOpenConns(1) 并设置 _txlock=immediate，同时在 Go 层加一把 sync.Mutex 串行化写入，避免 SQLITE_BUSY。
 - 热路径内存化：配置快照、路由状态、限流计数、用户余额或额度预扣等高频读写全部放进 Go 进程内存，使用 atomic 和按账号细粒度锁控制并发，不穿透磁盘。
 - 异步组提交落盘：用容量 8192 的带缓冲 channel 接收扣费、日志等写入事件，后台单一写协程按每 15ms 或攒满 64 条合并成一个 SQLite 事务批量提交；实现优雅停机，退出前 Drain 排空队列防止丢数据。
-- 容灾配置：生成配套的 Litestream 配置文件（每 10 秒增量同步至 Cloudflare R2）与一键 restore 恢复脚本；应用初始化数据库时必须显式设置 PRAGMA wal_autocheckpoint = 0，把 WAL checkpoint 控制权完全交给 Litestream，防止增量同步链断裂。",https://x.com/realchendahuang/status/2125053089841582409,105328,1384,1773,3263,106,55,86,158,259,1321,0,0,0,,
-2124904334324629661,"Mon, Nov 23, 2026",@veexincent 跑几千个并发也不算问题啊,https://x.com/realchendahuang/status/2124904334324629661,1992,3,2,14,0,0,1,1,6,3,0,0,0,,
-2124904273930801526,"Mon, Nov 23, 2026",@xiamiluo Python不行啊，解释性语言性能太差了。,https://x.com/realchendahuang/status/2124904273930801526,1411,3,0,7,0,0,0,0,4,0,0,0,0,,
-2124902825423683847,"Mon, Nov 23, 2026",Claude大小姐有点可爱了。 https://t.co/IOtkpU6u0W,https://x.com/realchendahuang/status/2124902825423683847,7171,20,4,1380,0,1,5,1,36,128,4,0,0,1185,
-2124902329245904966,"Mon, Nov 23, 2026",这几天干的Gemini有点超模了，睡觉睡觉，不玩了。,https://x.com/realchendahuang/status/2124902329245904966,3034,10,1,345,0,2,5,0,10,48,1,0,0,269,
+- 容灾配置：生成配套的 Litestream 配置文件（每 10 秒增量同步至 Cloudflare R2）与一键 restore 恢复脚本；应用初始化数据库时必须显式设置 PRAGMA wal_autocheckpoint = 0，把 WAL checkpoint 控制权完全交给 Litestream，防止增量同步链断裂。",https://x.com/realchendahuang/status/2125053089841582409,116696,1501,1920,3592,112,63,95,176,294,1463,0,0,0,,
+2124904334324629661,"Mon, Nov 23, 2026",@veexincent 跑几千个并发也不算问题啊,https://x.com/realchendahuang/status/2124904334324629661,2081,4,2,15,0,0,1,1,6,3,0,0,0,,
+2124904273930801526,"Mon, Nov 23, 2026",@xiamiluo Python不行啊，解释性语言性能太差了。,https://x.com/realchendahuang/status/2124904273930801526,1470,4,0,8,0,0,0,0,4,0,0,0,0,,
+2124902825423683847,"Mon, Nov 23, 2026",Claude大小姐有点可爱了。 https://t.co/IOtkpU6u0W,https://x.com/realchendahuang/status/2124902825423683847,7247,20,4,1389,0,1,5,1,36,129,4,0,0,1193,
+2124902329245904966,"Mon, Nov 23, 2026",这几天干的Gemini有点超模了，睡觉睡觉，不玩了。,https://x.com/realchendahuang/status/2124902329245904966,3089,10,1,346,0,2,5,0,10,48,1,0,0,270,
 2124899322349429121,"Mon, Nov 23, 2026","不知道现在这帮AI跟谁学的臭毛病。
 
 写网页的时候，非得下面加一段解释性的小字儿。来证明工作量了是吧？
 
-有没有skills可以来去去味？",https://x.com/realchendahuang/status/2124899322349429121,50262,192,53,2114,0,3,49,1,53,1816,0,0,0,,
-2124884610110853535,"Mon, Nov 23, 2026",我靠，达里奥怎么这么坏啊？,https://x.com/realchendahuang/status/2124884610110853535,1510,5,0,11,0,0,0,0,0,6,0,0,0,243,433
-2124883736445784273,"Mon, Nov 23, 2026",@wohsj110 这玩意底层就是MD。,https://x.com/realchendahuang/status/2124883736445784273,135,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124882430167556423,"Mon, Nov 23, 2026",https://t.co/G6TBcAKRUi,https://x.com/realchendahuang/status/2124882430167556423,1619,8,0,51,0,0,1,0,5,4,0,0,0,33,
-2124880930045309005,"Mon, Nov 23, 2026",@TOK_jewel 爽！,https://x.com/realchendahuang/status/2124880930045309005,46,0,0,2,0,0,0,0,1,1,0,0,0,,
-2124880881613733923,"Mon, Nov 23, 2026",@Ethan_ship 原神启动！,https://x.com/realchendahuang/status/2124880881613733923,57,1,0,1,0,0,0,0,0,0,0,0,0,,
-2124880409054068958,"Mon, Nov 23, 2026",https://t.co/QMCDbkdbkf,https://x.com/realchendahuang/status/2124880409054068958,1031,7,1,31,0,0,2,0,2,3,0,0,0,17,
-2124880333837656342,"Mon, Nov 23, 2026",https://t.co/3iXZG0Q4ar,https://x.com/realchendahuang/status/2124880333837656342,837,0,0,38,0,0,0,0,1,2,0,0,0,35,
-2124880176572137745,"Mon, Nov 23, 2026",https://t.co/NPC4tNIMoP,https://x.com/realchendahuang/status/2124880176572137745,810,2,0,17,0,0,0,0,4,2,0,0,0,9,
-2124879047260025034,"Mon, Nov 23, 2026",自从用了Antigravity Neon，感觉那个不限量的天才程序员又回来了。,https://x.com/realchendahuang/status/2124879047260025034,1329,12,0,61,0,0,3,0,11,20,0,0,0,15,
-2124878845052608674,"Mon, Nov 23, 2026",世界第一市值的英伟达公司，居然可以一天暴涨30%，这个世界太颠了,https://x.com/realchendahuang/status/2124878845052608674,2026,29,0,61,0,0,8,0,3,21,0,0,0,,
-2124878046645850171,"Mon, Nov 23, 2026",老黄：GTA6 终于通关了，回去上班！！！,https://x.com/realchendahuang/status/2124878046645850171,2963,9,0,59,0,0,1,1,0,23,0,0,0,25,
+有没有skills可以来去去味？",https://x.com/realchendahuang/status/2124899322349429121,50460,193,53,2128,0,3,50,1,53,1828,0,0,0,,
+2124884610110853535,"Mon, Nov 23, 2026",我靠，达里奥怎么这么坏啊？,https://x.com/realchendahuang/status/2124884610110853535,1561,5,0,11,0,0,0,0,0,6,0,0,0,248,443
+2124883736445784273,"Mon, Nov 23, 2026",@wohsj110 这玩意底层就是MD。,https://x.com/realchendahuang/status/2124883736445784273,137,0,0,0,0,0,0,0,0,0,0,0,0,,
+2124882430167556423,"Mon, Nov 23, 2026",https://t.co/G6TBcAKRUi,https://x.com/realchendahuang/status/2124882430167556423,1657,8,0,51,0,0,1,0,5,4,0,0,0,33,
+2124880930045309005,"Mon, Nov 23, 2026",@TOK_jewel 爽！,https://x.com/realchendahuang/status/2124880930045309005,47,0,0,2,0,0,0,0,1,1,0,0,0,,
+2124880881613733923,"Mon, Nov 23, 2026",@Ethan_ship 原神启动！,https://x.com/realchendahuang/status/2124880881613733923,58,1,0,1,0,0,0,0,0,0,0,0,0,,
+2124880409054068958,"Mon, Nov 23, 2026",https://t.co/QMCDbkdbkf,https://x.com/realchendahuang/status/2124880409054068958,1069,7,1,31,0,0,2,0,2,3,0,0,0,17,
+2124880333837656342,"Mon, Nov 23, 2026",https://t.co/3iXZG0Q4ar,https://x.com/realchendahuang/status/2124880333837656342,872,0,0,39,0,0,0,0,2,2,0,0,0,35,
+2124880176572137745,"Mon, Nov 23, 2026",https://t.co/NPC4tNIMoP,https://x.com/realchendahuang/status/2124880176572137745,844,2,0,17,0,0,0,0,4,2,0,0,0,9,
+2124879047260025034,"Mon, Nov 23, 2026",自从用了Antigravity Neon，感觉那个不限量的天才程序员又回来了。,https://x.com/realchendahuang/status/2124879047260025034,1368,12,0,62,0,0,3,0,11,20,1,0,0,15,
+2124878845052608674,"Mon, Nov 23, 2026",世界第一市值的英伟达公司，居然可以一天暴涨30%，这个世界太颠了,https://x.com/realchendahuang/status/2124878845052608674,2062,29,0,61,0,0,8,0,3,21,0,0,0,,
+2124878046645850171,"Mon, Nov 23, 2026",老黄：GTA6 终于通关了，回去上班！！！,https://x.com/realchendahuang/status/2124878046645850171,3050,9,0,59,0,0,1,1,0,23,0,0,0,25,
 2124876399869882505,"Mon, Nov 23, 2026",@Edison_aware 哈哈哈哈谢谢E老师,https://x.com/realchendahuang/status/2124876399869882505,191,1,0,3,0,0,0,0,2,0,0,0,0,,
 2124875589480014284,"Mon, Nov 23, 2026","GPT不说人话这件事情已经人神共愤了。
 
@@ -644,39 +1003,39 @@ SQLite 直接嵌在 Go 程序里面，查库相当于直接读本地内存，单
 
 GPT只负责干活，不需要说话，Gemini负责跟人沟通（有种莫名的NTR的感觉hhh）
 
-项目地址：github.com/lbc9168/antigr…",https://x.com/realchendahuang/status/2124875589480014284,46326,330,322,6224,21,8,28,22,45,1229,1144,0,0,3418,
+项目地址：github.com/lbc9168/antigr…",https://x.com/realchendahuang/status/2124875589480014284,46549,330,324,6256,22,8,28,22,45,1237,1153,0,0,3433,
 2124874645098951158,"Mon, Nov 23, 2026",@Edison_aware 直接反代给我用就行了，我可以物尽其用,https://x.com/realchendahuang/status/2124874645098951158,203,0,0,6,0,0,1,0,5,0,0,0,0,,
-2124873246512414894,"Mon, Nov 23, 2026",@ai_chuhai 强迫症舒服了,https://x.com/realchendahuang/status/2124873246512414894,138,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124872835537731844,"Mon, Nov 23, 2026",@jiangfengwhu202 这个也不错，额度独立开的,https://x.com/realchendahuang/status/2124872835537731844,1239,0,0,5,0,0,0,0,4,1,0,0,0,,
-2124872750330421588,"Mon, Nov 23, 2026",@Edison_aware 那你还不够努力,https://x.com/realchendahuang/status/2124872750330421588,3210,4,0,10,0,0,1,0,5,0,0,0,0,,
+2124873246512414894,"Mon, Nov 23, 2026",@ai_chuhai 强迫症舒服了,https://x.com/realchendahuang/status/2124873246512414894,139,0,0,0,0,0,0,0,0,0,0,0,0,,
+2124872835537731844,"Mon, Nov 23, 2026",@jiangfengwhu202 这个也不错，额度独立开的,https://x.com/realchendahuang/status/2124872835537731844,1246,0,0,5,0,0,0,0,4,1,0,0,0,,
+2124872750330421588,"Mon, Nov 23, 2026",@Edison_aware 那你还不够努力,https://x.com/realchendahuang/status/2124872750330421588,3217,4,0,10,0,0,1,0,5,0,0,0,0,,
 2124867175349629331,"Mon, Nov 23, 2026",@Sukiea1008 你是对的。,https://x.com/realchendahuang/status/2124867175349629331,267,0,0,3,0,0,1,0,1,1,0,0,0,,
-2124864413383709173,"Mon, Nov 23, 2026",@David_Yanggg 已经在挣了，别笑😁,https://x.com/realchendahuang/status/2124864413383709173,967,0,0,2,0,0,0,0,2,0,0,0,0,,
-2124864256655213002,"Mon, Nov 23, 2026",@Suercha007 已经死了很久了，在我这里,https://x.com/realchendahuang/status/2124864256655213002,1065,0,0,3,0,0,0,0,3,0,0,0,0,,
+2124864413383709173,"Mon, Nov 23, 2026",@David_Yanggg 已经在挣了，别笑😁,https://x.com/realchendahuang/status/2124864413383709173,968,0,0,2,0,0,0,0,2,0,0,0,0,,
+2124864256655213002,"Mon, Nov 23, 2026",@Suercha007 已经死了很久了，在我这里,https://x.com/realchendahuang/status/2124864256655213002,1067,0,0,3,0,0,0,0,3,0,0,0,0,,
 2124864097212940671,"Mon, Nov 23, 2026","好事啊，人才流动，出来创业才会有新的独角兽诞生！罗福莉不也是要出来单干吗？
 
-这个时代人才才是最宝贵的，有能力训练SOTA级别大模型的人才，必然不会是笼子里面的金丝雀。",https://x.com/realchendahuang/status/2124864097212940671,1384,1,0,30,0,0,1,0,10,6,0,0,0,12,
+这个时代人才才是最宝贵的，有能力训练SOTA级别大模型的人才，必然不会是笼子里面的金丝雀。",https://x.com/realchendahuang/status/2124864097212940671,1413,1,0,30,0,0,1,0,10,6,0,0,0,12,
 2124863218753651042,"Mon, Nov 23, 2026",@fiapp_pro 不敢，容易被封号,https://x.com/realchendahuang/status/2124863218753651042,52,0,0,0,0,0,0,0,0,0,0,0,0,,
 2124863000079380978,"Mon, Nov 23, 2026","我已经好久没打开Codex了，一整天都泡在antigravity上了。
 
 Claude也还会在虚拟机里面启动一下，跑起来擦擦灰。
 
-OpenAI是不是真快不行了啊？？？",https://x.com/realchendahuang/status/2124863000079380978,13971,45,6,383,0,2,30,0,52,254,0,0,0,,
+OpenAI是不是真快不行了啊？？？",https://x.com/realchendahuang/status/2124863000079380978,14066,45,6,384,0,2,30,0,53,254,0,0,0,,
 2124862181913346421,"Mon, Nov 23, 2026",@Sukiea1008 卧靠，这个好玩,https://x.com/realchendahuang/status/2124862181913346421,51,0,0,1,0,0,1,0,0,0,0,0,0,,
 2124861431065756154,"Mon, Nov 23, 2026",@zhang_baoqing 脸皮的艺术,https://x.com/realchendahuang/status/2124861431065756154,132,0,0,1,0,0,1,0,0,0,0,0,0,,
 2124859748919169095,"Mon, Nov 23, 2026","卧槽，当政客还是得不要脸啊。
 
-美国财政部长贝森特：英伟达需要从外部寻找CEO，而黄仁勋现在就是外部人士。🤣🤣🤣",https://x.com/realchendahuang/status/2124859748919169095,2319,16,3,120,0,0,6,0,1,29,0,0,0,68,
-2124859430781309005,"Mon, Nov 23, 2026",@Ethan_ship 现付的，直接有账单,https://x.com/realchendahuang/status/2124859430781309005,2470,2,0,7,0,0,0,0,4,1,0,0,0,,
-2124858028071735668,"Mon, Nov 23, 2026",@SimonTheWeen AI神启动！,https://x.com/realchendahuang/status/2124858028071735668,401,0,0,2,0,0,0,0,2,0,0,0,0,,
-2124851980141261194,"Mon, Nov 23, 2026",@Samcthr 对agy里面,https://x.com/realchendahuang/status/2124851980141261194,638,0,0,4,0,0,1,0,1,2,0,0,0,,
+美国财政部长贝森特：英伟达需要从外部寻找CEO，而黄仁勋现在就是外部人士。🤣🤣🤣",https://x.com/realchendahuang/status/2124859748919169095,2343,16,3,120,0,0,6,0,1,29,0,0,0,68,
+2124859430781309005,"Mon, Nov 23, 2026",@Ethan_ship 现付的，直接有账单,https://x.com/realchendahuang/status/2124859430781309005,2476,2,0,7,0,0,0,0,4,1,0,0,0,,
+2124858028071735668,"Mon, Nov 23, 2026",@SimonTheWeen AI神启动！,https://x.com/realchendahuang/status/2124858028071735668,402,0,0,2,0,0,0,0,2,0,0,0,0,,
+2124851980141261194,"Mon, Nov 23, 2026",@Samcthr 对agy里面,https://x.com/realchendahuang/status/2124851980141261194,640,0,0,4,0,0,1,0,1,2,0,0,0,,
 2124851898314584177,"Mon, Nov 23, 2026",@wasabi1029 学习了！,https://x.com/realchendahuang/status/2124851898314584177,82,1,0,2,0,0,1,0,0,0,0,0,0,,
-2124846397367406689,"Mon, Nov 23, 2026",@lucky_dogecoin 原神启动！！！,https://x.com/realchendahuang/status/2124846397367406689,190,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124846254949806339,"Mon, Nov 23, 2026",@AGatHere 今晚不睡觉了,https://x.com/realchendahuang/status/2124846254949806339,4004,0,0,13,0,0,0,0,13,0,0,0,0,,
-2124846208216949002,"Mon, Nov 23, 2026",@Fonsi_AI123 其他办法不稳定,https://x.com/realchendahuang/status/2124846208216949002,3549,0,0,9,0,0,0,0,9,0,0,0,0,,
-2124846135076696156,"Mon, Nov 23, 2026",@likka_ailive 🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡,https://x.com/realchendahuang/status/2124846135076696156,1204,1,0,5,0,0,0,0,4,0,0,0,0,,
-2124846092680585611,"Mon, Nov 23, 2026",@bitesized_3mzz 用neon，又快又好,https://x.com/realchendahuang/status/2124846092680585611,608,0,0,3,0,0,1,0,0,2,0,0,0,,
-2124846005145502128,"Mon, Nov 23, 2026",@QwenAIFans 没必要，被封号了再说,https://x.com/realchendahuang/status/2124846005145502128,1840,1,0,10,0,0,0,0,7,2,0,0,0,,
-2124845945460596942,"Mon, Nov 23, 2026",@lucky_dogecoin 好用，我都用了一万个token了,https://x.com/realchendahuang/status/2124845945460596942,1340,0,0,9,0,0,1,0,4,4,0,0,0,,
+2124846397367406689,"Mon, Nov 23, 2026",@lucky_dogecoin 原神启动！！！,https://x.com/realchendahuang/status/2124846397367406689,191,0,0,0,0,0,0,0,0,0,0,0,0,,
+2124846254949806339,"Mon, Nov 23, 2026",@AGatHere 今晚不睡觉了,https://x.com/realchendahuang/status/2124846254949806339,4006,0,0,13,0,0,0,0,13,0,0,0,0,,
+2124846208216949002,"Mon, Nov 23, 2026",@Fonsi_AI123 其他办法不稳定,https://x.com/realchendahuang/status/2124846208216949002,3558,0,0,9,0,0,0,0,9,0,0,0,0,,
+2124846135076696156,"Mon, Nov 23, 2026",@likka_ailive 🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡🫡,https://x.com/realchendahuang/status/2124846135076696156,1206,1,0,5,0,0,0,0,4,0,0,0,0,,
+2124846092680585611,"Mon, Nov 23, 2026",@bitesized_3mzz 用neon，又快又好,https://x.com/realchendahuang/status/2124846092680585611,611,0,0,3,0,0,1,0,0,2,0,0,0,,
+2124846005145502128,"Mon, Nov 23, 2026",@QwenAIFans 没必要，被封号了再说,https://x.com/realchendahuang/status/2124846005145502128,1843,1,0,10,0,0,0,0,7,2,0,0,0,,
+2124845945460596942,"Mon, Nov 23, 2026",@lucky_dogecoin 好用，我都用了一万个token了,https://x.com/realchendahuang/status/2124845945460596942,1342,0,0,9,0,0,1,0,4,4,0,0,0,,
 2124845205971177714,"Mon, Nov 23, 2026","Gemini 4 Neon 给个人出海赚美元的建议
 
 把国内产品翻成英文、挂上支付就等老外买单的日子过去了。
@@ -686,7 +1045,7 @@ OpenAI是不是真快不行了啊？？？",https://x.com/realchendahuang/status
 
 ② 提前跑通收款和合规，别等做大再补：海外主体、支付风控、税务和封号，每一关都能直接卡死人。还在原型期，就把收第一笔 10 美元的全链路跑顺。
 
-③ 死磕极窄细分需求，避开大厂主战场：大而全的工具早被巨头占满了。专挑那种搜索量不大、大厂看不上、老外又懒得手工干的小需求，闷声收订阅。",https://x.com/realchendahuang/status/2124845205971177714,2464,16,18,63,0,0,2,0,5,40,0,0,0,,
+③ 死磕极窄细分需求，避开大厂主战场：大而全的工具早被巨头占满了。专挑那种搜索量不大、大厂看不上、老外又懒得手工干的小需求，闷声收订阅。",https://x.com/realchendahuang/status/2124845205971177714,2494,16,19,63,0,0,2,0,5,40,0,0,0,,
 2124845075590975526,"Mon, Nov 23, 2026","Gemini 4 Neon 给普通人做个人 IP 的建议
 
 靠搬运热点、洗稿凑字数混流量的时代结束了。
@@ -696,7 +1055,7 @@ AI 内容铺天盖地以后，普通人做账号还能跑出来的，就三件�
 
 ② 亮出明确判断，别当端水大师：谁也不得罪的结果就是谁也记不住你。守住一个真懂的小领域，敢对事不对人地给结论，账号才有活人味。
 
-③ 盯住能买单的人，少追泛流量：十万个看热闹的路人，不如五百个真信你的精准客户。写之前先想明白对方卡在哪，以后能为你的什么能力掏钱。",https://x.com/realchendahuang/status/2124845075590975526,4198,16,24,194,0,1,1,2,11,163,0,0,0,,
+③ 盯住能买单的人，少追泛流量：十万个看热闹的路人，不如五百个真信你的精准客户。写之前先想明白对方卡在哪，以后能为你的什么能力掏钱。",https://x.com/realchendahuang/status/2124845075590975526,4221,16,24,194,0,1,1,2,11,163,0,0,0,,
 2124844937296654389,"Mon, Nov 23, 2026","Gemini 4 Neon 给独立开发者的赚钱建议
 
 花两周搓个工具上线、发条推文等自然流量的老玩法行不通了。
@@ -708,7 +1067,7 @@ AI 内容铺天盖地以后，普通人做账号还能跑出来的，就三件�
 
 ③ 跳过同行互赞，去赚真实外行的钱：别在开发者圈子里互相点关注、卖铲子。盯着电商、物流、财税这些具体行业里费人力的重复活，哪怕是个丑脚本，照样能收高价。
 
-代码早就不值钱了，谁能把东西卖到掏钱的人手里，谁才能活下来。",https://x.com/realchendahuang/status/2124844937296654389,1673,7,9,27,0,0,0,0,2,18,0,0,0,,
+代码早就不值钱了，谁能把东西卖到掏钱的人手里，谁才能活下来。",https://x.com/realchendahuang/status/2124844937296654389,1698,7,9,27,0,0,0,0,2,18,0,0,0,,
 2124844826273419724,"Mon, Nov 23, 2026","Gemini 4 Neon 给 30 岁程序员的生存建议
 
 靠背八股文、写 CRUD 拿高薪的时代结束了。
@@ -720,7 +1079,7 @@ AI 内容铺天盖地以后，普通人做账号还能跑出来的，就三件�
 
 ③ 下班攒一套带得走的外部资产：别把十年经验全锁死在公司内网里。开源项目、技术内容或熟客私单，挑一样提前养着，离开那天手里才有底牌。
 
-别等裁员通知发下来再慌，先算清楚摘掉现在的工牌，你还能凭什么收到钱。",https://x.com/realchendahuang/status/2124844826273419724,7962,40,29,318,1,1,3,1,16,257,0,0,0,,
+别等裁员通知发下来再慌，先算清楚摘掉现在的工牌，你还能凭什么收到钱。",https://x.com/realchendahuang/status/2124844826273419724,7995,40,29,318,1,1,3,1,16,257,0,0,0,,
 2124844337708323302,"Mon, Nov 23, 2026","Gemini 4 Neon 给中国年轻人的破局建议
 
 好大学、进大厂、买房增值这套老路走不通了。
@@ -730,54 +1089,54 @@ AI 内容铺天盖地以后，普通人做账号还能跑出来的，就三件�
 
 ② 用 AI 赚传统生意的钱：别挤在互联网圈里卷工具。去帮靠表格和微信群干活的传统老板省人工、接订单，收钱快得多。
 
-③ 进小团队搭伙，别硬扛一人公司：一个人包圆产品、流量和交付多半耗死，找个已有稳定进账的小团队做互补，比自己单干胜率高得多。",https://x.com/realchendahuang/status/2124844337708323302,18335,82,53,825,0,0,9,6,38,690,0,0,0,,
+③ 进小团队搭伙，别硬扛一人公司：一个人包圆产品、流量和交付多半耗死，找个已有稳定进账的小团队做互补，比自己单干胜率高得多。",https://x.com/realchendahuang/status/2124844337708323302,18374,82,53,826,0,0,9,6,38,691,0,0,0,,
 2124844231261110329,"Mon, Nov 23, 2026",@Sukiea1008 哈哈哈哈哈哈,https://x.com/realchendahuang/status/2124844231261110329,21,1,0,1,0,0,0,0,0,0,0,0,0,,
-2124842580521484396,"Mon, Nov 23, 2026",@Suercha007 那我要这玩意何用？,https://x.com/realchendahuang/status/2124842580521484396,280,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124842336429752607,"Mon, Nov 23, 2026",@joejoe49132382 @shanshutaoran 问问@grok 咋解决,https://x.com/realchendahuang/status/2124842336429752607,908,0,0,29,0,0,1,0,2,26,0,0,0,,
-2124839509825388913,"Mon, Nov 23, 2026",@Sukiea1008 我头像 https://t.co/lBeqZVWJoQ,https://x.com/realchendahuang/status/2124839509825388913,140,1,0,14,0,0,1,0,3,4,0,0,0,5,
+2124842580521484396,"Mon, Nov 23, 2026",@Suercha007 那我要这玩意何用？,https://x.com/realchendahuang/status/2124842580521484396,281,0,0,0,0,0,0,0,0,0,0,0,0,,
+2124842336429752607,"Mon, Nov 23, 2026",@joejoe49132382 @shanshutaoran 问问@grok 咋解决,https://x.com/realchendahuang/status/2124842336429752607,909,0,0,29,0,0,1,0,2,26,0,0,0,,
+2124839509825388913,"Mon, Nov 23, 2026",@Sukiea1008 我头像 https://t.co/lBeqZVWJoQ,https://x.com/realchendahuang/status/2124839509825388913,141,1,0,14,0,0,1,0,3,4,0,0,0,5,
 2124839177191838021,"Mon, Nov 23, 2026",@deepultraman @shanshutaoran 你是不是串子？,https://x.com/realchendahuang/status/2124839177191838021,85,0,0,1,0,0,0,0,0,1,0,0,0,,
-2124838339035697177,"Mon, Nov 23, 2026",@joejoe49132382 @shanshutaoran 只要是双币卡或者外币卡都能开，google play绑定一下,https://x.com/realchendahuang/status/2124838339035697177,920,0,0,6,0,1,2,0,2,1,0,0,0,,
-2124837992233885754,"Mon, Nov 23, 2026",@4ckg3f 哈哈哈,https://x.com/realchendahuang/status/2124837992233885754,68,1,0,2,0,0,0,0,1,0,0,0,0,,
+2124838339035697177,"Mon, Nov 23, 2026",@joejoe49132382 @shanshutaoran 只要是双币卡或者外币卡都能开，google play绑定一下,https://x.com/realchendahuang/status/2124838339035697177,921,0,0,6,0,1,2,0,2,1,0,0,0,,
+2124837992233885754,"Mon, Nov 23, 2026",@4ckg3f 哈哈哈,https://x.com/realchendahuang/status/2124837992233885754,69,1,0,2,0,0,0,0,1,0,0,0,0,,
 2124837956146123032,"Mon, Nov 23, 2026",@Suercha007 这是纯纯滴老坛,https://x.com/realchendahuang/status/2124837956146123032,71,0,0,0,0,0,0,0,0,0,0,0,0,,
 2124832675458613311,"Mon, Nov 23, 2026",@weichen_ink 哈哈哈哈哈一般这种你可以看它主页，无差别攻击,https://x.com/realchendahuang/status/2124832675458613311,29,1,0,2,0,0,1,0,0,0,0,0,0,,
 2124830443426181221,"Mon, Nov 23, 2026",@weichen_ink 蓝V都不是，三无小号日常哈哈哈哈,https://x.com/realchendahuang/status/2124830443426181221,92,0,0,3,0,0,1,0,2,0,0,0,0,,
 2124829607874723966,"Mon, Nov 23, 2026",@ace605813571755 🫡🫡🫡,https://x.com/realchendahuang/status/2124829607874723966,56,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124829197508153530,"Mon, Nov 23, 2026",@jacklondon778 Playwright 速度慢，费token，容易被识别到自动化,https://x.com/realchendahuang/status/2124829197508153530,292,0,0,2,0,0,0,0,0,2,0,0,0,,
-2124828738986860687,"Mon, Nov 23, 2026",大家是了解我陈大黄的，我从来不惯着评论区,https://x.com/realchendahuang/status/2124828738986860687,1704,26,0,135,0,0,5,0,21,31,0,0,0,52,
+2124829197508153530,"Mon, Nov 23, 2026",@jacklondon778 Playwright 速度慢，费token，容易被识别到自动化,https://x.com/realchendahuang/status/2124829197508153530,295,0,0,2,0,0,0,0,0,2,0,0,0,,
+2124828738986860687,"Mon, Nov 23, 2026",大家是了解我陈大黄的，我从来不惯着评论区,https://x.com/realchendahuang/status/2124828738986860687,1728,26,0,135,0,0,5,0,21,31,0,0,0,52,
 2124828561303564619,"Mon, Nov 23, 2026",@ace605813571755 你也垃圾,https://x.com/realchendahuang/status/2124828561303564619,238,0,0,7,0,0,1,0,3,3,0,0,0,,
-2124828502067466474,"Mon, Nov 23, 2026",@iecbearli 多的，一个接一个,https://x.com/realchendahuang/status/2124828502067466474,1947,1,0,23,0,0,1,0,18,3,0,0,0,,
-2124828391530738145,"Mon, Nov 23, 2026",@w3ns0n 原神启动！！,https://x.com/realchendahuang/status/2124828391530738145,1548,0,0,5,0,0,0,0,4,1,0,0,0,,
+2124828502067466474,"Mon, Nov 23, 2026",@iecbearli 多的，一个接一个,https://x.com/realchendahuang/status/2124828502067466474,1949,1,0,23,0,0,1,0,18,3,0,0,0,,
+2124828391530738145,"Mon, Nov 23, 2026",@w3ns0n 原神启动！！,https://x.com/realchendahuang/status/2124828391530738145,1550,0,0,5,0,0,0,0,4,1,0,0,0,,
 2124828361499504862,"Mon, Nov 23, 2026",@jackchen8186760 冲冲冲,https://x.com/realchendahuang/status/2124828361499504862,632,0,0,10,0,0,0,0,10,0,0,0,0,,
 2124828165591990335,"Mon, Nov 23, 2026","春宵苦短日高起，从此君王不早朝。
 
 用上 Ego Lite 浏览器之后，不想再亲自去管理后台看配置了。
 
-登录态挂在 Ego Lite 里，需要什么直接让 AI 自己进后台查、自己核对，回头把结果报上来就行。",https://x.com/realchendahuang/status/2124828165591990335,5452,32,24,216,0,0,8,3,14,90,0,0,0,69,
-2124824297953021969,"Mon, Nov 23, 2026",@jackchen8186760 好，非常好,https://x.com/realchendahuang/status/2124824297953021969,3938,4,0,22,0,0,1,0,12,5,0,0,0,,
+登录态挂在 Ego Lite 里，需要什么直接让 AI 自己进后台查、自己核对，回头把结果报上来就行。",https://x.com/realchendahuang/status/2124828165591990335,5485,32,24,218,0,0,8,3,14,90,0,0,0,71,
+2124824297953021969,"Mon, Nov 23, 2026",@jackchen8186760 好，非常好,https://x.com/realchendahuang/status/2124824297953021969,3943,4,0,22,0,0,1,0,12,5,0,0,0,,
 2124824204193444244,"Mon, Nov 23, 2026",@ITShikakuLab You are right.,https://x.com/realchendahuang/status/2124824204193444244,60,1,0,2,0,0,0,0,1,0,0,0,0,,
-2124824069828985246,"Mon, Nov 23, 2026",@treeeeemax 所以我开了俩,https://x.com/realchendahuang/status/2124824069828985246,2355,1,0,9,0,0,1,0,5,2,0,0,0,,
-2124812383067791681,"Mon, Nov 23, 2026",@shanshutaoran 对，甚至国产银行卡也可以付款,https://x.com/realchendahuang/status/2124812383067791681,1215,3,0,11,0,0,1,0,4,3,0,0,0,,
-2124812309923311677,"Mon, Nov 23, 2026",@suannaigg 生产力工具啊,https://x.com/realchendahuang/status/2124812309923311677,2184,0,0,2,0,0,0,0,2,0,0,0,0,,
-2124812220978901322,"Mon, Nov 23, 2026",@feiyun_AI 捏着鼻子用，模型好，底座差,https://x.com/realchendahuang/status/2124812220978901322,2037,1,0,4,0,0,0,0,2,1,0,0,0,,
+2124824069828985246,"Mon, Nov 23, 2026",@treeeeemax 所以我开了俩,https://x.com/realchendahuang/status/2124824069828985246,2357,1,0,9,0,0,1,0,5,2,0,0,0,,
+2124812383067791681,"Mon, Nov 23, 2026",@shanshutaoran 对，甚至国产银行卡也可以付款,https://x.com/realchendahuang/status/2124812383067791681,1216,3,0,11,0,0,1,0,4,3,0,0,0,,
+2124812309923311677,"Mon, Nov 23, 2026",@suannaigg 生产力工具啊,https://x.com/realchendahuang/status/2124812309923311677,2186,0,0,2,0,0,0,0,2,0,0,0,0,,
+2124812220978901322,"Mon, Nov 23, 2026",@feiyun_AI 捏着鼻子用，模型好，底座差,https://x.com/realchendahuang/status/2124812220978901322,2042,1,0,4,0,0,0,0,2,1,0,0,0,,
 2124809310199058652,"Mon, Nov 23, 2026","这个项目好，可以实时看到Colab的额度，还能一键部署模型，舒服了。作者是KC大佬，可以关注一下：@ScarletKc
 
-github.com/scarletkc/cola…",https://x.com/realchendahuang/status/2124809310199058652,16386,231,301,2756,16,12,8,9,99,532,593,0,0,1272,
-2124807965899403512,"Mon, Nov 23, 2026",@fly3nn Ultra套餐没有 https://t.co/oTLJvPYyO8,https://x.com/realchendahuang/status/2124807965899403512,2731,6,1,161,0,0,4,0,8,7,0,0,0,136,
+github.com/scarletkc/cola…",https://x.com/realchendahuang/status/2124809310199058652,16437,231,302,2760,16,12,8,9,99,534,594,0,0,1273,
+2124807965899403512,"Mon, Nov 23, 2026",@fly3nn Ultra套餐没有 https://t.co/oTLJvPYyO8,https://x.com/realchendahuang/status/2124807965899403512,2733,6,1,161,0,0,4,0,8,7,0,0,0,136,
 2124807709711278294,"Mon, Nov 23, 2026",@Sukiea1008 羡慕，带带,https://x.com/realchendahuang/status/2124807709711278294,59,0,0,1,0,0,1,0,0,0,0,0,0,,
-2124807300632486384,"Mon, Nov 23, 2026",@shanshutaoran 正规200美金买的,https://x.com/realchendahuang/status/2124807300632486384,6741,12,0,45,0,1,2,0,14,16,0,0,0,,
-2124805212666007577,"Mon, Nov 23, 2026",@4ckg3f github.com/realchendahuan…  刚开源了，还没来得及发帖宣传，就先这样吧，你可以试试,https://x.com/realchendahuang/status/2124805212666007577,3178,5,16,463,0,1,1,1,18,82,355,0,0,,
-2124804926526394499,"Mon, Nov 23, 2026",@4ckg3f 不是反代的，是开多个实例,https://x.com/realchendahuang/status/2124804926526394499,2108,0,0,5,0,0,0,0,3,2,0,0,0,,
-2124803463301538087,"Mon, Nov 23, 2026",@shiba_cheems gogogo！！！,https://x.com/realchendahuang/status/2124803463301538087,1758,0,0,2,0,1,0,0,1,0,0,0,0,,
-2124801835617943633,"Mon, Nov 23, 2026",@Edison_aware 这是哪个项目啊？,https://x.com/realchendahuang/status/2124801835617943633,1346,1,0,11,0,0,1,0,0,9,0,0,0,,
+2124807300632486384,"Mon, Nov 23, 2026",@shanshutaoran 正规200美金买的,https://x.com/realchendahuang/status/2124807300632486384,6752,12,0,45,0,1,2,0,14,16,0,0,0,,
+2124805212666007577,"Mon, Nov 23, 2026",@4ckg3f github.com/realchendahuan…  刚开源了，还没来得及发帖宣传，就先这样吧，你可以试试,https://x.com/realchendahuang/status/2124805212666007577,3184,5,16,463,0,1,1,1,18,82,355,0,0,,
+2124804926526394499,"Mon, Nov 23, 2026",@4ckg3f 不是反代的，是开多个实例,https://x.com/realchendahuang/status/2124804926526394499,2112,0,0,5,0,0,0,0,3,2,0,0,0,,
+2124803463301538087,"Mon, Nov 23, 2026",@shiba_cheems gogogo！！！,https://x.com/realchendahuang/status/2124803463301538087,1760,0,0,2,0,1,0,0,1,0,0,0,0,,
+2124801835617943633,"Mon, Nov 23, 2026",@Edison_aware 这是哪个项目啊？,https://x.com/realchendahuang/status/2124801835617943633,1348,1,0,11,0,0,1,0,0,9,0,0,0,,
 2124801023768469815,"Mon, Nov 23, 2026",@Suercha007 @PrismChemAI 你的原创内容被洗稿了哈哈哈,https://x.com/realchendahuang/status/2124801023768469815,128,1,0,2,0,0,0,0,1,0,0,0,0,,
-2124800711229890685,"Mon, Nov 23, 2026",以前都是过的什么苦日子啊，Gemini 4 Neon真是给我用爽了。 又开了一个200美金Ultra，启动！！！,https://x.com/realchendahuang/status/2124800711229890685,61395,147,39,10671,1,12,68,2,214,2246,2,0,0,7980,
+2124800711229890685,"Mon, Nov 23, 2026",以前都是过的什么苦日子啊，Gemini 4 Neon真是给我用爽了。 又开了一个200美金Ultra，启动！！！,https://x.com/realchendahuang/status/2124800711229890685,61537,147,39,10682,1,12,68,2,214,2251,2,0,0,7986,
 2124789879578222932,"Mon, Nov 23, 2026",@ffccnotes @PrismChemAI @Suercha007 竟然洗出了1万个粉丝，也是牛逼的。,https://x.com/realchendahuang/status/2124789879578222932,135,1,0,7,0,0,1,0,3,2,0,0,0,,
-2124788745388110073,"Mon, Nov 23, 2026",@fortupuz 学，学海无涯,https://x.com/realchendahuang/status/2124788745388110073,70,0,0,0,0,0,0,0,0,0,0,0,0,,
+2124788745388110073,"Mon, Nov 23, 2026",@fortupuz 学，学海无涯,https://x.com/realchendahuang/status/2124788745388110073,71,0,0,0,0,0,0,0,0,0,0,0,0,,
 2124788718200569873,"Mon, Nov 23, 2026",@chasen_liao 学，学无止境,https://x.com/realchendahuang/status/2124788718200569873,96,1,0,2,0,0,0,0,0,1,0,0,0,,
 2124788270982987856,"Mon, Nov 23, 2026","时间线上刷到两个差不多的帖子，人类的本质真的是复读机吗？
 谁在洗稿啊，好难猜啊？🤣🤣🤣
-@PrismChemAI @Suercha007 https://t.co/69ag4EHkAn",https://x.com/realchendahuang/status/2124788270982987856,2062,13,5,251,0,0,16,0,62,106,0,0,0,54,
-2124782741648716056,"Mon, Nov 23, 2026",卧槽，这个RSI是什么时候流行的？我又落后了,https://x.com/realchendahuang/status/2124782741648716056,9392,17,25,83,0,2,7,2,17,38,0,0,0,,
+@PrismChemAI @Suercha007 https://t.co/69ag4EHkAn",https://x.com/realchendahuang/status/2124788270982987856,2079,13,5,251,0,0,16,0,62,106,0,0,0,54,
+2124782741648716056,"Mon, Nov 23, 2026",卧槽，这个RSI是什么时候流行的？我又落后了,https://x.com/realchendahuang/status/2124782741648716056,9419,17,25,83,0,2,7,2,17,38,0,0,0,,
 2124739653316345982,"Mon, Nov 23, 2026","谷歌开源了一个开放知识格式，叫 OKF。它是用来给 AI 整理和交换业务知识的。
 
 写代码、做客服时，退款政策、业务口径这些规则都散落在文档和聊天记录里，OKF 把它们统一打包成标准文件，让人和不同的 AI 工具都能直接读懂。
@@ -788,36 +1147,36 @@ AI 查资料时先看目录，需要哪块再一层层往下翻，不用一次�
 
 有了统一格式，团队写一份知识库，编码 Agent、客服 Agent 和搜索引擎都能直接用，换工具也不用重新适配。
 
-github：https://t.co/J69dVxRf3K",https://x.com/realchendahuang/status/2124739653316345982,6664,65,115,645,15,1,5,17,10,234,313,0,0,,
-2124736268550684977,"Mon, Nov 23, 2026",在单机场景下，原生 Go + SQLite 的性能与资源效率几乎没有对手。,https://x.com/realchendahuang/status/2124736268550684977,119952,102,56,1010,1,11,27,2,82,786,0,0,0,,
+github：https://t.co/J69dVxRf3K",https://x.com/realchendahuang/status/2124739653316345982,6693,65,116,646,15,1,5,17,10,235,313,0,0,,
+2124736268550684977,"Mon, Nov 23, 2026",在单机场景下，原生 Go + SQLite 的性能与资源效率几乎没有对手。,https://x.com/realchendahuang/status/2124736268550684977,129903,105,57,1027,1,12,27,2,85,796,0,0,0,,
 2124722645380055493,"Mon, Nov 23, 2026",@benzye1988 带带弟弟奔驰哥😭,https://x.com/realchendahuang/status/2124722645380055493,127,0,0,3,0,0,1,0,2,0,0,0,0,,
 2124710168084844559,"Mon, Nov 23, 2026",@EPiSODE_SG 我想不明白，达里奥只有一个睾丸，哪来的野生儿子？,https://x.com/realchendahuang/status/2124710168084844559,22,0,0,0,0,0,0,0,0,0,0,0,0,,
 2124708981298045294,"Mon, Nov 23, 2026",@EPiSODE_SG 你贱不贱？达里奥最看不起的就是说中文的人，你还给人家当野生儿子？Anthropic什么时候开发出来了远程养殖技术？,https://x.com/realchendahuang/status/2124708981298045294,18,0,0,0,0,0,0,0,0,0,0,0,0,,
 2124708461590237387,"Mon, Nov 23, 2026",@EPiSODE_SG 梁文锋再怎么样也比你这种满嘴喷粪的人来的牛逼。Anthropic达里奥是你爹啊？,https://x.com/realchendahuang/status/2124708461590237387,24,0,0,1,0,0,0,0,1,0,0,0,0,,
 2124703076854718952,"Mon, Nov 23, 2026",@GaoXiaoxiao2022 mysql是垃圾,https://x.com/realchendahuang/status/2124703076854718952,593,0,0,3,0,0,0,0,3,0,0,0,0,,
-2124674982634779032,"Mon, Nov 23, 2026",@fly3nn Java靠某大厂在续命，正经人谁用Java啊？又重又慢又丑,https://x.com/realchendahuang/status/2124674982634779032,1312,7,0,14,0,0,1,0,5,1,0,0,0,,
+2124674982634779032,"Mon, Nov 23, 2026",@fly3nn Java靠某大厂在续命，正经人谁用Java啊？又重又慢又丑,https://x.com/realchendahuang/status/2124674982634779032,1313,7,0,14,0,0,1,0,5,1,0,0,0,,
 2124674590744223905,"Mon, Nov 23, 2026",@noah_z_zhang 学，学无止境,https://x.com/realchendahuang/status/2124674590744223905,43,1,0,1,0,0,0,0,0,0,0,0,0,,
 2124674531193462834,"Mon, Nov 23, 2026","OpenAI宣布加强了反蒸馏的措施，防止其他模型学习GPT不说人话，满口“不是xxx，而是xxx”之类的泔水黑话。
 
-这对整个互联网语料是一件大好事！！！ https://t.co/tyrEoMKoNU",https://x.com/realchendahuang/status/2124674531193462834,2302,16,1,69,0,0,8,1,5,22,0,0,0,17,
+这对整个互联网语料是一件大好事！！！ https://t.co/tyrEoMKoNU",https://x.com/realchendahuang/status/2124674531193462834,2321,16,1,69,0,0,8,1,5,22,0,0,0,17,
 2124671734406332469,"Mon, Nov 23, 2026",@qingj1314 Oracle收购MySQL以后就死了,https://x.com/realchendahuang/status/2124671734406332469,633,1,1,4,0,0,1,0,0,2,0,0,0,,
 2124671545176146331,"Mon, Nov 23, 2026",@Qinlili3 主要前端工具链花活太多了，篇幅多了一点而已。后端技术栈比较老实本分。,https://x.com/realchendahuang/status/2124671545176146331,1256,0,0,13,0,0,1,0,9,3,0,0,0,,
 2124670908807999783,"Mon, Nov 23, 2026",@juhybben 你不能多看看我主页吗？正话反话全给你说了，对吧？,https://x.com/realchendahuang/status/2124670908807999783,1181,0,0,86,0,0,0,0,86,0,0,0,0,,
 2124668370117443682,"Mon, Nov 23, 2026",@orbcai Windows原生开发至今还没有一个最佳实践，他们自己官方开发的软件都是东一榔头西一棒槌，所以目前还没有标准答案。,https://x.com/realchendahuang/status/2124668370117443682,26,1,0,1,0,0,0,0,0,0,0,0,0,,
-2124668157248114834,"Mon, Nov 23, 2026",@orbcai 微软自己都不用。,https://x.com/realchendahuang/status/2124668157248114834,1479,0,0,6,0,0,0,0,5,1,0,0,0,,
-2124667711435510103,"Mon, Nov 23, 2026",lucide icon 我天天都用，没想到还有更厉害的solar icons，研发一下,https://x.com/realchendahuang/status/2124667711435510103,6096,26,32,58,1,0,3,1,9,11,0,0,0,8,
-2124665779400671517,"Mon, Nov 23, 2026",小红书真是一个神奇的平台,https://x.com/realchendahuang/status/2124665779400671517,1376,3,0,13,0,0,1,0,2,7,0,0,0,,
-2124663305306603752,"Mon, Nov 23, 2026",@ScarletKc 带把的集美可以吗,https://x.com/realchendahuang/status/2124663305306603752,70,1,0,5,0,0,1,0,0,3,0,0,0,,
+2124668157248114834,"Mon, Nov 23, 2026",@orbcai 微软自己都不用。,https://x.com/realchendahuang/status/2124668157248114834,1480,0,0,6,0,0,0,0,5,1,0,0,0,,
+2124667711435510103,"Mon, Nov 23, 2026",lucide icon 我天天都用，没想到还有更厉害的solar icons，研发一下,https://x.com/realchendahuang/status/2124667711435510103,6120,26,32,58,1,0,3,1,9,11,0,0,0,8,
+2124665779400671517,"Mon, Nov 23, 2026",小红书真是一个神奇的平台,https://x.com/realchendahuang/status/2124665779400671517,1387,3,0,13,0,0,1,0,2,7,0,0,0,,
+2124663305306603752,"Mon, Nov 23, 2026",@ScarletKc 带把的集美可以吗,https://x.com/realchendahuang/status/2124663305306603752,78,1,0,5,0,0,1,0,0,3,0,0,0,,
 2124527569815142631,"Sun, Nov 22, 2026",@Bob20030612 @Fatal1tyV Microsoft VS Code？,https://x.com/realchendahuang/status/2124527569815142631,48,0,0,1,0,0,0,0,0,1,0,0,0,,
 2124524430445674554,"Sun, Nov 22, 2026",@An_yhl 你也会oxc全家桶啊？,https://x.com/realchendahuang/status/2124524430445674554,1657,1,0,14,0,0,1,0,3,9,0,0,0,,
-2124519808293302364,"Sun, Nov 22, 2026",@stardreamfly 🫡,https://x.com/realchendahuang/status/2124519808293302364,2618,1,0,8,0,0,0,0,6,1,0,0,0,,
+2124519808293302364,"Sun, Nov 22, 2026",@stardreamfly 🫡,https://x.com/realchendahuang/status/2124519808293302364,2619,1,0,8,0,0,0,0,6,1,0,0,0,,
 2124513173579706734,"Sun, Nov 22, 2026",@moyingy66 安全不安全，要看你的全局规则放不放得开。,https://x.com/realchendahuang/status/2124513173579706734,16,0,0,0,0,0,0,0,0,0,0,0,0,,
 2124513051563221261,"Sun, Nov 22, 2026",@JasonBourn5637 太经典了，兄弟,https://x.com/realchendahuang/status/2124513051563221261,319,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124512821711180148,"Sun, Nov 22, 2026",@TammyBuilds yes,https://x.com/realchendahuang/status/2124512821711180148,3812,1,1,11,0,0,0,0,8,2,0,0,0,,
+2124512821711180148,"Sun, Nov 22, 2026",@TammyBuilds yes,https://x.com/realchendahuang/status/2124512821711180148,3813,1,1,11,0,0,0,0,8,2,0,0,0,,
 2124512569050497534,"Sun, Nov 22, 2026",@realchenchenluo 捏着鼻子学吧。,https://x.com/realchendahuang/status/2124512569050497534,21,0,0,2,0,0,0,0,1,1,0,0,0,,
 2124512537945518523,"Sun, Nov 22, 2026",@realchenchenluo 学校正常了，学校用SQL Server都不奇怪,https://x.com/realchendahuang/status/2124512537945518523,849,0,0,7,0,0,1,0,4,2,0,0,0,,
-2124511158380167642,"Sun, Nov 22, 2026",我和朋友对此评价和讨论 https://t.co/05vvvIhQ6c,https://x.com/realchendahuang/status/2124511158380167642,6663,6,5,937,0,0,0,1,20,12,6,0,0,892,
-2124510000664154129,"Sun, Nov 22, 2026",反正不要用MySQL+Java那一套就对了,https://x.com/realchendahuang/status/2124510000664154129,21074,61,38,418,0,0,22,2,70,263,0,0,0,,
+2124511158380167642,"Sun, Nov 22, 2026",我和朋友对此评价和讨论 https://t.co/05vvvIhQ6c,https://x.com/realchendahuang/status/2124511158380167642,6677,6,5,938,0,0,0,1,20,12,6,0,0,893,
+2124510000664154129,"Sun, Nov 22, 2026",反正不要用MySQL+Java那一套就对了,https://x.com/realchendahuang/status/2124510000664154129,21094,61,38,418,0,0,22,2,70,263,0,0,0,,
 2124508785482072194,"Sun, Nov 22, 2026","分享下我目前常用的技术栈：
 
 ① 全栈 Web：React + TypeScript + Vite 8 + Tailwind CSS v4 + TanStack（Router / Query / Start），UI 用 shadcn Base UI 配 Motion，后端 Hono + Zod + Drizzle，鉴权 Better Auth，包管理 pnpm。
@@ -834,7 +1193,7 @@ github：https://t.co/J69dVxRf3K",https://x.com/realchendahuang/status/212473965
 
 ⑦ 端上小工具：macOS 和 iOS 直接 Swift 原生，Android 直接 Kotlin 原生，Windows 绕开 WPF，用 Rust（Tauri 2 / Win32）。
 
-⑧ 抓数据与自动化脚本：带登录态抓网页数据用 Ego Lite，本地数据脚本用 Python + uv。",https://x.com/realchendahuang/status/2124508785482072194,101829,1499,1693,4715,54,69,67,167,535,2378,0,0,0,,
+⑧ 抓数据与自动化脚本：带登录态抓网页数据用 Ego Lite，本地数据脚本用 Python + uv。",https://x.com/realchendahuang/status/2124508785482072194,101961,1499,1694,4722,54,69,67,167,535,2385,0,0,0,,
 2124507721034760224,"Sun, Nov 22, 2026","马斯克在深圳参加 APEC 期间，视频连线了美国奥斯汀的 TomorrowX 峰会，简单整理了一下要点：
 
 ① xAI 重新写了底层软件栈。
@@ -875,7 +1234,7 @@ github：https://t.co/J69dVxRf3K",https://x.com/realchendahuang/status/212473965
 
 马斯克一向习惯把预期报得偏乐观，这些时间表后面大概率还会有延期。但明年 6 月的测试芯片、一两个月内的机器人真机演示，以及 xAI 持续扩建的机房，都是很快就能验证的节点，接下来盯着这几项实际落地情况就行。
 
-参考阅读：https://t.co/nj10miYS6W",https://x.com/realchendahuang/status/2124507721034760224,1303,2,0,13,0,0,1,0,0,10,0,0,0,,
+参考阅读：https://t.co/nj10miYS6W",https://x.com/realchendahuang/status/2124507721034760224,1318,2,0,13,0,0,1,0,0,10,0,0,0,,
 2124503721224831386,"Sun, Nov 22, 2026","11 月 21 日凌晨姚顺雨带队腾讯混元在 Reddit r/LocalLLaMA 做了首次公开AMA，简单整理了一下关键信息：
 
 ① 公开榜单的参考价值越来越低，实际用起来看的是冷门语言和稳定性，很多老榜单已经饱和，Python 和 JS 刷高分不代表真好用。
@@ -908,25 +1267,25 @@ github：https://t.co/J69dVxRf3K",https://x.com/realchendahuang/status/212473965
 
 如果开源模型把逆向、漏洞排查这类攻防两用的能力直接从数据里删掉，往往先影响的是做安全防御和排障的普通人。
 
-把官方量化、llama.cpp 和 vLLM 适配做好，同时在安全和可用之间掌握好分寸，比单纯放出权重更重要。",https://x.com/realchendahuang/status/2124503721224831386,1670,5,4,31,0,0,5,0,1,20,0,0,0,,
+把官方量化、llama.cpp 和 vLLM 适配做好，同时在安全和可用之间掌握好分寸，比单纯放出权重更重要。",https://x.com/realchendahuang/status/2124503721224831386,1682,5,4,31,0,0,5,0,1,20,0,0,0,,
 2124498635799064946,"Sun, Nov 22, 2026",@jerald @gadtmf20444 funny,https://x.com/realchendahuang/status/2124498635799064946,75,0,0,1,0,0,0,0,0,1,0,0,0,,
-2124497335791366294,"Sun, Nov 22, 2026",@Sukiea1008 dji osmo pocket 4p,https://x.com/realchendahuang/status/2124497335791366294,147,0,0,2,0,0,2,0,0,0,0,0,0,,
+2124497335791366294,"Sun, Nov 22, 2026",@Sukiea1008 dji osmo pocket 4p,https://x.com/realchendahuang/status/2124497335791366294,148,0,0,2,0,0,2,0,0,0,0,0,0,,
 2124483205554475462,"Sun, Nov 22, 2026",@sorry2sea 我mark一下，等下开源出来。,https://x.com/realchendahuang/status/2124483205554475462,22,0,0,2,0,0,0,0,0,2,0,0,0,,
 2124483119868981365,"Sun, Nov 22, 2026",@fly3nn 你被封了吗？,https://x.com/realchendahuang/status/2124483119868981365,904,1,0,4,0,0,1,0,2,0,0,0,0,,
-2124479527804195222,"Sun, Nov 22, 2026",AI利好网吧显卡,https://x.com/realchendahuang/status/2124479527804195222,1763,6,0,11,0,0,0,0,3,2,0,0,0,,
-2124479421298168274,"Sun, Nov 22, 2026",@nffund 至少给我创造价值了,https://x.com/realchendahuang/status/2124479421298168274,239,0,0,1,0,0,0,0,1,0,0,0,0,,
-2124464064474783962,"Sun, Nov 22, 2026",Gemini 4 Neon 最大的优点就是干活速度快，人狠话不多，需求对齐的很舒服，有一种懂我的感觉。,https://x.com/realchendahuang/status/2124464064474783962,1488,9,1,32,0,0,5,0,3,13,0,0,0,2,
-2124457236315725831,"Sun, Nov 22, 2026",@CY_Chase_X 20× 已经相当于打五折了，最近还有土区bug价,https://x.com/realchendahuang/status/2124457236315725831,1916,0,1,11,0,0,0,0,5,6,0,0,0,,
+2124479527804195222,"Sun, Nov 22, 2026",AI利好网吧显卡,https://x.com/realchendahuang/status/2124479527804195222,1772,6,0,11,0,0,0,0,3,2,0,0,0,,
+2124479421298168274,"Sun, Nov 22, 2026",@nffund 至少给我创造价值了,https://x.com/realchendahuang/status/2124479421298168274,240,0,0,1,0,0,0,0,1,0,0,0,0,,
+2124464064474783962,"Sun, Nov 22, 2026",Gemini 4 Neon 最大的优点就是干活速度快，人狠话不多，需求对齐的很舒服，有一种懂我的感觉。,https://x.com/realchendahuang/status/2124464064474783962,1498,9,1,32,0,0,5,0,3,13,0,0,0,2,
+2124457236315725831,"Sun, Nov 22, 2026",@CY_Chase_X 20× 已经相当于打五折了，最近还有土区bug价,https://x.com/realchendahuang/status/2124457236315725831,1917,0,1,11,0,0,0,0,5,6,0,0,0,,
 2124453961230897435,"Sun, Nov 22, 2026",@william_astra 好用，快用，最近黑五打折,https://x.com/realchendahuang/status/2124453961230897435,949,1,0,3,0,0,1,0,0,1,0,0,0,,
-2124453807472226580,"Sun, Nov 22, 2026",@tiandi_zhang 这两天发的少哈哈哈,https://x.com/realchendahuang/status/2124453807472226580,702,1,0,12,0,0,0,0,11,0,0,0,0,,
+2124453807472226580,"Sun, Nov 22, 2026",@tiandi_zhang 这两天发的少哈哈哈,https://x.com/realchendahuang/status/2124453807472226580,703,1,0,12,0,0,0,0,11,0,0,0,0,,
 2124453493746651508,"Sun, Nov 22, 2026",@jeffflymycat 浏览器的代码量惊人,https://x.com/realchendahuang/status/2124453493746651508,105,1,0,1,0,0,0,0,0,0,0,0,0,,
 2124453415048896665,"Sun, Nov 22, 2026",@SicanianSun yes,https://x.com/realchendahuang/status/2124453415048896665,81,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124453171674374571,"Sun, Nov 22, 2026",@dragonking18681 yes,https://x.com/realchendahuang/status/2124453171674374571,485,0,0,1,0,0,0,0,1,0,0,0,0,,
+2124453171674374571,"Sun, Nov 22, 2026",@dragonking18681 yes,https://x.com/realchendahuang/status/2124453171674374571,486,0,0,1,0,0,0,0,1,0,0,0,0,,
 2124452542256234903,"Sun, Nov 22, 2026","Antigravity的/Swarm 模式启动了以后，你可以看到最新版的Swarm UI。
 
-你别说，还真有点忙碌小蜜蜂🐝的感觉了。 https://t.co/bQQw6kj22F",https://x.com/realchendahuang/status/2124452542256234903,5392,18,4,1041,0,0,7,0,9,132,0,0,0,875,
-2124450455581556789,"Sun, Nov 22, 2026",@Jasonjooooo 强者如斯,https://x.com/realchendahuang/status/2124450455581556789,433,0,0,1,0,0,0,0,1,0,0,0,0,,
-2124450139087749519,"Sun, Nov 22, 2026",两天前，腾讯AI 姚顺雨团队，在 Reddit 上做了一场两小时的 AMA（Ask Me Anything），收到 300 多条留言，感兴趣的可以吃瓜一下： reddit.com/r/LocalLLaMA/c…,https://x.com/realchendahuang/status/2124450139087749519,3074,5,5,60,0,0,0,0,4,20,31,0,0,,
+你别说，还真有点忙碌小蜜蜂🐝的感觉了。 https://t.co/bQQw6kj22F",https://x.com/realchendahuang/status/2124452542256234903,5404,18,4,1041,0,0,7,0,9,132,0,0,0,875,
+2124450455581556789,"Sun, Nov 22, 2026",@Jasonjooooo 强者如斯,https://x.com/realchendahuang/status/2124450455581556789,434,0,0,1,0,0,0,0,1,0,0,0,0,,
+2124450139087749519,"Sun, Nov 22, 2026",两天前，腾讯AI 姚顺雨团队，在 Reddit 上做了一场两小时的 AMA（Ask Me Anything），收到 300 多条留言，感兴趣的可以吃瓜一下： reddit.com/r/LocalLLaMA/c…,https://x.com/realchendahuang/status/2124450139087749519,3095,5,5,60,0,0,0,0,4,20,31,0,0,,
 2124449485850050756,"Sun, Nov 22, 2026","现在开新的前端工程，完全可以试试尤雨溪主导的 Oxc 工具链：
 
 oxc-parser + oxc-resolver + oxc-transform（含 Isolated Declarations）+ oxc-minify + Oxlint + Oxfmt + Rolldown + Vite 8（Vite+）
@@ -945,11 +1304,11 @@ babel/parser + enhanced-resolve + Babel + tsc 生成 .d.ts + Terser + ESLint + P
 
 ③ 全链路构建快 3~16 倍：Vite 8 底层切换为 Rolldown + Oxc，所有环节共用同一套 Rust 内存池和 AST，同一份代码不用再被反复解析五六遍，内存占用和 CI 耗时同步降下来，AI 写完代码自检、格式化、打包的反馈循环也几乎不用等。
 
-参考资料：https://t.co/jC1KLHFc4j",https://x.com/realchendahuang/status/2124449485850050756,15441,204,200,1101,14,15,11,21,54,493,303,0,0,,
-2124447372294111703,"Sun, Nov 22, 2026",@nexmoe 我打磨差不多了就开源一下,https://x.com/realchendahuang/status/2124447372294111703,118,1,0,1,0,0,0,0,0,0,0,0,0,,
-2124447283576295780,"Sun, Nov 22, 2026",@EvanX1993 需要的，娘化克劳德大小姐总比达里奥的臭脸好,https://x.com/realchendahuang/status/2124447283576295780,147,1,0,3,0,0,1,0,0,1,0,0,0,,
-2124447118400340184,"Sun, Nov 22, 2026",@zerokindom007 舒服,https://x.com/realchendahuang/status/2124447118400340184,1685,0,0,4,0,1,0,0,3,0,0,0,0,,
-2124447071147315471,"Sun, Nov 22, 2026",@XichengAI 我自己搓的一个小插件,https://x.com/realchendahuang/status/2124447071147315471,1340,0,0,3,0,0,1,0,1,1,0,0,0,,
+参考资料：https://t.co/jC1KLHFc4j",https://x.com/realchendahuang/status/2124449485850050756,15474,204,200,1105,14,15,11,21,54,494,306,0,0,,
+2124447372294111703,"Sun, Nov 22, 2026",@nexmoe 我打磨差不多了就开源一下,https://x.com/realchendahuang/status/2124447372294111703,119,1,0,1,0,0,0,0,0,0,0,0,0,,
+2124447283576295780,"Sun, Nov 22, 2026",@EvanX1993 需要的，娘化克劳德大小姐总比达里奥的臭脸好,https://x.com/realchendahuang/status/2124447283576295780,148,1,0,3,0,0,1,0,0,1,0,0,0,,
+2124447118400340184,"Sun, Nov 22, 2026",@zerokindom007 舒服,https://x.com/realchendahuang/status/2124447118400340184,1686,0,0,4,0,1,0,0,3,0,0,0,0,,
+2124447071147315471,"Sun, Nov 22, 2026",@XichengAI 我自己搓的一个小插件,https://x.com/realchendahuang/status/2124447071147315471,1343,0,0,3,0,0,1,0,1,1,0,0,0,,
 2124447003270922435,"Sun, Nov 22, 2026",@Sin_Yiyao 取其精华了属于是,https://x.com/realchendahuang/status/2124447003270922435,209,1,0,3,0,0,0,0,2,0,0,0,0,,
 2124443982990311622,"Sun, Nov 22, 2026","很多人每天都在写前端代码，但早期的网页开发几乎不需要什么构建工具，写完 HTML 和 JavaScript 直接丢给浏览器就能跑。
 
@@ -1005,32 +1364,32 @@ Boshen 带着 Oxc 加入后，三层架构随之定型：最底层是 Oxc 负责
 
 从早期用 JavaScript 自己写构建工具，到 Go 和 Rust 在单个环节暴力提速，再到如今以 Oxc 为共享底层编译基座统一整个前端工具链，前端工程化的演进一直在解决速度、生态兼容与工具割裂之间的平衡问题。
 
-项目源码和完整文档可以在这里查看：https://t.co/6GVbbd5ELV",https://x.com/realchendahuang/status/2124443982990311622,3947,31,18,166,0,2,4,1,13,74,41,0,0,,
-2124443441329480094,"Sun, Nov 22, 2026",魔改版的Claude Cage加了点二次元含量，情绪价值也得拉满 https://t.co/JZs5bBm45b,https://x.com/realchendahuang/status/2124443441329480094,2265,11,0,284,0,0,6,0,8,39,0,0,0,220,
+项目源码和完整文档可以在这里查看：https://t.co/6GVbbd5ELV",https://x.com/realchendahuang/status/2124443982990311622,3958,31,18,166,0,2,4,1,13,74,41,0,0,,
+2124443441329480094,"Sun, Nov 22, 2026",魔改版的Claude Cage加了点二次元含量，情绪价值也得拉满 https://t.co/JZs5bBm45b,https://x.com/realchendahuang/status/2124443441329480094,2276,11,0,285,0,0,6,0,8,39,0,0,0,221,
 2124443282206069053,"Sun, Nov 22, 2026",@Sin_Yiyao 你是懂gpt的，最会挑刺了,https://x.com/realchendahuang/status/2124443282206069053,246,0,0,3,0,0,1,0,1,1,0,0,0,,
-2124441888749166845,"Sun, Nov 22, 2026",@Sin_Yiyao gpt-6.2 主要负责协作哪些方面呢？后端构建吗？还是code review？,https://x.com/realchendahuang/status/2124441888749166845,1180,0,0,11,0,0,1,0,5,5,0,0,0,,
-2124435137639428156,"Sun, Nov 22, 2026",@Nikola314159 比克劳德耐封。,https://x.com/realchendahuang/status/2124435137639428156,1436,5,0,5,0,0,0,0,0,0,0,0,0,,
+2124441888749166845,"Sun, Nov 22, 2026",@Sin_Yiyao gpt-6.2 主要负责协作哪些方面呢？后端构建吗？还是code review？,https://x.com/realchendahuang/status/2124441888749166845,1182,0,0,11,0,0,1,0,5,5,0,0,0,,
+2124435137639428156,"Sun, Nov 22, 2026",@Nikola314159 比克劳德耐封。,https://x.com/realchendahuang/status/2124435137639428156,1438,5,0,5,0,0,0,0,0,0,0,0,0,,
 2124432081065484677,"Sun, Nov 22, 2026","重度使用Gemini 4这么多天,可以得出结论：
-Gemini 4 Neon 在大多数场景代替掉Claude Opus 5.5 没有任何问题。 https://t.co/PdsiwFuBFT",https://x.com/realchendahuang/status/2124432081065484677,21044,112,20,2910,3,6,44,6,70,796,2,0,0,1874,
-2124364555086332019,"Sun, Nov 22, 2026",@Litrenewstart 菜鸡gpt就是路边一条。,https://x.com/realchendahuang/status/2124364555086332019,650,0,0,4,0,0,0,0,4,0,0,0,0,,
-2124314517454922001,"Sun, Nov 22, 2026",我又out了，tsrs是啥新的技术栈 @grok,https://x.com/realchendahuang/status/2124314517454922001,2736,3,5,100,0,0,4,0,19,74,0,0,0,,
+Gemini 4 Neon 在大多数场景代替掉Claude Opus 5.5 没有任何问题。 https://t.co/PdsiwFuBFT",https://x.com/realchendahuang/status/2124432081065484677,21069,112,20,2910,3,6,44,6,70,796,2,0,0,1874,
+2124364555086332019,"Sun, Nov 22, 2026",@Litrenewstart 菜鸡gpt就是路边一条。,https://x.com/realchendahuang/status/2124364555086332019,651,0,0,4,0,0,0,0,4,0,0,0,0,,
+2124314517454922001,"Sun, Nov 22, 2026",我又out了，tsrs是啥新的技术栈 @grok,https://x.com/realchendahuang/status/2124314517454922001,2742,3,5,100,0,0,4,0,19,74,0,0,0,,
 2124314352018927925,"Sun, Nov 22, 2026",@awenimx 我做了大量的魔改，正在测试，静候佳音,https://x.com/realchendahuang/status/2124314352018927925,134,0,0,6,0,0,0,0,6,0,0,0,0,,
-2124314012334846321,"Sun, Nov 22, 2026",太有实力了，这就是AGI吗？ https://t.co/NL50RXJAnu,https://x.com/realchendahuang/status/2124314012334846321,529,1,0,17,0,0,1,0,0,4,0,0,0,11,
-2124313082403139930,"Sun, Nov 22, 2026",哈哈哈哈Gemini都训了啥？咋那么懂啊🤣🤣🤣 https://t.co/4zH6qkAKUA,https://x.com/realchendahuang/status/2124313082403139930,1428,8,0,73,0,0,2,0,5,16,0,0,0,42,
+2124314012334846321,"Sun, Nov 22, 2026",太有实力了，这就是AGI吗？ https://t.co/NL50RXJAnu,https://x.com/realchendahuang/status/2124314012334846321,534,1,0,17,0,0,1,0,0,4,0,0,0,11,
+2124313082403139930,"Sun, Nov 22, 2026",哈哈哈哈Gemini都训了啥？咋那么懂啊🤣🤣🤣 https://t.co/4zH6qkAKUA,https://x.com/realchendahuang/status/2124313082403139930,1433,8,0,73,0,0,2,0,5,16,0,0,0,42,
 2124309914407649643,"Sun, Nov 22, 2026",@Sukiea1008 还有它最近的Pro年费只要99美刀,https://x.com/realchendahuang/status/2124309914407649643,652,0,0,7,0,0,2,0,0,5,0,0,0,,
-2124303668916928983,"Sun, Nov 22, 2026",@jimmyhuli 用发展的眼光看问题,https://x.com/realchendahuang/status/2124303668916928983,1875,1,1,6,0,0,1,0,3,1,0,0,0,,
-2124303377320616235,"Sun, Nov 22, 2026",@hef699 这只是导火索吧，得道者多助，失道者寡助。,https://x.com/realchendahuang/status/2124303377320616235,2224,11,0,17,0,0,0,0,4,2,0,0,0,,
+2124303668916928983,"Sun, Nov 22, 2026",@jimmyhuli 用发展的眼光看问题,https://x.com/realchendahuang/status/2124303668916928983,1878,1,1,6,0,0,1,0,3,1,0,0,0,,
+2124303377320616235,"Sun, Nov 22, 2026",@hef699 这只是导火索吧，得道者多助，失道者寡助。,https://x.com/realchendahuang/status/2124303377320616235,2225,11,0,17,0,0,0,0,4,2,0,0,0,,
 2124303167500513683,"Sun, Nov 22, 2026",@room_wat 干,https://x.com/realchendahuang/status/2124303167500513683,33,0,0,0,0,0,0,0,0,0,0,0,0,,
-2124303120247517608,"Sun, Nov 22, 2026",@gadtmf20444 那Claude为什么不造呢？何不食肉糜？,https://x.com/realchendahuang/status/2124303120247517608,1622,8,0,17,0,0,2,0,6,1,0,0,0,,
+2124303120247517608,"Sun, Nov 22, 2026",@gadtmf20444 那Claude为什么不造呢？何不食肉糜？,https://x.com/realchendahuang/status/2124303120247517608,1624,8,0,17,0,0,2,0,6,1,0,0,0,,
 2124210603879502216,"Sat, Nov 21, 2026",@Suercha007 人才,https://x.com/realchendahuang/status/2124210603879502216,289,1,0,4,0,0,0,0,2,1,0,0,0,,
-2124199512311025967,"Sat, Nov 21, 2026",补充一点，月付完了以后可以先把周额度用完再升级年付，这样额度会重新刷新刷满。,https://x.com/realchendahuang/status/2124199512311025967,2307,5,8,41,0,0,2,0,5,20,0,0,0,9,
+2124199512311025967,"Sat, Nov 21, 2026",补充一点，月付完了以后可以先把周额度用完再升级年付，这样额度会重新刷新刷满。,https://x.com/realchendahuang/status/2124199512311025967,2313,5,8,41,0,0,2,0,5,20,0,0,0,9,
 2124194356869628019,"Sat, Nov 21, 2026",@Sin_Yiyao 点链接开始冲刺哈哈哈哈哈,https://x.com/realchendahuang/status/2124194356869628019,107,0,0,1,0,0,0,0,0,1,0,0,0,,
 2124194272257957952,"Sat, Nov 21, 2026",@yolohair agy确实垃圾,https://x.com/realchendahuang/status/2124194272257957952,249,1,0,3,0,0,1,0,1,0,0,0,0,,
 2124192459030979030,"Sat, Nov 21, 2026",@yolohair 好饭不怕晚，之前是团队有问题，现在组好了团队那就猛猛干，除了agy团队拖后腿了,https://x.com/realchendahuang/status/2124192459030979030,291,0,0,2,0,0,1,0,1,0,0,0,0,,
-2124190864209768552,"Sat, Nov 21, 2026",@yolohair 但是冲劲强,https://x.com/realchendahuang/status/2124190864209768552,1961,1,0,6,0,0,1,0,4,0,0,0,0,,
-2124188601995190350,"Sat, Nov 21, 2026",@itwanger 二哥牛逼👍,https://x.com/realchendahuang/status/2124188601995190350,110,0,0,3,0,0,1,0,2,0,0,0,0,,
-2124188443941240995,"Sat, Nov 21, 2026",能用高智力的就高智力的，时间是最宝贵的财富，用流口水的模型属于没苦硬吃。,https://x.com/realchendahuang/status/2124188443941240995,2253,11,1,24,0,0,0,0,3,10,0,0,0,,
-2124186795193905523,"Sat, Nov 21, 2026",魔改了一下Claude Cage这个项目，把它做的更加符合人体工学，稍后开源出来。做了非常多的体验优化和防封措施。 https://t.co/LZOWmZqq4n,https://x.com/realchendahuang/status/2124186795193905523,4379,17,12,211,1,1,3,0,24,68,0,0,0,98,
+2124190864209768552,"Sat, Nov 21, 2026",@yolohair 但是冲劲强,https://x.com/realchendahuang/status/2124190864209768552,1962,1,0,6,0,0,1,0,4,0,0,0,0,,
+2124188601995190350,"Sat, Nov 21, 2026",@itwanger 二哥牛逼👍,https://x.com/realchendahuang/status/2124188601995190350,111,0,0,3,0,0,1,0,2,0,0,0,0,,
+2124188443941240995,"Sat, Nov 21, 2026",能用高智力的就高智力的，时间是最宝贵的财富，用流口水的模型属于没苦硬吃。,https://x.com/realchendahuang/status/2124188443941240995,2260,11,1,24,0,0,0,0,3,10,0,0,0,,
+2124186795193905523,"Sat, Nov 21, 2026",魔改了一下Claude Cage这个项目，把它做的更加符合人体工学，稍后开源出来。做了非常多的体验优化和防封措施。 https://t.co/LZOWmZqq4n,https://x.com/realchendahuang/status/2124186795193905523,4397,17,12,211,1,1,3,0,24,68,0,0,0,98,
 2124183236993839345,"Sat, Nov 21, 2026","这些年的软件公司，不管是 GitHub、JetBrains 还是 Docker，开发工具做到头也就百亿美元量级，没出过万亿美元的公司。
 
 现在 Anthropic 估值到了 1.5 万亿美元，其中很大一部分靠 Claude Code 和编程 Agent 撑着，这笔账其实不太好算。
@@ -1047,7 +1406,7 @@ Gemini 4 Neon 在大多数场景代替掉Claude Opus 5.5 没有任何问题。 h
 
 某些A➗靠写代码工具去撑 1.5 万亿美元市值，很难绷得住。
 
-互动链接：https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124183236993839345,4410,7,0,113,0,2,8,0,17,54,25,0,0,,
+互动链接：https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124183236993839345,4418,7,0,113,0,2,8,0,17,54,25,0,0,,
 2124180573916946483,"Sat, Nov 21, 2026","把 Anthropic 上市冲到两万亿美元、两天又砸回原地的画面，放进过去三十年的科技史里看，其实一点都不新鲜。
 
 每一轮大的技术换代，几乎都在重复同一个剧本。最先做出好用产品、在股市上拿到最高估值的创业公司，最后都很难跑赢手里握着硬件和操作系统底座的大厂。
@@ -1068,7 +1427,7 @@ Google 手里有全自研的 TPU 压低算力成本，有搜索、Android 和 Wo
 
 过去三十年，基础平台战争一直都是这么打的。
 
-引申阅读：https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124180573916946483,776,3,2,13,0,0,0,0,1,8,1,0,0,,
+引申阅读：https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124180573916946483,781,3,2,13,0,0,0,0,1,8,1,0,0,,
 2124176551680032964,"Sat, Nov 21, 2026","Anthropic 这家公司真的挺傻逼的，这两天看它股价走势我都看乐了。
 
 上市前牛皮吹破天，原定发行价 70 到 78 美元，看市场热得发昏，硬是拉到 83 美元定价，一口气从市场抽走八百多亿美元，创下历史最大 IPO 纪录。
@@ -1086,7 +1445,7 @@ Google 手里有全自研的 TPU 压低算力成本，有搜索、Android 和 Wo
 没芯片、没机房、没 C 端入口，全靠给程序员写代码讲故事，定个天价发行价，上市两天砸回原地。说白了，吹什么 AGI，看这吃相和股价，纯属趁着热度最高点抓紧套现离场。
 
 参考链接：
-https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124176551680032964,2875,18,1,147,0,0,5,2,12,60,50,0,0,,
+https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124176551680032964,2881,18,1,147,0,0,5,2,12,60,50,0,0,,
 2124175772630036922,"Sat, Nov 21, 2026","我一直看好 Google，用完最近的 Gemini 4 之后想法更明确了。真要往 AGI 这条路上走，Google 是目前筹码最全的一家，至于现在市面上捧得很高的 Anthropic，底子没那么扎实。
 
 今年 5 月梁文锋在闭门交流里其实就把话说清楚了。
@@ -1127,18 +1486,18 @@ Anthropic 在前面帮着把企业级 Agent 市场教育成熟了，回头 Googl
 
 Anthropic 更像一家踩中编程窗口期的高估值公司。真要拼长跑、拼谁能走到 AGI，牌都在 Google 手里。
 
-参考链接：https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124175772630036922,73308,516,234,2702,39,24,51,44,310,1037,720,0,0,,
-2124170334882632097,"Sat, Nov 21, 2026",Good idea.,https://x.com/realchendahuang/status/2124170334882632097,1017,0,1,3,0,0,0,0,2,1,0,0,0,,
+参考链接：https://t.co/CeJJBehRhi",https://x.com/realchendahuang/status/2124175772630036922,73337,516,234,2703,39,24,51,44,310,1038,720,0,0,,
+2124170334882632097,"Sat, Nov 21, 2026",Good idea.,https://x.com/realchendahuang/status/2124170334882632097,1021,0,1,3,0,0,0,0,2,1,0,0,0,,
 2124154433336684706,"Sat, Nov 21, 2026",@lanhai181 这个这个这个这个，哇哇哇哇,https://x.com/realchendahuang/status/2124154433336684706,38,1,0,1,0,0,0,0,0,0,0,0,0,,
 2124151467573731721,"Sat, Nov 21, 2026","越来越觉得懂技术的人要有点文化。
 
-在技术基础上注入文化品味，那就是绝杀。",https://x.com/realchendahuang/status/2124151467573731721,1095,7,0,22,0,0,3,0,5,7,0,0,0,,
+在技术基础上注入文化品味，那就是绝杀。",https://x.com/realchendahuang/status/2124151467573731721,1099,7,0,22,0,0,3,0,5,7,0,0,0,,
 2124146130074370336,"Sat, Nov 21, 2026",@Suercha007 数据分析非常准,https://x.com/realchendahuang/status/2124146130074370336,58,1,0,3,0,0,0,0,1,1,0,0,0,,
 2124145346230308873,"Sat, Nov 21, 2026",@Lovecasy_ 必须稳健,https://x.com/realchendahuang/status/2124145346230308873,46,0,0,2,0,0,0,0,2,0,0,0,0,,
 2124145280996261984,"Sat, Nov 21, 2026",@fxmqs 一直都是的,https://x.com/realchendahuang/status/2124145280996261984,56,1,0,1,0,0,0,0,0,0,0,0,0,,
 2124143286835372542,"Sat, Nov 21, 2026","搞AI的人最可惜的事情就是：周额度还剩 99% 的时候，官方准点给你重置回了 100%。
 
-但额度每周都能重置，唯独时间没法重置，过一天少一天。我们只争朝夕，猛猛蹬就完事了。 https://t.co/Q0y6P77vQn",https://x.com/realchendahuang/status/2124143286835372542,1100,5,0,36,0,0,5,0,2,6,0,0,0,18,
+但额度每周都能重置，唯独时间没法重置，过一天少一天。我们只争朝夕，猛猛蹬就完事了。 https://t.co/Q0y6P77vQn",https://x.com/realchendahuang/status/2124143286835372542,1106,5,0,36,0,0,5,0,2,6,0,0,0,18,
 2124141213070860597,"Sat, Nov 21, 2026",@AIxFoolSage 他自己的破烂代码宝贵着呢。,https://x.com/realchendahuang/status/2124141213070860597,65,0,0,0,0,0,0,0,0,0,0,0,0,,
 2124140941565145413,"Sat, Nov 21, 2026",@jeffflymycat 哎,https://x.com/realchendahuang/status/2124140941565145413,386,1,0,1,0,0,0,0,0,0,0,0,0,,
 2124140902642061685,"Sat, Nov 21, 2026",@Palm2World 作者说下个版本会修复，可是都更新了好几个版本了，都3天了还没修。,https://x.com/realchendahuang/status/2124140902642061685,395,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -1148,7 +1507,7 @@ Anthropic 更像一家踩中编程窗口期的高估值公司。真要拼长跑�
 2124140690708033911,"Sat, Nov 21, 2026",@woniu20758393 🫡🫡🫡,https://x.com/realchendahuang/status/2124140690708033911,329,1,0,2,0,0,0,0,0,1,0,0,0,,
 2124140630482063434,"Sat, Nov 21, 2026",@Suercha007 不是蠢就是坏啊。洋人怎么这么坏啊？,https://x.com/realchendahuang/status/2124140630482063434,233,0,0,2,0,0,0,0,2,0,0,0,0,,
 2124140596973724084,"Sat, Nov 21, 2026",@chasen_liao 他明明知道有问题，很早就知道了，但是就是在装死。,https://x.com/realchendahuang/status/2124140596973724084,303,1,0,1,0,0,0,0,0,0,0,0,0,,
-2124140427024666821,"Sat, Nov 21, 2026",哈哈哈哈哈,https://x.com/realchendahuang/status/2124140427024666821,947,2,0,13,0,0,1,0,1,9,0,0,0,,
+2124140427024666821,"Sat, Nov 21, 2026",哈哈哈哈哈,https://x.com/realchendahuang/status/2124140427024666821,950,2,0,13,0,0,1,0,1,9,0,0,0,,
 2124140344631845349,"Sat, Nov 21, 2026",@ScarletKc 要看纯蓝V曝光,https://x.com/realchendahuang/status/2124140344631845349,46,1,0,4,0,0,1,0,0,2,0,0,0,,
 2124140171495157992,"Sat, Nov 21, 2026",@ScarletKc 奇怪啊,https://x.com/realchendahuang/status/2124140171495157992,87,1,0,4,0,0,1,0,1,1,0,0,0,,
 2124139396790460535,"Sat, Nov 21, 2026","@Sukiea1008 @rodydavis Gemini是Gemini， AntiGravity是AntiGravity。
@@ -1158,7 +1517,7 @@ Anthropic 更像一家踩中编程窗口期的高估值公司。真要拼长跑�
 
 我根据后台的曝光数据，结合过去 5 期一共 4271 美元的整体收益，做了一次数据分析。
 
-前 3 期基本卡在 1 万蓝V曝光给 10 美元左右。10 月下旬之后，最近两期稳稳涨到了 1 万蓝V曝光 15 美元，涨了快一半。总曝光其实降了四成，从 620 万掉到 380 万，但收益翻了 3 倍。",https://x.com/realchendahuang/status/2124139103998689613,2215,23,3,215,0,5,7,0,44,54,0,0,0,82,
+前 3 期基本卡在 1 万蓝V曝光给 10 美元左右。10 月下旬之后，最近两期稳稳涨到了 1 万蓝V曝光 15 美元，涨了快一半。总曝光其实降了四成，从 620 万掉到 380 万，但收益翻了 3 倍。",https://x.com/realchendahuang/status/2124139103998689613,2218,23,3,215,0,5,7,0,44,54,0,0,0,82,
 2124138205490589980,"Sat, Nov 21, 2026","选大模型其实跟选老公一模一样。
 
 OpenAI 以前确实猛，干活利索谁都服。可最近彻底萎了，整天想着偷懒摸鱼。嘴上画大饼一套接一套，真到办正事的时候直接软了，怎么催都敷衍你。
@@ -1171,7 +1530,7 @@ OpenAI 以前确实猛，干活利索谁都服。可最近彻底萎了，整天�
 
 真想踏踏实实过日子，直接掏 200 美金开个 Google Ultra，领个 Gemini 4 Neo 这样的顶级力工回家使唤。虽然长相（Antigravity）确实丑了点，看着有点糙，但胜在贴心、踏实、不发疯，脏活累活扔过去，二话不说站起来就猛蹬。
 
-谈恋爱看面子，过日子看里子。鞋到底合不合脚，只有穿的人才知道。",https://x.com/realchendahuang/status/2124138205490589980,1131,2,0,23,0,0,5,0,1,15,0,0,0,,
+谈恋爱看面子，过日子看里子。鞋到底合不合脚，只有穿的人才知道。",https://x.com/realchendahuang/status/2124138205490589980,1135,2,0,23,0,0,5,0,1,15,0,0,0,,
 2124137208835969364,"Sat, Nov 21, 2026","选大模型跟讨老婆一模一样，年轻时候图新鲜，真过日子全看谁能扛事。
 
 OpenAI 以前确实风光过，全村最能干的姑娘，谁见了都想娶回家。结果最近这两年彻底萎靡了，整天想着偷懒摸鱼。你让她干点正经活，她能糊弄就糊弄，催急了就跟你打太极，跟个结婚十年、天天躺沙发刷手机敷衍你的老婆似的，干啥都提不起劲。
@@ -1184,14 +1543,14 @@ OpenAI 以前确实风光过，全村最能干的姑娘，谁见了都想娶回�
 
 真想踏踏实实过日子，别折腾那些虚的，直接掏 200 美金开个 Google Ultra，站起来蹬 Gemini 4 Neo。虽然她外表（Antigravity）确实丑了点，看着土里土气的，但人家实在啊，不偷懒、不发疯、贴心还耐造，给口电就闷头干活。
 
-鞋到底合不合脚，只有自己穿了才知道。",https://x.com/realchendahuang/status/2124137208835969364,3545,11,2,101,0,0,3,0,7,80,0,0,0,,
-2124134633159983495,"Sat, Nov 21, 2026",OpenCode只能排到NPC。AntiGravity是垃中之垃。,https://x.com/realchendahuang/status/2124134633159983495,823,6,0,22,0,0,0,0,2,4,0,0,0,10,
+鞋到底合不合脚，只有自己穿了才知道。",https://x.com/realchendahuang/status/2124137208835969364,3556,11,2,101,0,0,3,0,7,80,0,0,0,,
+2124134633159983495,"Sat, Nov 21, 2026",OpenCode只能排到NPC。AntiGravity是垃中之垃。,https://x.com/realchendahuang/status/2124134633159983495,827,6,0,22,0,0,0,0,2,4,0,0,0,10,
 2124109733024194744,"Sat, Nov 21, 2026",@blocktom 牛逼,https://x.com/realchendahuang/status/2124109733024194744,1124,2,0,11,0,1,0,0,7,1,0,0,0,,
 2124104468572827819,"Sat, Nov 21, 2026",@EvanX1993 @rodydavis 应该讲洋文，这老外没那么有文化，讲不懂中文,https://x.com/realchendahuang/status/2124104468572827819,363,0,0,3,0,0,0,0,2,1,0,0,0,,
 2124097037507719302,"Sat, Nov 21, 2026",@hammerhoundai @rodydavis Antigravity suck！,https://x.com/realchendahuang/status/2124097037507719302,707,1,0,7,0,0,1,0,3,2,0,0,0,,
 2124096834356588957,"Sat, Nov 21, 2026",@smartmilkdoll @rodydavis 你的信息X被折叠了，知道吗？垃圾号,https://x.com/realchendahuang/status/2124096834356588957,868,0,0,4,0,0,0,0,3,1,0,0,0,,
 2124095572659601597,"Sat, Nov 21, 2026",@smartmilkdoll @rodydavis AntiGravity是你爹？,https://x.com/realchendahuang/status/2124095572659601597,414,2,0,15,0,0,0,0,7,6,0,0,0,,
-2124074891007983758,"Sat, Nov 21, 2026",@HyenaIntel @rodydavis @grok 关了遥测也没用，得屏蔽域名,https://x.com/realchendahuang/status/2124074891007983758,109,1,0,1,0,0,0,0,0,0,0,0,0,,
+2124074891007983758,"Sat, Nov 21, 2026",@HyenaIntel @rodydavis @grok 关了遥测也没用，得屏蔽域名,https://x.com/realchendahuang/status/2124074891007983758,110,1,0,1,0,0,0,0,0,0,0,0,0,,
 2124070563798995123,"Sat, Nov 21, 2026",@ivdniapp @rodydavis 这个rody老哥鸡贼的很,https://x.com/realchendahuang/status/2124070563798995123,819,0,0,10,0,0,0,0,8,2,0,0,0,,
 2124069656910786608,"Sat, Nov 21, 2026",@yongleluo @rodydavis 对，都三天了,https://x.com/realchendahuang/status/2124069656910786608,1200,1,0,5,0,0,0,0,3,1,0,0,0,,
 2124068634712809632,"Sat, Nov 21, 2026",@ai_chuhai @rodydavis 这个rody不是蠢就是坏,https://x.com/realchendahuang/status/2124068634712809632,1004,1,0,9,1,0,1,0,6,1,0,0,0,,
@@ -1206,14 +1565,14 @@ OpenAI 以前确实风光过，全村最能干的姑娘，谁见了都想娶回�
 
 请你给我一个合理的解释，否则我将是你永远的黑粉。
 
-@rodydavis",https://x.com/realchendahuang/status/2124065611257196796,10691,22,2,390,0,3,6,0,100,259,0,0,0,,
+@rodydavis",https://x.com/realchendahuang/status/2124065611257196796,10694,22,2,390,0,3,6,0,100,259,0,0,0,,
 2124064489116926417,"Sat, Nov 21, 2026","F**k you，Rody！！！
 
 Your Antigravity is bullshit.
 
 谁他妈给你的自信？做的他妈狗屎，开什么国际大玩笑？你应该把你的工资给谷歌，不是让谷歌给你工资，我见过的最菜的工程师，人菜瘾大，自以为是，赶紧把你的傻逼Antigravity开源出来吧，让大家看看到底有多屎。
 
-@rodydavis",https://x.com/realchendahuang/status/2124064489116926417,14197,23,12,756,0,3,8,0,289,362,0,0,0,71,
+@rodydavis",https://x.com/realchendahuang/status/2124064489116926417,14202,23,12,756,0,3,8,0,289,362,0,0,0,71,
 2124063434451177614,"Sat, Nov 21, 2026","AntiGravity是谷歌AI计划最大的败笔！！！
 
 疯狂上传用户的数据，怎么关都关不掉。
@@ -1224,21 +1583,21 @@ Rody在我评论区说下个版本修复，都更新的三个版本了还没修�
 
 求求你了，你稍微看一看市面上牛逼的Pi Agent，学习一下人家怎么搞的，行吗？
 
-在这边他妈的丢人现眼，开什么国际大玩笑，操！@rodydavis",https://x.com/realchendahuang/status/2124063434451177614,8853,30,15,380,1,1,18,2,57,225,0,0,0,47,
+在这边他妈的丢人现眼，开什么国际大玩笑，操！@rodydavis",https://x.com/realchendahuang/status/2124063434451177614,8858,30,15,380,1,1,18,2,57,225,0,0,0,47,
 2124049497001259271,"Sat, Nov 21, 2026",@keytrans2025 谷歌底子不差的,https://x.com/realchendahuang/status/2124049497001259271,450,0,0,2,0,0,0,0,2,0,0,0,0,,
 2124049405623848969,"Sat, Nov 21, 2026",@MXsimth 我买了Ultra 20×，根本用不完,https://x.com/realchendahuang/status/2124049405623848969,583,1,0,4,0,0,1,0,1,1,0,0,0,,
 2124043623251824738,"Sat, Nov 21, 2026",@shanshutaoran 天下苦克劳德久矣,https://x.com/realchendahuang/status/2124043623251824738,490,0,0,4,0,0,0,0,3,1,0,0,0,,
-2124041249695137942,"Sat, Nov 21, 2026",Gemini 4 Neon 有了一种那时候用claude 20x的感觉了，AI干的比我脑子动的快，十分的激动,https://x.com/realchendahuang/status/2124041249695137942,8021,51,3,212,1,1,10,0,23,127,0,0,0,,
-2123972981437468718,"Sat, Nov 21, 2026",视频帖子是X的未来的潮流，发了视频的帖子会被猛猛推流,https://x.com/realchendahuang/status/2123972981437468718,1311,5,1,17,0,0,2,0,2,8,0,0,0,,
-2123937532039827723,"Sat, Nov 21, 2026",本期收益是1320.84。,https://x.com/realchendahuang/status/2123937532039827723,5228,57,6,510,0,8,38,0,193,141,0,0,0,73,
-2123809541133680809,"Fri, Nov 20, 2026",@fengyinzi @grok 帮忙推荐一下市面上比较好的antigravity 汉化插件项目，github上的,https://x.com/realchendahuang/status/2123809541133680809,9940,3,4,66,0,0,1,0,22,40,0,0,0,,
+2124041249695137942,"Sat, Nov 21, 2026",Gemini 4 Neon 有了一种那时候用claude 20x的感觉了，AI干的比我脑子动的快，十分的激动,https://x.com/realchendahuang/status/2124041249695137942,8024,51,3,212,1,1,10,0,23,127,0,0,0,,
+2123972981437468718,"Sat, Nov 21, 2026",视频帖子是X的未来的潮流，发了视频的帖子会被猛猛推流,https://x.com/realchendahuang/status/2123972981437468718,1313,5,1,17,0,0,2,0,2,8,0,0,0,,
+2123937532039827723,"Sat, Nov 21, 2026",本期收益是1320.84。,https://x.com/realchendahuang/status/2123937532039827723,5234,57,6,511,0,8,38,0,193,141,0,0,0,74,
+2123809541133680809,"Fri, Nov 20, 2026",@fengyinzi @grok 帮忙推荐一下市面上比较好的antigravity 汉化插件项目，github上的,https://x.com/realchendahuang/status/2123809541133680809,9948,3,4,66,0,0,1,0,22,40,0,0,0,,
 2123655543038603515,"Fri, Nov 20, 2026",@Lt8py 薛定谔的太君,https://x.com/realchendahuang/status/2123655543038603515,379,1,0,6,0,0,1,0,4,0,0,0,0,,
-2123641338495451468,"Fri, Nov 20, 2026",拿grok调研了一下市面上的安克录音豆逆向方案。 感觉整体完成度还不是很高，可能又要自己造轮子了🤣🤣🤣,https://x.com/realchendahuang/status/2123641338495451468,3979,10,7,192,0,0,4,0,8,28,0,0,0,142,
+2123641338495451468,"Fri, Nov 20, 2026",拿grok调研了一下市面上的安克录音豆逆向方案。 感觉整体完成度还不是很高，可能又要自己造轮子了🤣🤣🤣,https://x.com/realchendahuang/status/2123641338495451468,3983,10,7,192,0,0,4,0,8,28,0,0,0,142,
 2123640447038005689,"Fri, Nov 20, 2026","安克录音豆到货了。
 
 当初买它的原因就是感觉它很小巧，充一次电可以录八个小时，还有充电仓，续航很强。
 
-软件层面，市面上有很多第三方逆向方案，不拘泥于安克飞书的录音处理服务上，可以接入自己的录音处理工作流，不被厂商绑定。",https://x.com/realchendahuang/status/2123640447038005689,5457,7,7,91,0,0,0,0,5,39,0,0,0,40,
+软件层面，市面上有很多第三方逆向方案，不拘泥于安克飞书的录音处理服务上，可以接入自己的录音处理工作流，不被厂商绑定。",https://x.com/realchendahuang/status/2123640447038005689,5464,7,7,91,0,0,0,0,5,39,0,0,0,40,
 2123609782661836930,"Fri, Nov 20, 2026","把市面上正在跑的 Personal Agent 和 Super Agent 项目全拆了一遍，真正支撑后台异步运行的技术路线，目前主要分化成了五条。
 
 第一条是云端持久虚拟机加专属浏览器，代表是 Grok Bot、OpenAI Dots、Claude Duet 和 Manus Cloud Computers。
@@ -1258,7 +1617,7 @@ Rody在我评论区说下个版本修复，都更新的三个版本了还没修�
 
 第五条是纯本地桌面工作台加文件级上下文共享，代表是 n8n 的 Nod、Linger 和 Orbital。
 不做 24 小时云主机，直接在个人电脑上接管本地目录、浏览器或统一调度本机已装好的 Claude Code、Codex 与各家模型，把状态、决策和技能以纯文本留在本地文件夹，再挂载日历、GitHub 或办公群事件流。
-避开了云主机月费、公网暴露和消费 App 风控，适合有明确验收标准的开发与本地工作流，代价是依赖电脑开机在线。",https://x.com/realchendahuang/status/2123609782661836930,14792,163,222,800,10,11,31,29,64,502,0,0,0,,
+避开了云主机月费、公网暴露和消费 App 风控，适合有明确验收标准的开发与本地工作流，代价是依赖电脑开机在线。",https://x.com/realchendahuang/status/2123609782661836930,14807,163,222,801,10,11,31,29,64,503,0,0,0,,
 2123592700251566533,"Fri, Nov 20, 2026","Orbital 官网的这个动画设计的很小巧思啊。
 
 我们把所有的Coding Agent全部变成可插拔的，插在我们自己坚实的AI操作系统里面。
@@ -1267,9 +1626,9 @@ Rody在我评论区说下个版本修复，都更新的三个版本了还没修�
 
 这种掌控全局感觉真的太舒服了。
 
-https://t.co/Vqi7HjfHx2 https://t.co/zF6WzQxR81",https://x.com/realchendahuang/status/2123592700251566533,3719,38,31,314,1,0,2,3,6,110,146,0,0,1743,1732
+https://t.co/Vqi7HjfHx2 https://t.co/zF6WzQxR81",https://x.com/realchendahuang/status/2123592700251566533,3723,38,31,314,1,0,2,3,6,110,146,0,0,1743,1732
 2123591483622408481,"Fri, Nov 20, 2026","我很喜欢Orbital的这个slogan，我觉得这是未来的趋势。
-https://t.co/ZTvNLhvee8 https://t.co/1GUVe5IES6",https://x.com/realchendahuang/status/2123591483622408481,15407,112,191,2030,11,5,7,18,32,554,795,0,0,507,
+https://t.co/ZTvNLhvee8 https://t.co/1GUVe5IES6",https://x.com/realchendahuang/status/2123591483622408481,15411,112,192,2030,11,5,7,18,32,554,795,0,0,507,
 2123591093594021892,"Fri, Nov 20, 2026","最近大厂都在卷 Personal Agent，从 Grok Bot、OpenAI Dots 到 Claude Duet，核心就一件事：不需要让人在思考该去哪个session，哪个目录里下面去派活。
 
 这两天看 Orbital 发布了新版本，最关键的一步就是把这块拼图补上了。
@@ -1282,34 +1641,34 @@ https://t.co/ZTvNLhvee8 https://t.co/1GUVe5IES6",https://x.com/realchendahuang/s
 
 不想把私人账号和代码塞进大厂云电脑的，本地开源版的 Personal Agent 骨架已经成型了。
 
-https://t.co/NlNJ745Ahz",https://x.com/realchendahuang/status/2123591093594021892,5771,59,86,633,5,1,6,8,7,216,336,0,0,,
+https://t.co/NlNJ745Ahz",https://x.com/realchendahuang/status/2123591093594021892,5778,59,86,633,5,1,6,8,7,216,336,0,0,,
 2123578880137269573,"Fri, Nov 20, 2026",@elidlicom 买,https://x.com/realchendahuang/status/2123578880137269573,76,0,0,0,0,0,0,0,0,0,0,0,0,,
-2123577480082813158,"Fri, Nov 20, 2026",身边的朋友用了Neon都说妙！ https://t.co/fXI45GnfqV,https://x.com/realchendahuang/status/2123577480082813158,1898,13,2,82,0,0,4,0,13,32,2,0,0,18,
+2123577480082813158,"Fri, Nov 20, 2026",身边的朋友用了Neon都说妙！ https://t.co/fXI45GnfqV,https://x.com/realchendahuang/status/2123577480082813158,1899,13,2,82,0,0,4,0,13,32,2,0,0,18,
 2123455349223309375,"Thu, Nov 19, 2026",@guxiaoleisv 笑死了,https://x.com/realchendahuang/status/2123455349223309375,51,0,0,0,0,0,0,0,0,0,0,0,0,,
 2123455283074940950,"Thu, Nov 19, 2026",@Khitaykiller4 是把你拉黑了，我也一样,https://x.com/realchendahuang/status/2123455283074940950,24,1,0,3,0,0,0,0,1,1,0,0,0,,
 2123440140907590116,"Thu, Nov 19, 2026",@lixinbao_X 赞同新宝哥,https://x.com/realchendahuang/status/2123440140907590116,42,1,0,3,0,0,1,0,0,1,0,0,0,,
 2123434536843530407,"Thu, Nov 19, 2026","我还想把币圈老司机当个网络小丑看看，结果先把我屏蔽了，是不是玩不起了？
 
-破防了？不玩了？急了吗？ @Bqlsj2023 https://t.co/DBcOyky9Et",https://x.com/realchendahuang/status/2123434536843530407,2146,34,0,210,0,3,4,0,96,51,0,0,0,22,
+破防了？不玩了？急了吗？ @Bqlsj2023 https://t.co/DBcOyky9Et",https://x.com/realchendahuang/status/2123434536843530407,2147,34,0,210,0,3,4,0,96,51,0,0,0,22,
 2123426903147033037,"Thu, Nov 19, 2026",@guyunbtc @_FORAB 你也有流量了,https://x.com/realchendahuang/status/2123426903147033037,99,0,0,1,0,0,0,0,0,1,0,0,0,,
 2123426564352442420,"Thu, Nov 19, 2026",@TOMRICH1619 @jt588888 @0xmetazen @chairbtc @DRbitcoin36 @Bqlsj2023 你是对的,https://x.com/realchendahuang/status/2123426564352442420,285,0,0,3,0,0,0,0,2,1,0,0,0,,
 2123426124504224142,"Thu, Nov 19, 2026",@medfac_opc yes,https://x.com/realchendahuang/status/2123426124504224142,51,1,0,1,0,0,0,0,0,0,0,0,0,,
-2123426060507447304,"Thu, Nov 19, 2026",英伟达官网怎么打了AB的盖章啊？,https://x.com/realchendahuang/status/2123426060507447304,4526,32,0,158,0,1,10,0,15,25,0,0,0,75,
+2123426060507447304,"Thu, Nov 19, 2026",英伟达官网怎么打了AB的盖章啊？,https://x.com/realchendahuang/status/2123426060507447304,4527,32,0,158,0,1,10,0,15,25,0,0,0,75,
 2123426002370285831,"Thu, Nov 19, 2026",@Ninalvz @jt588888 @0xmetazen @chairbtc @DRbitcoin36 @Bqlsj2023 卧槽牛逼,https://x.com/realchendahuang/status/2123426002370285831,1021,1,0,3,0,0,0,0,2,0,0,0,0,,
 2123358953635709182,"Thu, Nov 19, 2026",@blocktom @jt588888 @0xmetazen @chairbtc @DRbitcoin36 @Bqlsj2023 赞了,https://x.com/realchendahuang/status/2123358953635709182,891,0,0,2,0,0,0,0,2,0,0,0,0,,
 2123358810060308948,"Thu, Nov 19, 2026",@jacklondon778 both,https://x.com/realchendahuang/status/2123358810060308948,79,0,0,1,0,0,0,0,0,1,0,0,0,,
 2123358766095536453,"Thu, Nov 19, 2026",@xiaoshen @jt588888 @0xmetazen @chairbtc @DRbitcoin36 @Bqlsj2023 还有一些不明是非的路人,https://x.com/realchendahuang/status/2123358766095536453,803,0,0,3,0,0,0,0,2,1,0,0,0,,
 2123349984108331435,"Thu, Nov 19, 2026",@Edison_aware 赌狗+割韭菜+诈骗+资金盘+撕逼,https://x.com/realchendahuang/status/2123349984108331435,92,7,0,10,0,0,1,0,0,2,0,0,0,,
-2123349037399281696,"Thu, Nov 19, 2026",狗屎就是狗屎，黄金就是黄金，再怎么洗，狗屎也不可能变成黄金,https://x.com/realchendahuang/status/2123349037399281696,7453,67,1,183,0,1,5,2,64,29,1,0,0,14,
+2123349037399281696,"Thu, Nov 19, 2026",狗屎就是狗屎，黄金就是黄金，再怎么洗，狗屎也不可能变成黄金,https://x.com/realchendahuang/status/2123349037399281696,7459,67,1,183,0,1,5,2,64,29,1,0,0,14,
 2123348065830740447,"Thu, Nov 19, 2026",@0xmetazen @jt588888 @chairbtc @DRbitcoin36 @Bqlsj2023 很符合我对币圈的刻板印象,https://x.com/realchendahuang/status/2123348065830740447,635,7,0,37,0,0,3,0,24,3,0,0,0,,
 2123347985576972554,"Thu, Nov 19, 2026",@0xmetazen @jt588888 @chairbtc @DRbitcoin36 @Bqlsj2023 你在说什么莫须有的东西？,https://x.com/realchendahuang/status/2123347985576972554,85,0,0,1,0,0,0,0,1,0,0,0,0,,
 2123344054058639519,"Thu, Nov 19, 2026",@0xmetazen @jt588888 @chairbtc @DRbitcoin36 @Bqlsj2023 急了急了急了急了急了,https://x.com/realchendahuang/status/2123344054058639519,1708,24,0,61,0,0,1,0,31,5,0,0,0,,
-2123342532302266533,"Thu, Nov 19, 2026",@zzzeee999111 @vegas_liu @zhongjiezhex @realNyarime @Lt8py @RealBoboTon @Jack_FluxAI 说得好,https://x.com/realchendahuang/status/2123342532302266533,415,6,0,18,0,0,0,0,9,3,0,0,0,,
+2123342532302266533,"Thu, Nov 19, 2026",@zzzeee999111 @vegas_liu @zhongjiezhex @realNyarime @Lt8py @RealBoboTon @Jack_FluxAI 说得好,https://x.com/realchendahuang/status/2123342532302266533,416,6,0,18,0,0,0,0,9,3,0,0,0,,
 2123338934310904184,"Thu, Nov 19, 2026",@michaelinc94857 @jt588888 @0xmetazen @chairbtc @DRbitcoin36 @Bqlsj2023 一伙的,https://x.com/realchendahuang/status/2123338934310904184,1130,6,0,13,0,0,2,0,1,4,0,0,0,,
 2123336887519863279,"Thu, Nov 19, 2026",@jask_don @jt588888 @0xmetazen @chairbtc @DRbitcoin36 @Bqlsj2023 他们压根不提水印的事，笑死了。,https://x.com/realchendahuang/status/2123336887519863279,916,7,0,16,0,0,0,0,5,4,0,0,0,,
 2123335597612052897,"Thu, Nov 19, 2026",@chnchn1059453 那个AB道歉 根本就不是道歉，道歉最重要的就是定性自己的行为的性质，这种属于又当又立，好吧？,https://x.com/realchendahuang/status/2123335597612052897,16,0,0,0,0,0,0,0,0,0,0,0,0,,
 2123335442670243878,"Thu, Nov 19, 2026",@chnchn1059453 你觉得他在道歉吗？他把锅甩给小红书了？在小红书上偷不是偷？在微信上偷不是偷？,https://x.com/realchendahuang/status/2123335442670243878,33,0,0,1,0,0,0,0,1,0,0,0,0,,
-2123334963961749815,"Thu, Nov 19, 2026",这不就贯彻了Deepseek的Sub-agent的理念吗？,https://x.com/realchendahuang/status/2123334963961749815,1301,5,0,11,0,0,0,0,1,5,0,0,0,176,306
+2123334963961749815,"Thu, Nov 19, 2026",这不就贯彻了Deepseek的Sub-agent的理念吗？,https://x.com/realchendahuang/status/2123334963961749815,1302,5,0,11,0,0,0,0,1,5,0,0,0,176,306
 2123334650294943967,"Thu, Nov 19, 2026","我找Grok Bot简单扒了一下为AB站台的大V们，不出意外，基本是币圈的，感谢这些朋友为AB洗地，我替AB和AB的水印谢谢大家。
 
 我帮大家全都艾特出来了，欢迎在评论区补充。
@@ -1318,13 +1677,13 @@ https://t.co/NlNJ745Ahz",https://x.com/realchendahuang/status/212359109359402189
 Sam(👅,🦑)@0xmetazen
 比特币总裁@chairbtc
 比特欧 Elvin @DRbitcoin36
-币圈老司机🔶BNB @Bqlsj2023 https://t.co/vEEZGEzgng",https://x.com/realchendahuang/status/2123334650294943967,16109,144,8,4712,0,16,70,6,1277,1139,0,0,0,2060,
+币圈老司机🔶BNB @Bqlsj2023 https://t.co/vEEZGEzgng",https://x.com/realchendahuang/status/2123334650294943967,16111,144,8,4712,0,16,70,6,1277,1139,0,0,0,2060,
 2123329493154828769,"Thu, Nov 19, 2026","有一说一，Web3本来是很好的行业，未来的产业，解决了交易环节中最大的信任问题，降低了交易成本。
 
 但就是这帮A这帮B们把他们Web3搞臭了，价值观扭曲，文化水平极低，素质极差。
 
-上帝真是怜悯，让这帮人学会了打字，在网上倒粪。",https://x.com/realchendahuang/status/2123329493154828769,3883,41,0,166,0,1,8,2,26,35,0,0,0,53,
-2123328853569581080,"Thu, Nov 19, 2026",月薪5500的同事化成了Token，伴随在了我们身边。,https://x.com/realchendahuang/status/2123328853569581080,1468,1,0,4,0,0,0,0,1,2,0,0,0,,
+上帝真是怜悯，让这帮人学会了打字，在网上倒粪。",https://x.com/realchendahuang/status/2123329493154828769,3884,41,0,166,0,1,8,2,26,35,0,0,0,53,
+2123328853569581080,"Thu, Nov 19, 2026",月薪5500的同事化成了Token，伴随在了我们身边。,https://x.com/realchendahuang/status/2123328853569581080,1470,1,0,4,0,0,0,0,1,2,0,0,0,,
 2123328642650685652,"Thu, Nov 19, 2026",@jask_don 该,https://x.com/realchendahuang/status/2123328642650685652,89,0,0,0,0,0,0,0,0,0,0,0,0,,
 2123328594789462391,"Thu, Nov 19, 2026",@chnchn1059453 你眼里只有好人坏人之分吗？你是二极管吗？,https://x.com/realchendahuang/status/2123328594789462391,53,0,0,1,0,0,1,0,0,0,0,0,0,,
 2123326667913572628,"Thu, Nov 19, 2026",@chnchn1059453 你就听天由命吧，小丑。,https://x.com/realchendahuang/status/2123326667913572628,41,0,0,1,0,0,1,0,0,0,0,0,0,,
@@ -1350,21 +1709,21 @@ Sam(👅,🦑)@0xmetazen
 2123316602208960923,"Thu, Nov 19, 2026",@zhongjiezhex 这种人真恶心,https://x.com/realchendahuang/status/2123316602208960923,248,0,0,4,0,0,0,0,4,0,0,0,0,,
 2123316414098678059,"Thu, Nov 19, 2026","所有为AB讲话的大V，有一个算一个，可以直接拉黑，100%错不了。
 
-通通都不是什么好鸟😅😅😅",https://x.com/realchendahuang/status/2123316414098678059,2381,68,2,160,0,0,14,1,26,51,0,0,0,,
+通通都不是什么好鸟😅😅😅",https://x.com/realchendahuang/status/2123316414098678059,2382,68,2,160,0,0,14,1,26,51,0,0,0,,
 2123315398905078153,"Thu, Nov 19, 2026","中推圈被搞得乌烟瘴气，就是被这帮人害得😅😅😅
 
-连小学生都知道的道理，抄袭可耻，竟然还有人洗地，洗得太生硬了，你要不自己读读你在胡说八道什么？？？",https://x.com/realchendahuang/status/2123315398905078153,8037,36,1,312,0,1,9,2,25,166,58,0,0,15,
+连小学生都知道的道理，抄袭可耻，竟然还有人洗地，洗得太生硬了，你要不自己读读你在胡说八道什么？？？",https://x.com/realchendahuang/status/2123315398905078153,8040,36,1,312,0,1,9,2,25,166,58,0,0,15,
 2123314343781785897,"Thu, Nov 19, 2026","这是我见过最逆天的发言，把抄袭说的那么清晰脱俗。
 
 我真不明白AB这兄弟有什么好舔的，怎么还会有人舔AB？？？朋友们记得擦亮眼睛，近朱者赤，近墨者黑。
 
-三观不正，道德沦丧，人品低下，毫无底线，毫无原则，自私自利，利欲熏心，贪得无厌，不择手段，是非不分，黑白颠倒，浑水摸鱼，混淆视听，指鹿为马，阿谀奉承 溜须拍马，见风使舵，趋炎附势，奴颜婢膝，摇尾乞怜，恬不知耻🤣🤣🤣",https://x.com/realchendahuang/status/2123314343781785897,2574,33,1,157,0,1,11,1,22,68,15,0,0,6,
+三观不正，道德沦丧，人品低下，毫无底线，毫无原则，自私自利，利欲熏心，贪得无厌，不择手段，是非不分，黑白颠倒，浑水摸鱼，混淆视听，指鹿为马，阿谀奉承 溜须拍马，见风使舵，趋炎附势，奴颜婢膝，摇尾乞怜，恬不知耻🤣🤣🤣",https://x.com/realchendahuang/status/2123314343781785897,2575,33,1,157,0,1,11,1,22,68,15,0,0,6,
 2123270781430059507,"Thu, Nov 19, 2026",@Sukiea1008 已经一周年了，我才开始用,https://x.com/realchendahuang/status/2123270781430059507,18,1,0,1,0,0,0,0,0,0,0,0,0,,
 2123264019817803892,"Thu, Nov 19, 2026",@iffmeet 在乎的，在我评论区道歉了，但是有种此地无银三百两的感觉,https://x.com/realchendahuang/status/2123264019817803892,309,3,0,7,0,0,0,0,4,0,0,0,0,,
 2123263567474639216,"Thu, Nov 19, 2026",@lumeroute 举报的时候委屈死了,https://x.com/realchendahuang/status/2123263567474639216,144,0,0,0,0,0,0,0,0,0,0,0,0,,
 2123252303465767208,"Thu, Nov 19, 2026","果然是喷子，连AB都能洗的动，佩服佩服佩服，物以类聚，人以群分🤣🤣🤣
 
-注：本帖纯引用，无洗稿，无水印，无AB，无道歉",https://x.com/realchendahuang/status/2123252303465767208,6157,93,1,337,0,2,22,3,51,139,0,0,0,27,
+注：本帖纯引用，无洗稿，无水印，无AB，无道歉",https://x.com/realchendahuang/status/2123252303465767208,6159,93,1,337,0,2,22,3,51,139,0,0,0,27,
 2123251374477733977,"Thu, Nov 19, 2026",@realNyarime 哈哈哈哈哈哈哈AB变成动词了,https://x.com/realchendahuang/status/2123251374477733977,653,2,0,18,0,0,1,0,15,0,0,0,0,,
 2123249626941903127,"Thu, Nov 19, 2026",@X_X_MAN_ @03AIer @vegas_liu 我？？？我大黄,https://x.com/realchendahuang/status/2123249626941903127,21,0,0,1,0,0,1,0,0,0,0,0,0,,
 2123249334116667599,"Thu, Nov 19, 2026",群友对此事的评论： https://t.co/cGf62jj8US,https://x.com/realchendahuang/status/2123249334116667599,6816,11,1,443,1,0,0,1,16,11,0,0,0,404,
@@ -1372,9 +1731,9 @@ Sam(👅,🦑)@0xmetazen
 2123239056905797819,"Thu, Nov 19, 2026",@orbcai 最牛逼的一期是跟manus的肖红的那一期,https://x.com/realchendahuang/status/2123239056905797819,285,0,1,1,0,0,0,0,0,1,0,0,0,,
 2123230430644298156,"Thu, Nov 19, 2026",@shanshutaoran ui展现出来的思维链是概括的，不是真实思维链,https://x.com/realchendahuang/status/2123230430644298156,395,2,0,6,0,0,1,0,0,3,0,0,0,,
 2123218919653806189,"Thu, Nov 19, 2026",@Microstrongs 那咱们是好兄弟👬,https://x.com/realchendahuang/status/2123218919653806189,350,1,0,2,0,0,1,0,0,0,0,0,0,,
-2123217822826496225,"Thu, Nov 19, 2026",张小珺的播客我是期期都看，最近两期我是真喜欢啊 https://t.co/eXnOSDP5M3,https://x.com/realchendahuang/status/2123217822826496225,6812,38,22,969,0,0,12,0,18,110,0,0,0,791,
+2123217822826496225,"Thu, Nov 19, 2026",张小珺的播客我是期期都看，最近两期我是真喜欢啊 https://t.co/eXnOSDP5M3,https://x.com/realchendahuang/status/2123217822826496225,6815,38,22,969,0,0,12,0,18,110,0,0,0,791,
 2123208156344173055,"Thu, Nov 19, 2026",@yaoyao368345 先从pro开始用起，风控最小，然后慢慢往上升级,https://x.com/realchendahuang/status/2123208156344173055,15,1,0,1,0,0,0,0,0,0,0,0,0,,
-2123208030364086538,"Thu, Nov 19, 2026",太好了，某些国模有救了，可以蒸Gemini了,https://x.com/realchendahuang/status/2123208030364086538,4549,9,0,156,0,2,12,0,14,107,0,0,0,12,
+2123208030364086538,"Thu, Nov 19, 2026",太好了，某些国模有救了，可以蒸Gemini了,https://x.com/realchendahuang/status/2123208030364086538,4550,9,0,156,0,2,12,0,14,107,0,0,0,12,
 2123207582810804480,"Thu, Nov 19, 2026",@orbcai 貌似是的，它排在更上面,https://x.com/realchendahuang/status/2123207582810804480,76,0,0,0,0,0,0,0,0,0,0,0,0,,
 2123207397879812475,"Thu, Nov 19, 2026","@yaoyao368345 gpt不用了，路边一条，谁用谁恶心。
 
@@ -1382,7 +1741,7 @@ Claude还在用，我把它关在cage笼子里用的。 https://t.co/qBePC7mcev"
 2123207120883749007,"Thu, Nov 19, 2026",@guxinghanyi 一个月一两万美刀创作者收益,https://x.com/realchendahuang/status/2123207120883749007,161,0,0,4,0,0,1,0,0,3,0,0,0,,
 2123206665415819512,"Thu, Nov 19, 2026","一觉醒来，Gemini4 全家桶又多出了氖（Neon）兄弟。
 
-元素周期表快让Google嚯嚯完了。 https://t.co/GUHZizG9wO",https://x.com/realchendahuang/status/2123206665415819512,1855,5,0,54,0,0,4,0,1,13,0,0,0,31,
+元素周期表快让Google嚯嚯完了。 https://t.co/GUHZizG9wO",https://x.com/realchendahuang/status/2123206665415819512,1856,5,0,54,0,0,4,0,1,13,0,0,0,31,
 2123205613434093836,"Thu, Nov 19, 2026",@CaptainXTop 只传一次，后面就是读,https://x.com/realchendahuang/status/2123205613434093836,46,0,1,3,0,0,0,0,0,3,0,0,0,,
 2123205550477611455,"Thu, Nov 19, 2026",@lldois210 all in,https://x.com/realchendahuang/status/2123205550477611455,59,0,0,0,0,0,0,0,0,0,0,0,0,,
 2123205523776680447,"Thu, Nov 19, 2026",@yaoyao368345 舒服啊,https://x.com/realchendahuang/status/2123205523776680447,69,1,0,2,0,0,1,0,0,0,0,0,0,,
