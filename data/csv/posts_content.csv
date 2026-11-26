@@ -94,7 +94,60 @@ Someone on the same LAN can sniff a single packet and gain full shell control of
 
 First, a 30-day plaintext shell session in LAN mode.
 
-T3 Code issues browser session cookies with a 30-day default",https://x.com/realchendahuang/status/2125494623640465525,11831,166,31,538,4,2,15,6,45,248,36,0,0,20,
+T3 Code issues browser session cookies with a 30-day default lifetime. By their own SECURITY.md definition, a default session gives you a full shell as the server's OS user. PR #37042 on Nov 15 only added the Secure flag for HTTPS requests; under t3 up --lan plain HTTP, the cookie still ships without Secure and crosses the local network in clear text. Worse, the Origin check explicitly returns true whenever the Origin header is omitted. Anyone on the same LAN who sniffs a single request can replay that cookie from a non-browser script with no Origin header and hold a shell on your machine for a month—while the UI reports zero errors.
+
+Second, 30-day unbound Bearer tokens cannot revoke themselves.
+
+When exchanging credentials on /oauth/token, tokens only drop to a 1-hour lifetime if you supply a DPoP proof key. Without DPoP, it falls back to an unbound 30-day Bearer token. There is no logout route anywhere in the auth API, and calling revoke on your own session fails with current_session_revoke_not_allowed. Once one of these 30-day high-privilege tokens lands in a script or CI job, it cannot even terminate its own session when done—you need a second session or local CLI access to revoke it.
+
+Third, WebSocket tickets travel in URLs and stay replayable for 5 minutes.
+
+Clients pass wsTicket directly in the ?wsTicket= query string, which naturally lands in reverse-proxy logs and packet captures and remains valid for a full 5 minutes. Server verification only checks the signature, expiry, audience, and session revocation—there is no single-use replay store. Aside from DPoP-bound RPC tickets, any standard Bearer-issued RPC ticket and every media route ticket can be replayed unlimited times within those 5 minutes by anyone who gets the URL.
+
+Fourth, opening an untrusted repo exposes your entire machine's SSH authority.
+
+When creating a worktree, if .gitmodules exists, T3 Code defaults to running git submodule update --init --recursive. Its general Git runner adds bare-repo guards but does not globally disable git hooks, and live Claude sessions synchronously execute repository-level SessionStart hooks. Crucially, spawned child processes inherit virtually your entire host process.env, including GITHUB_TOKEN and SSH_AUTH_SOCK. Even if you argue repo code already runs under your OS user, SSH_AUTH_SOCK widens the blast radius to every remote repository and production server that key can sign for—far beyond the checkout itself.
+
+Fifth, a ridiculous bug hiding in plain sight.
+
+In the exact same startupAccess.ts file, line 39 whitelists the IPv6 loopback address ::1 as local, yet line 73 validates private-network connections using only NodeNet.isIPv4. With private-network protection enabled, local Tailscale Serve and T3 Connect tunnels arriving over ::1 get misclassified as external traffic and silently killed via socket.destroy(), making a working tunnel look inexplicably broken.
+
+If you are still using T3 Code, take at least these three precautions right away:
+- Never run plaintext --lan exposed without a TLS proxy or Tailscale encrypted tunnel in front.
+- Never put non-DPoP 30-day Bearer tokens into CI or scripts.
+- Strip SSH_AUTH_SOCK and GITHUB_TOKEN from the environment and disable automatic worktree submodule init before opening untrusted open-source repos.
+
+Evidence (pinned to today's latest commit ca81b7b9):
+
+30-day session & 5-minute WS ticket default TTL:
+https://t.co/bsAgVBnqp6
+
+Plaintext --lan cookie without Secure (and partial Nov 15 patch PR #37042):
+https://t.co/oywf5cGJdB
+https://t.co/Yg98PFygEn
+
+Missing Origin header bypasses browser cookie check:
+https://t.co/r3Fn5OkcBJ
+
+Unbound 30-day Bearer issuance, self-revocation blocked & no logout route:
+https://t.co/PAEbt9iAWg
+https://t.co/CgfVVFDldF
+https://t.co/LAEK2FQ8Re
+
+WS ticket in URL & non-DPoP/media replay gap:
+https://t.co/Bna4RQNT7l
+https://t.co/OBjCUenSO3
+
+::1 misclassified by isIPv4 and dropped via socket.destroy():
+https://t.co/tIC6OhCkSe
+
+Recursive submodules, missing global git-hook block & full env inheritance:
+https://t.co/FHU2W037m7
+https://t.co/zZ8gb50iNq
+https://t.co/tqHv0JaUJG
+
+Nov 20 silent secrets path-traversal patch (0 security advisories):
+https://t.co/MgClw1rJSO",https://x.com/realchendahuang/status/2125494623640465525,11831,166,31,538,4,2,15,6,45,248,36,0,0,20,
 2125494234614788390,"Wed, Nov 25, 2026","有热心网友发来一份 T3 Code 的安全审计清单，T3 Code有重大的安全漏洞。
 
 第一，局域网模式下的 30 天明文 shell 会话。
@@ -169,7 +222,16 @@ https://t.co/MgClw1shIm",https://x.com/realchendahuang/status/212549423461478839
 https://t.co/VohQAcY4RK",https://x.com/realchendahuang/status/2125472997687574680,3228,2,0,17,0,0,0,0,7,1,4,0,0,3,
 2125471775219941876,"Wed, Nov 25, 2026","关于 T3Code 的全部信息均已收录于此。本项目无遥测、无种族歧视，欢迎大家提交 PR 或 Issue 补充完善。
 
-All information regarding T3Code has been compiled here. This project features zero telemetry and zero racial discrimination; PRs and issues are welcome to help expand and refine",https://x.com/realchendahuang/status/2125471775219941876,3242,5,0,64,0,0,0,0,5,16,38,0,0,,
+All information regarding T3Code has been compiled here. This project features zero telemetry and zero racial discrimination; PRs and issues are welcome to help expand and refine it.
+
+Toutes les informations concernant T3Code ont été rassemblées ici. Ce projet est exempt de toute télémétrie et de toute discrimination raciale ; toute contribution par PR ou issue est la bienvenue pour le compléter.
+
+Вся информация о T3Code собрана здесь. Данный проект полностью свободен от телеметрии и расовой дискриминации; приветствуются ваши PR и issue для его дополнения и совершенствования.
+
+Toda la información sobre T3Code ha sido recopilada aquí. Este proyecto está libre de telemetría y de discriminación racial; sus contribuciones mediante PR o issue son bienvenidas para ampliarlo y perfeccionarlo.
+
+جُمعت هنا جميع المعلومات المتعلقة بـ T3Code. هذا المشروع خالٍ تماماً من القياس عن بُعد ومن التمييز العنصري، ونرحب بمساهماتكم عبر PR أو Issue لإثرائه واستكماله.
+https://t.co/7qSrFePoOt",https://x.com/realchendahuang/status/2125471775219941876,3242,5,0,64,0,0,0,0,5,16,38,0,0,,
 2125470974493794490,"Wed, Nov 25, 2026","为了让全世界的朋友都能无障碍领略 T3Code 和 Theo 的光辉事迹，特建此 GitHub 仓库，留档备查。
 
 To ensure friends around the world can effortlessly appreciate the illustrious deeds of T3Code and Theo, this GitHub repository has been specially established and archived for the record. https://t.co/oNBA5Q60JT",https://x.com/realchendahuang/status/2125470974493794490,33904,649,56,3855,4,6,68,28,187,1292,690,0,0,935,
@@ -328,7 +390,35 @@ https://t.co/39zLwGqekZ",https://x.com/realchendahuang/status/212540894925619228
 
 2024 年他自己 Fork 别人的 VS Code 主题，把仓库名直接起成 vsc-material-but-i-wont-sue-you，中文意思就是我不会告你。
 
-简介里公开嘲讽原作者脾气差，所以他建个仓库让大家随便用。轮到自己发了 MIT 协议的项目，别人照规矩 Fork 一下，他就开始喊着请律师。",https://x.com/realchendahuang/status/2125408843152953693,26145,813,44,2197,2,8,22,40,271,611,432,0,0,,
+简介里公开嘲讽原作者脾气差，所以他建个仓库让大家随便用。轮到自己发了 MIT 协议的项目，别人照规矩 Fork 一下，他就开始喊着请律师。
+
+今天凌晨快四点，他被骂破防直接发推威胁，说今晚就把 T3 Code 闭源，说大家不配用开源软件。
+
+骗完三千多赞、天还没亮自己又怂了，悄悄把那条威胁闭源的推文删得一干二净，仓库照样公开。
+
+靠地域攻击和群体网暴赚流量是他的老手艺。
+
+两年前他发视频点名印度教学频道带头刷开源 PR，在评论区引爆针对印度开发者的地域网暴。
+
+闹大后他被迫拍了一期 I screwed up. 公开低头认错，对着镜头说按国籍攻击开发者太可怕了，让带偏见的观众立刻取关。
+
+结果才过两年，他自己亲自下场发推，骂中文技术推特是他踩过最大的粪坑，骂信这边分析文章的人全是脑残。
+
+嘴上喊着保护开源维护者，手底下专干霸凌维护者的事。半个月前他还在 X 上装正义，骂骚扰开源维护者是下三滥。
+
+可去年 10 月他跟 FFmpeg 官方账号杠上，对着镜头连飙脏话不算，还公开悬赏 2 万美元，逼 FFmpeg 团队把维护者赶走。
+
+最后 VPN 厂商 Windscribe 看不下去，反手出价 2.1 万美元让他闭嘴停更 X 一个月，VLC 创始人也公开表态反对拿悬赏逼走开源贡献者，FFmpeg 开发者直接在邮件列表定性这是公开霸凌。
+
+踢到铁板之后，他又熟练地删视频、删推文、撤回悬赏，装作什么都没发生。
+
+骂印度开发者、骂中文技术圈、悬赏搞 FFmpeg、凌晨威胁闭源天亮删帖，这套碰瓷、网暴、删帖、装无辜的连招他早就练成肌肉记忆了。
+
+自己 Fork 别人取名我不会告你的仓库：https://t.co/JtNFaw548h
+急眼合入商标法律追责条款的 PR：https://t.co/5LG5sFMgGj
+两年前引爆印度开发者网暴后的认错视频：https://t.co/ls6udE99Ju
+亲口骂中文技术推特是粪坑的原推：https://t.co/jDPV45YaKv
+悬赏 2 万美元逼走 FFmpeg 维护者全记录：https://t.co/mR546Y5oB9",https://x.com/realchendahuang/status/2125408843152953693,26145,813,44,2197,2,8,22,40,271,611,432,0,0,,
 2125408333494673631,"Wed, Nov 25, 2026","第十五弹，这个@theo 根本没有T3 Code的商标，在那边喊人家侵权，这不是贼喊捉贼吗？
 https://t.co/Lli8ewXMIp",https://x.com/realchendahuang/status/2125408333494673631,5401,7,1,17,0,0,0,0,5,3,2,0,0,,
 2125408163273080950,"Wed, Nov 25, 2026","第十五弹：
@@ -337,7 +427,53 @@ T3 Code 作者 @theo 前两天威胁要联系 GitHub，把一个用了 T3 名字
 
 顺着 @vildanden_ai 的线索，我去查了美国专利商标局（USPTO）和 GitHub 官方政策，他手里没有这个注册商标。
 
-在 USPTO 数据库里搜 T3 Code，结果是 0 条记录，T3",https://x.com/realchendahuang/status/2125408163273080950,18370,443,16,1184,0,7,19,19,275,344,77,0,0,,
+在 USPTO 数据库里搜 T3 Code，结果是 0 条记录，T3 Tools 和 T3 Connect 同样查不到注册。
+
+他名下主体 T3 Tools Inc. 历史上只向 USPTO 递交过一件商标申请，是 2022 年 3 月申请的旧名 PING LABS（申请号 97294243）。
+
+官方 TSDR 页面显示，这件申请在 2025 年 2 月被最终驳回，2025 年 5 月 19 日因为逾期未答复已经废弃（ABANDONED）。
+
+至于他在仓库 TRADEMARK.md 里把纯 T3 字标也划成自家资产，实际很难独占。
+
+USPTO 里带 T3 的记录超过 1200 条，软件和 SaaS 所在的第 42 类与第 9 类，EquipmentShare 在 2025 年 5 月 13 日已经注册了纯 T3 商标（注册号 7795672，申请号 90644500），ESG Operations 也持有计算机软件服务类的 T3 关联注册商标（注册号 3324707）。
+
+再对照 GitHub 官方的 Trademark Policy，条款写明：
+
+商业公司提交商标侵权举报，联邦或国际注册商标编号（federal or international trademark registration number）和注册机构是必填项，同时要在承担伪证罪责任的前提下宣誓自己拥有这项排他权。
+
+未注册商标的例外说明只面向政府机构和非营利组织，商业公司用不了。就算真有注册号，对于并非恶意冒充、只是容易引起混淆的开源账号，GitHub 的处理方式也是先通知对方澄清或更名，不会直接封号。
+
+昨天中午 12 点 21 分，@theo 自己在仓库合并了 PR #41898，补上一份 TRADEMARK.md，写明无论是否注册都归 T3 Tools 所有，会通过平台下架和法律手段维权。
+
+但在他威胁找 GitHub 封号的当下，按平台规则他连举报表单都填不完。
+
+顺带翻到两条他自己以前发的推文：
+
+2024 年 9 月评 WordPress 商标争议时，他说对方发起了无法执行的商标争议（unenforceable trademark dispute）；2025 年 4 月又发过一句，把有很多先例的常见词拿去注册商标是疯了（Trademarking something so common with so much prior art is genuinely insane）。
+
+参考链接：
+USPTO 官方 TSDR（T3 Tools Inc. 唯一申请 PING LABS 97294243 已废弃）
+https://t.co/3ixXST6NHP
+
+EquipmentShare 持有的纯 T3 软件/SaaS 类注册商标（Reg 7795672 / Serial 90644500）
+https://t.co/TiupdbBVUA
+
+GitHub 官方 Trademark Policy（商业公司必填注册号条款）
+https://t.co/0o5WWo7W40
+
+11 月 24 日事后补上的 TRADEMARK.md（PR #41898）
+https://t.co/5LG5sFMgGj
+https://t.co/qju3Qirddl
+
+@theo 威胁找 GitHub 封号原推
+https://t.co/7M3cHThIT1
+
+@vildanden_ai 相关科普帖
+https://t.co/pz5zczdWnd
+
+@theo 历史相关原推（2024 年 9 月 / 2025 年 4 月）
+https://t.co/W0YL1GUnd3
+https://t.co/zExqX06UOG",https://x.com/realchendahuang/status/2125408163273080950,18370,443,16,1184,0,7,19,19,275,344,77,0,0,,
 2125407528754569257,"Wed, Nov 25, 2026",@mydream2025 @theo @op7418 原来是这样的啊，破案了,https://x.com/realchendahuang/status/2125407528754569257,1109,2,0,10,0,0,0,0,7,1,0,0,0,,
 2125407229998407765,"Wed, Nov 25, 2026",@NeoZhang1474417 这个兄弟他说中文区是粪坑啊。,https://x.com/realchendahuang/status/2125407229998407765,1618,18,0,51,0,0,0,0,32,1,0,0,0,,
 2125407186121826346,"Wed, Nov 25, 2026",@YuYiChyan @NeoZhang1474417 不是我做的，网友评论区推荐的。,https://x.com/realchendahuang/status/2125407186121826346,66,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -407,14 +543,87 @@ https://t.co/n86eu4EcW5",https://x.com/realchendahuang/status/212540472604925567
 
 @theo 直接发推开地图炮，把整个中文技术推特骂成他踩过最大的粪坑，骂相信中文圈源码审计文章的开发者全是脑残。
 
-可就在他骂街后，自家仓库悄悄合入了一连串直接危及用户电脑安全的高危修复，偏偏一条提醒老用户升级的安全公告都不发。",https://x.com/realchendahuang/status/2125395980354994414,11819,110,9,432,1,0,13,5,66,192,46,0,0,,
+可就在他骂街后，自家仓库悄悄合入了一连串直接危及用户电脑安全的高危修复，偏偏一条提醒老用户升级的安全公告都不发。
+
+内置浏览器预览页，此前居然连最基本的桌面沙箱隔离都没开，弹窗还会直接继承这个危险状态；陌生代码仓库里的项目配置，此前根本不需要用户点同意，就能直接在你电脑上执行命令，昨晚才偷偷合了一个三千多行的大补丁补上确认弹窗。
+
+再加上一连串越权调用、凭证跨机器串流和外部应用劫持的修复，GitHub 安全公告栏点进去至今冷冰冰写着 0 条。
+
+出了这么多高危洞瞒着不报，前面曝光过的几个致命硬伤，通宵之后依然纹丝不动：
+
+接 Google Antigravity 照旧在后台伪造官方客户端身份、塞假环境变量骗系统钥匙串，随时把付费用户送去封号，官网问答还在哄人放心用。
+
+Claude Auto 模式无视确认拦截、直接替你强推代码的漏洞，从 10 月 4 日挂到现在整整 53 天依然没修。一晚上能合二十个公关灭火补丁，就是不修会毁代码的洞。
+
+手机远程连电脑既不做端到端加密，新设备登录审批默认还关着，只补了个事后弹窗，门锁不锁、人进了屋才给你发短信。
+
+今早 8 点多，@theo 直接回复说端到端加密根本不可能做。
+
+所有流量最终汇总过去、负责留存原始数据的接收网关 https://t.co/WOgVQPKbCD，至今死活闭源不让人审计，他给的理由是开源网关会更容易被攻击。客户端开源演给外人看，真正收数据的地方焊死黑箱，出了漏洞 0 公告，被拆穿就骂揭发的人是粪坑。
+
+电脑上还留着这软件的，别再只靠环境变量，直接把这行写进 hosts 拦死，或者趁早卸载换干净的替代品：
+
+127.0.0.1 https://t.co/WOgVQPKbCD
+
+参考证据：
+至今 0 条公告的 GitHub 安全公告栏
+https://t.co/LygExQgRNX
+
+静默修补预览页此前未开沙箱隔离与项目配置免审批跑命令（PR #41757 / #42386 / #42504）
+https://t.co/QUzIBEwSfy
+https://t.co/VjtrNQ9J7E
+https://t.co/QkvHJXolx3
+
+挂满 53 天依然 Open 的强推代码漏洞（Issue #15353）
+https://t.co/WlUqwLS4Ev
+
+至今仍在伪造请求头直连 Google 内部接口与绕过钥匙串的源码
+https://t.co/L2fr6zBDot
+https://t.co/y9gQlyp1PG
+
+@theo 骂中文技术推特是粪坑、以怕被攻击为由拒绝开源接收网关及把端到端加密斥为不可能做的原帖
+https://t.co/jDPV45YaKv
+https://t.co/n0HEBKzcsb
+https://t.co/peRk4arylg",https://x.com/realchendahuang/status/2125395980354994414,11819,110,9,432,1,0,13,5,66,192,46,0,0,,
 2125395621486174388,"Wed, Nov 25, 2026","第十二弹，@theo 这兄弟算反人类了吗？：
 https://t.co/Yztmq27s54",https://x.com/realchendahuang/status/2125395621486174388,6627,8,2,49,0,0,0,1,19,3,0,0,0,18,
 2125395501663281198,"Wed, Nov 25, 2026","T3 Code 项目黑历史第十二弹：
 
 昨晚有人把 T3 Code 举报到了欧盟 GDPR，结果今天凌晨的短短 6 个小时里，T3 团队通宵合补丁擦屁股，把自己藏得更深的四笔隐私旧账抖了出来。
 
-第一笔账，中继服务器以前每小时把约 220 万条追踪记录发给第三方日志平台，一存就是整整 30 天。 https://t.co/XDS1XCXSFw",https://x.com/realchendahuang/status/2125395501663281198,83244,1868,304,8080,33,22,42,93,692,2000,1039,0,0,2324,
+第一笔账，中继服务器以前每小时把约 220 万条追踪记录发给第三方日志平台，一存就是整整 30 天。
+
+每一条记录里，都把用户的真实 IP 地址和设备信息直接贴在账号 ID 旁边。荒唐的是，在这个补丁合并三个半小时之后，@theo 还在评论区睁眼说瞎话，宣称他们早就把 IP 去掉了。
+
+第二笔账，昨晚之前你在 T3 注销账号，后台数据库里的记录根本不会删，你电脑上连着的远程隧道也不会断开。
+
+维护者在补丁第一行就写漏了嘴：因为刚刚收到了一份正式的隐私删除请求，发现只能靠人工手写数据库命令一条条删、再手动清隧道，这才连夜赶工补上了自动删除功能。
+
+第三笔账，Android 手机端每次收推送，后台都直接把用户的明文账号 ID 塞进通知里发给了 Google；苹果手机端的推送，此前则把带着设备推送令牌的完整链接直接打进了错误日志和遥测。
+
+第四笔账，软件里号称完全匿名的反馈功能，以前不仅带着你的安装标识和完整的操作系统、架构、虚拟机指纹，甚至直接跟实名上报数据塞在同一个网络请求里打包发出。维护者自己在补丁说明里承认，这种做法直接违背了自家对外写的隐私说明。
+
+而他们官网那份正式隐私政策，从 10 月 6 日起至今一字未改，网页版追踪至今依然没有开关，账号哈希至今还在用不加盐的算法方便后台随时反查。
+
+如果不是欧盟合规的大棒真砸到了头上，这四笔账不知道还要藏多久。
+
+参考证据：
+自供每小时 220 万条真实 IP 贴着账号 ID 存满 30 天（PR #42380）
+https://t.co/TMEFfWp5ys
+
+自供刚收到隐私删除请求，此前删号不删库、不断活跃隧道（PR #42285 / #42430）
+https://t.co/uVxOevasvc
+https://t.co/SViDCw7XSU
+
+Android 明文传账号 ID 给 Google、苹果推送日志泄露设备令牌（PR #42459 / #41859）
+https://t.co/uMrDU5UaMB
+https://t.co/n1j3NMNxo6
+
+自供所谓匿名反馈和实名数据同包发出、违背自家文档（PR #42466）
+https://t.co/1ygsiOU3tU
+
+补丁合并 3.5 小时后 @theo 仍宣称已去 IP 的回复原帖
+https://t.co/n0HEBKzcsb",https://x.com/realchendahuang/status/2125395501663281198,83244,1868,304,8080,33,22,42,93,692,2000,1039,0,0,2324,
 2125395004680282455,"Wed, Nov 25, 2026","第十一弹，这个@theo 真是又蠢又坏啊：
 https://t.co/3K2BBCOfEF",https://x.com/realchendahuang/status/2125395004680282455,7070,8,0,45,0,1,0,0,15,2,2,0,0,17,
 2125394810559426993,"Wed, Nov 25, 2026","T3 Code 项目黑历史第十一弹：
@@ -423,7 +632,42 @@ T3Code创始人 @theo 今早发了篇澄清长文，拍胸脯向所有人保证�
 
 从未收过用户的文件路径、一直能用环境变量彻底关掉数据收集、Claude 的账号追踪本来就是坏的。
 
-结果发帖前后不到两小时，他自己团队通宵合进去的补丁，并且自己高调晒出来100MB 数据包。 https://t.co/ODGKrKVYuL",https://x.com/realchendahuang/status/2125394810559426993,130319,949,84,6021,4,45,63,55,939,2536,485,0,0,949,
+结果发帖前后不到两小时，他自己团队通宵合进去的补丁，并且自己高调晒出来100MB 数据包。
+
+核心维护者 Julius 紧急合了一个补丁，在更新说明里亲口承认：
+
+此前通过远程中继触发的自动化任务，会把整场运行的追踪记录全发往外部平台，里面直接带着用户电脑的绝对项目路径、系统用户名和仓库名。
+
+他嘴上说一直能用环境变量轻松关掉，结果昨晚连夜补的两个补丁露馅了。
+
+Windows 版以前根本不读用户配好的关闭开关，默认照样往外传；Mac 版首次打开时同样无视配置文件里的关闭设置，整次运行一直在偷传。
+
+到这一秒为止，官方文档里教的另一组关闭变量在桌面端依然漏读不生效。
+
+有老外在评论区当面追问，关掉数据收集后，软件启动时是不是还会往硬盘里写追踪文件。@theo 当场一口否认。但翻开此刻最新代码，软件一启动依然不看开关，照样往你电脑里写入本地追踪 ID，顺手把你关联的账号拿出来算一遍哈希。
+
+他为了演坦荡，公开甩出了自己 100MB 的使用数据包，还强调 Claude 的账号追踪早就坏了。
+
+结果把压缩包头一拆，里面的原始文件名叫清洗版，发推前 20 分钟刚洗过。
+
+即便洗了一遍，里面还是躺着 264 条活生生的 Claude 账号追踪记录，4 台不同电脑全精准串到了同一个人身上，连他自己私下用的第三方代理模型名都原样漏了出来。
+
+这人真是又蠢又坏。
+
+参考证据：
+@theo 澄清长文与公开否认写追踪文件原帖
+https://t.co/FwWLcNCAsA
+https://t.co/n0HEBKzcsb
+
+发帖 90 分钟后维护者自供传出本机绝对路径与用户名（PR #42450）
+https://t.co/2xDtktCYmL
+
+承认 Windows 与 Mac 桌面端此前无视环境变量关闭收集（PR #42376 / #42464）
+https://t.co/YlrWV52r7R
+https://t.co/RIm1U7FZFN
+
+此刻关掉遥测依然无条件往硬盘写追踪 ID 的最新源码
+https://t.co/ejMAfuXUmr",https://x.com/realchendahuang/status/2125394810559426993,130319,949,84,6021,4,45,63,55,939,2536,485,0,0,949,
 2125393795219087539,"Wed, Nov 25, 2026","第十弹：
 https://t.co/QvTYrHGIHq",https://x.com/realchendahuang/status/2125393795219087539,7321,8,1,62,0,0,0,0,6,2,0,0,0,46,
 2125393641665671593,"Wed, Nov 25, 2026","@Theo 在抄功能和管舆论这两件事上，自己留下的公开操作记录也很完整。
@@ -490,7 +734,35 @@ https://t.co/QvTYrHGIHq",https://x.com/realchendahuang/status/212539379521908753
 2125392465813442604,"Wed, Nov 25, 2026",第八弹：https://t.co/da8BnRhqtX,https://x.com/realchendahuang/status/2125392465813442604,8321,9,0,58,0,0,0,0,9,1,4,0,0,35,
 2125392410763239723,"Wed, Nov 25, 2026","一个靠订阅赚钱的独立创业者，为什么愿意自掏 80 万美元做一个免费 MIT 开源客户端，还把以前收费的老产品晾在一边。
 
-过去 17 天里，他发了 162 条围绕 T3 Code 的推文，而他之前主推的三个收费老业务 T3 Chat、UploadThing、https://t.co/zp9dKsqqE5，在 1151 条推文里的提及次数全部是 0。 https://t.co/OPOQoJjZBt",https://x.com/realchendahuang/status/2125392410763239723,98006,933,221,10863,7,19,55,44,415,2057,1303,0,0,6037,
+过去 17 天里，他发了 162 条围绕 T3 Code 的推文，而他之前主推的三个收费老业务 T3 Chat、UploadThing、https://t.co/muatQYtXlp，在 1151 条推文里的提及次数全部是 0。
+
+11月12日他在回复网友时亲口说过，T3 Code 这个免费开源工具已经花掉他 80 万美元以上。
+
+砸这么多钱不收软件费，回报从哪来？
+
+11月18日，他直接贴出内部监控看板，T3 Code 一天跑了 31.7 万亿 token，等效 API 消费 1019 万美元，三天后又补了一句峰值到过每天 1020 万美元。
+
+11月21日和22日，他又随口报出一连串精细比例：99% 的用量是订阅制，98.5% 的流量集中在 Codex、Claude 和 Antigravity 三家，其余模型全是误差级别。
+
+更早几天他连开源模型的漏斗都报得清清楚楚，试过开源模型的用户比例从前一个月的 15% 掉到 6%，实际发出去的 prompt 不到 0.5%。11月23日有人在评论区猜模型占比，他直接拿后台呛对方，说没想到你还能看我后台分析数据。
+
+手里握着每天千万美元级算力流向的实时看板，再加上几十万开发者的桌面入口，桌面上的筹码马上就变成了实打实的资源。
+
+OpenAI 这边，11月18日他在吐槽 GPT-6.2 Astra 的长文里顺口谢了 OpenAI 在内测期给他的无限制免费 token，光跑一个测试基准就白烧了 30 万美元以上。
+
+Google 这边，给了早期内测和 DeepMind 员工下场互动。资本这边，11月21日团队成员 @maria_rcks 开玩笑发了一条 T3 被收购，他赶紧在底下回复让对方别闹，说已经有多位投资人跑来问他这事了。
+
+把桌面端的遥测关闭藏进管理员路径，免费铺开几十万台开发者的机器，换来一张实时监测三家大模型厂份额消长的雷达，再拿这张雷达去实验室和 VC 桌上换内测权限、免费额度和估值。
+
+开源免费给用户用，只是这门生意的获客成本。
+
+原始链接
+自曝 T3 Code 已烧掉 80 万美元以上：https://t.co/Jh8Y2EMP2T
+晒出 31.7 万亿 token / 1019 万美元单日看板：https://t.co/zmQllxQujR
+披露 98.5% 用量集中在三家大厂：https://t.co/FzMNdLUuwO
+拿后台分析数据呛网友：https://t.co/aIczQmK3xk
+长文自曝拿 OpenAI 无限制内测免费烧掉 30 万美元以上：https://t.co/2ViQpCRN19
+回复团队成员透露多位投资人来询问：https://t.co/zgLXCVSHg9",https://x.com/realchendahuang/status/2125392410763239723,98006,933,221,10863,7,19,55,44,415,2057,1303,0,0,6037,
 2125391807345549321,"Wed, Nov 25, 2026","第七弹：
 https://t.co/ee3ROAqZYZ",https://x.com/realchendahuang/status/2125391807345549321,8923,13,0,93,0,0,0,0,20,2,1,0,0,57,
 2125391659492081947,"Wed, Nov 25, 2026","@Theo 11月24日反驳遥测质疑，说自家有全行业最好的企业 Managed Policy，配置起来轻而易举就能关掉全部遥测，还嘲讽单机设置开关都是骗人的。
